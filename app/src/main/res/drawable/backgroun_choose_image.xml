@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/state_normal"
+          android:drawable="@drawable/choose_image" />
+
+    <item android:id="@+id/state_pressed"
+          android:drawable="@drawable/choose_image_press" android:state_pressed="true"/>
+
+    <transition
+        android:fromId="@id/state_normal"
+        android:toId="@id/state_pressed">
+        <animation-list android:oneshot="true">
+            <item
+                android:drawable="@drawable/choose_image"
+                android:duration="200"/>
+        </animation-list>
+    </transition>
+
+    <!-- Transição de pressionado para normal -->
+    <transition
+        android:fromId="@id/state_pressed"
+        android:toId="@id/state_normal">
+        <animation-list android:oneshot="true">
+            <item
+                android:drawable="@drawable/choose_image_press"
+                android:duration="200"/>
+        </animation-list>
+    </transition>
+
+</animated-selector>

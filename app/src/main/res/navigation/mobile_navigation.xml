@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_all">
+
+    <!--name é o caminho do fragment criado-->
+    <!--label é o que será exibido na toolbar deste fragment-->
+    <!--layout é o xml do fragment-->
+    <fragment
+        android:id="@+id/nav_all"
+        android:name="com.example.minhaagenda.ui.allContacts.AllContactsFragment"
+        android:label="Todos contatos"
+        tools:layout="@layout/fragment_all_contacts" />
+
+    <fragment
+        android:id="@+id/nav_config"
+        android:name="com.example.minhaagenda.ui.addContacts.AddContactFragment"
+        android:label="Configuração"
+        tools:layout="@layout/fragment_add_contact" />
+
+    <fragment
+        android:id="@+id/nav_exit"
+        android:name="com.example.minhaagenda.ui.exitContacts.ExitContactragment"
+        android:label="Sair"
+        tools:layout="@layout/fragment_exit_contactragment" />
+</navigation>
