@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.minhaagenda.adapters.ContactAdapter
 import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.entities.ContactObjetc
+import com.example.minhaagendakotlin.R
 import com.example.minhaagendakotlin.databinding.FragmentAllContactsBinding
+import com.google.android.material.appbar.CollapsingToolbarLayout
 
 
 class AllContactsFragment : Fragment() {
@@ -20,6 +22,10 @@ class AllContactsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentAllContactsBinding.inflate(inflater)
+        //seto a visibilidade do collapsingBar para visivél quando for este fragment(para exibir os contatos)
+        val collapseBar = activity?.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
+        collapseBar?.visibility= View.VISIBLE
+
         var list = ArrayList<Contact>()
         var contact = Contact()
         contact.name = "BRUNO"
