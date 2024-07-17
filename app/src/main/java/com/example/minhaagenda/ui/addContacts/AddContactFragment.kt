@@ -1,6 +1,7 @@
 package com.example.minhaagenda.ui.addContacts
 
 
+import android.content.Context
 import android.os.Bundle
 import android.view.CollapsibleActionView
 import androidx.fragment.app.Fragment
@@ -9,8 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import com.example.minhaagenda.MainActivity
 import com.example.minhaagendakotlin.R
 import com.example.minhaagendakotlin.databinding.FragmentAddContactBinding
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 
 
@@ -23,9 +27,10 @@ class AddContactFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         binding = FragmentAddContactBinding.inflate(inflater)
-        //recupero o collapsingLayout para o ocultar.
-        val collapsingBar = activity?.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
-        collapsingBar?.visibility= View.GONE
+
+        //metodo da activity que expande a AppBarLayout
+        (activity as MainActivity).getAppBarLayout(false)
+
 
         //no clique da imagem retorno um layout que é inflado com uma animação de scale
         binding.imageChooseButton.setOnClickListener {
@@ -37,7 +42,6 @@ class AddContactFragment : Fragment() {
             binding.linearLayout.addView(layout)
             //adiciono a animação que o layout terá ao ser chamado
             layout.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.enter_layout_choose_image))
-
         }
 
         //solicito focu no primeiro editText
@@ -50,8 +54,11 @@ class AddContactFragment : Fragment() {
             keybord.showSoftInput(binding.editName,InputMethodManager.SHOW_IMPLICIT)
         },10)
 
+
         return binding.root
 
     }
+
+
 
 }

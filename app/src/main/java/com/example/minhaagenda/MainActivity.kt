@@ -1,6 +1,8 @@
 package com.example.minhaagenda
 
+import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -10,8 +12,11 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.recyclerview.widget.RecyclerView.Orientation
 import com.example.minhaagendakotlin.R
 import com.example.minhaagendakotlin.databinding.ActivityMainBinding
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.navigation.NavigationView
 
 
@@ -24,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         //setando a toolbar criada
         setSupportActionBar(binding.appBarMain.toolbar)
 
@@ -45,8 +51,13 @@ class MainActivity : AppCompatActivity() {
         // Configurar o NavigationView para manipular as ações de clique
         navView.setupWithNavController(navController)
 
-    }
 
+    }
+    //metodo recuperado nos fragments para expandir ou não a AppBarLayout.
+    fun getAppBarLayout(value:Boolean) {
+        val appBarLayout = findViewById<AppBarLayout>(R.id.app_bar_contact)
+        appBarLayout?.setExpanded(value)
+    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -59,4 +70,8 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
+
+
+
 }

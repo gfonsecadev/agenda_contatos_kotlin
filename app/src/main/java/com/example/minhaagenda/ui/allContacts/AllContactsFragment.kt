@@ -1,11 +1,13 @@
 package com.example.minhaagenda.ui.allContacts
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.minhaagenda.MainActivity
 import com.example.minhaagenda.adapters.ContactAdapter
 import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.entities.ContactObjetc
@@ -22,9 +24,9 @@ class AllContactsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentAllContactsBinding.inflate(inflater)
-        //seto a visibilidade do collapsingBar para visivél quando for este fragment(para exibir os contatos)
-        val collapseBar = activity?.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
-        collapseBar?.visibility= View.VISIBLE
+        //metódo da activity que expande a AppBarLayout
+        (activity as MainActivity).getAppBarLayout(true)
+
 
         var list = ArrayList<Contact>()
         var contact = Contact()
