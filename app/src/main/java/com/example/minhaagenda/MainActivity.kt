@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(R.id.nav_all, R.id.nav_config, R.id.nav_exit), drawerLayout
         )
+
         // Configurar a AppBar para exibir o botão de up (seta de voltar) quando necessário
         setupActionBarWithNavController(navController, appBarConfiguration)
         // Configurar o NavigationView para manipular as ações de clique
@@ -59,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         appBarLayout?.setExpanded(value)
     }
 
+    //metodo que infla o menu
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main2, menu)
