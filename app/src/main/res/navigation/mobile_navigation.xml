@@ -12,17 +12,20 @@
         android:id="@+id/nav_all"
         android:name="com.example.minhaagenda.ui.allContacts.AllContactsFragment"
         android:label="Todos contatos"
-        tools:layout="@layout/fragment_all_contacts" />
+        tools:layout="@layout/fragment_all_contacts">
+    </fragment>
 
     <fragment
         android:id="@+id/nav_config"
         android:name="com.example.minhaagenda.ui.addContacts.AddContactFragment"
         android:label="Configuração"
-        tools:layout="@layout/fragment_add_contact" />
+        tools:layout="@layout/fragment_add_contact">
+    </fragment>
 
     <fragment
         android:id="@+id/nav_exit"
         android:name="com.example.minhaagenda.ui.exitContacts.ExitContactragment"
         android:label="Sair"
-        tools:layout="@layout/fragment_exit_contactragment" />
+        tools:layout="@layout/fragment_exit_contactragment">
+    </fragment>
 </navigation>
