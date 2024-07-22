@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.minhaagenda.MainActivity
+import com.example.minhaagenda.SharedViewModel
 import com.example.minhaagenda.adapters.ContactAdapter
 import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.entities.ContactObjetc
@@ -24,8 +26,11 @@ class AllContactsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentAllContactsBinding.inflate(inflater)
-        //metódo da activity que expande a AppBarLayout
-        (activity as MainActivity).getAppBarLayout(true)
+
+        //instãncia do SharedViewModel
+        val viewModelShare = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        //chamamos o metodo setAppBarLayoutState para alterar o valor do MutableLiveData  e disparar o observer na actity passando o boleano
+        viewModelShare.setAppBarLayoutState(true)//appBar será exibida neste fragment
 
 
         var list = ArrayList<Contact>()

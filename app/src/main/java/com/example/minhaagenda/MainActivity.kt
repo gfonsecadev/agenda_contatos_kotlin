@@ -1,6 +1,7 @@
 package com.example.minhaagenda
 
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -12,6 +13,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
+import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.get
@@ -36,6 +41,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var binding: ActivityMainBinding
+    private lateinit var controller: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +59,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle = ActionBarDrawerToggle(this,drawerLayout,binding.appBarMain.toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close)
         //o passamos para o drawerLayout através do listener
         drawerLayout.addDrawerListener(toggle)
+        controller = findNavController(R.id.nav_host_fragment_content_main)
 
         //implementado no final da activity
         navView.setNavigationItemSelectedListener(this)
@@ -70,21 +77,27 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         })
 
+        //instãncia do SharedViewModel
+        val viewModelShared = ViewModelProvider(this).get(SharedViewModel::class.java)
 
+        //o LiveData appBarLayoutState será observado
+        //será chamada quando o metodo setAppBarLayoutState nos fragments  for acionado
+        viewModelShared.appBarLayoutState.observe(this) { expanded ->//este valor é o valor da MutableLiveData _appBarLayoutState
+            val appBarLayout = findViewById<AppBarLayout>(R.id.app_bar_contact)
+            appBarLayout?.setExpanded(expanded)
+        }
     }
     //metodo para retornar um fragment para ser mostrado
-    fun replaceFragment(fragment: Fragment){
-        val fragmentTransiction= supportFragmentManager.beginTransaction()
-        fragmentTransiction.replace(R.id.nav_host_fragment_content_main,fragment)
-        fragmentTransiction.setCustomAnimations(R.anim.enter_fragment,R.anim.close_fragment)
-        fragmentTransiction.addToBackStack(null)
-        fragmentTransiction.commit()
+    fun replaceFragment(fragmentId: Int){
+        val navOptions = NavOptions.Builder()
+            .setEnterAnim(R.anim.enter_fragment)
+            .setExitAnim(R.anim.close_fragment)
+            .build()
+        controller.navigate(fragmentId,null,navOptions )
+        drawerLayout.closeDrawer(GravityCompat.START)
+
     }
-    //metodo recuperado nos fragments para expandir ou não a AppBarLayout.
-    fun getAppBarLayout(value:Boolean) {
-        val appBarLayout = findViewById<AppBarLayout>(R.id.app_bar_contact)
-        appBarLayout?.setExpanded(value)
-    }
+
 
     //metodo que infla o menu
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -97,9 +110,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     //será passada mais acima pela navView.setNavigationItemSelectedListener
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            R.id.nav_all -> replaceFragment(AllContactsFragment())
-            R.id.nav_config -> replaceFragment(AddContactFragment())
-            R.id.nav_exit -> replaceFragment(ExitContactragment())
+            R.id.nav_all -> replaceFragment(R.id.nav_all)
+            R.id.nav_config -> replaceFragment(R.id.nav_config)
+            R.id.nav_exit -> replaceFragment(R.id.nav_exit)
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true

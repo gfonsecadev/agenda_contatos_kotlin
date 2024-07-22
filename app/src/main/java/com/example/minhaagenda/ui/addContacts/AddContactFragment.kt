@@ -1,64 +1,55 @@
 package com.example.minhaagenda.ui.addContacts
 
-
-import android.content.Context
 import android.os.Bundle
-import android.view.CollapsibleActionView
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.minhaagenda.MainActivity
+import com.example.minhaagenda.SharedViewModel
 import com.example.minhaagendakotlin.R
 import com.example.minhaagendakotlin.databinding.FragmentAddContactBinding
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.CollapsingToolbarLayout
-
 
 class AddContactFragment : Fragment() {
- lateinit var binding:FragmentAddContactBinding
+    private lateinit var binding: FragmentAddContactBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
-        binding = FragmentAddContactBinding.inflate(inflater)
+        // Inflar o layout para este fragmento
+        binding = FragmentAddContactBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        //metodo da activity que expande a AppBarLayout
-        (activity as MainActivity).getAppBarLayout(false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        //instãncia do SharedViewModel
+        val viewModelShare = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        //chamamos o metodo setAppBarLayoutState para alterar o valor do MutableLiveData  e disparar o observer na actity passando o boleano
+        viewModelShare.setAppBarLayoutState(false)//appBar não será exibida neste fragment
 
         //no clique da imagem retorno um layout que é inflado com uma animação de scale
         binding.imageChooseButton.setOnClickListener {
-            //recupero o layout
-            val layout = inflater.inflate(R.layout.choose_image_layout,binding.linearLayout,false)
-            //oculto a imagem para o layout ser exibido sozinho no container
+            // Inflar o layout adicional
+            val layout = LayoutInflater.from(requireContext()).inflate(R.layout.choose_image_layout, binding.linearLayout, false)
+            // Ocultar o botão de imagem
             binding.imageChooseButton.visibility = View.GONE
-            //adiciono no container o meu layout
+            // Adicionar o layout no container
             binding.linearLayout.addView(layout)
-            //adiciono a animação que o layout terá ao ser chamado
-            layout.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.enter_layout_choose_image))
+            // Adicionar animação ao layout
+            layout.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.enter_layout_choose_image))
         }
 
-        //solicito focu no primeiro editText
+        // Solicitar foco no primeiro EditText e mostrar o teclado
         binding.editName.requestFocus()
-        //logo depois chamo a instãncia do gerenciador do teclado para mostrar o mesmo(teclado)
         binding.editName.postDelayed({
-            //recupero o gerenciador
-            val keybord = activity?.getSystemService(android.app.Service.INPUT_METHOD_SERVICE) as InputMethodManager
-            //metodo do gerenciador para mostrar o teclado com foco no editText Passado
-            keybord.showSoftInput(binding.editName,InputMethodManager.SHOW_IMPLICIT)
-        },10)
-
-
-        return binding.root
-
+            val keyboard = requireActivity().getSystemService(InputMethodManager::class.java)
+            keyboard?.showSoftInput(binding.editName, InputMethodManager.SHOW_IMPLICIT)
+        }, 500) // Reduzir o atraso para 500 ms
     }
-
-
-
 }

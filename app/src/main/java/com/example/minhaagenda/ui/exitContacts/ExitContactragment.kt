@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import com.example.minhaagenda.SharedViewModel
 import com.example.minhaagendakotlin.R
 
 // TODO: Rename parameter arguments, choose names that match
@@ -35,6 +37,11 @@ class ExitContactragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        //instãncia do SharedViewModel
+        val viewModelShare = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        //chamamos o metodo setAppBarLayoutState para alterar o valor do MutableLiveData  e disparar o observer na actity passando o boleano
+        viewModelShare.setAppBarLayoutState(false)//appBar não será exibida neste fragment
+
         return inflater.inflate(R.layout.fragment_exit_contactragment, container, false)
     }
 
