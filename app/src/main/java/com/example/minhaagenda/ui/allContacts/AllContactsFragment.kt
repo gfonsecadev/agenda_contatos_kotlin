@@ -1,21 +1,22 @@
 package com.example.minhaagenda.ui.allContacts
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.minhaagenda.MainActivity
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.example.minhaagenda.SharedViewModel
 import com.example.minhaagenda.adapters.ContactAdapter
+import com.example.minhaagenda.animations.fade.FadeToViews.fadeInImmediately
+import com.example.minhaagenda.animations.fade.FadeToViews.fadeOut
 import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.entities.ContactObjetc
-import com.example.minhaagendakotlin.R
+import com.example.minhaagenda.mappers.ContactMapper.contactListToAContactObjectList
 import com.example.minhaagendakotlin.databinding.FragmentAllContactsBinding
-import com.google.android.material.appbar.CollapsingToolbarLayout
 
 
 class AllContactsFragment : Fragment() {
@@ -81,37 +82,45 @@ class AllContactsFragment : Fragment() {
         list.add(contact)
 
         list.sortBy { it.name }
-        val adapter = ContactAdapter(contactToArrayContactObject(list), context)
-        binding.recyclerContact.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        binding.recyclerContact.adapter = adapter
+
+        //metodo com toda configuração do recyclerView
+        recyclerSettings(list)
 
         return binding.root
 
 
     }
 
-    fun contactToArrayContactObject(list: ArrayList<Contact>): ArrayList<ContactObjetc> {
-        var contact: ContactObjetc? = null
-        listAux.clear()//limpo a lista para não ficar acumulando
-        list.forEachIndexed { index, value ->
+    //configuração do recyclerView Principal
+    fun recyclerSettings(list: ArrayList<Contact>){
+        //o contactAdapter recebe uma lista de contact onde o mapper contactToContactObject converte para contactObjeto que é o exigido pelo adapter
+        val adapter = ContactAdapter(contactListToAContactObjectList(list), context)
 
-            if (index > 0 && (list[index - 1].name.first() !== value.name.first())) {
-                contact = ContactObjetc()
-                contact!!.letter = list[index - 1].name.first().toString()
-                contact!!.contactList =
-                    list.filter { it.name.startsWith(list[index - 1].name.first()) }
-                listAux.add(contact!!)
-            }
-            if (index == list.size - 1) {
-                contact = ContactObjetc()
-                contact!!.letter = value.name.first().toString()
-                contact!!.contactList = list.filter { it.name.startsWith(value.name.first()) }
-                listAux.add(contact!!)
-            }
+        binding.recyclerContact.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        binding.recyclerContact.adapter = adapter
 
-        }
-        return listAux
+       //utilizo o scrollListener para ouvir mudanças no scroll do recyclerView
+        binding.recyclerContact.addOnScrollListener(object: OnScrollListener(){
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                //recupero o layoutManager
+                val layout = recyclerView.layoutManager as LinearLayoutManager
+                //recupero o primeiro item visivel do recyclerView
+                //o metódo getItem foi implementado por min no atual adapter para retornar o item da lista de acordo com a posição passada
+                val item = adapter.getItem(layout.findFirstVisibleItemPosition())
+                //passo a letra do contactObject deste item
+                binding.textLetter.text = item.letter
+
+                if(newState == RecyclerView.SCROLL_STATE_DRAGGING || newState == RecyclerView.SCROLL_STATE_SETTLING){
+                    fadeInImmediately(binding.textLetter)
+                }else{
+                    fadeOut(binding.textLetter,500)
+                }
+
+            }
+        })
     }
 
 

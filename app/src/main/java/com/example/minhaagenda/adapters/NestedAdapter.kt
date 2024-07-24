@@ -28,6 +28,10 @@ class NestedAdapter(val list: List<Contact>,val context:Context?) :
         return list.size
     }
 
+    fun getItem(position: Int): Contact {
+        return list.get(position)
+    }
+
     override fun onBindViewHolder(holder: HolderNestedAdaper, position: Int) {
         var contact = list.get(position)
         holder.name.text = contact.name

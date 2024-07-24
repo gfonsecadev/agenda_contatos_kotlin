@@ -2,22 +2,18 @@ package com.example.minhaagenda.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Looper
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.minhaagenda.DividerRecyclerView.CustomDivider
 import com.example.minhaagenda.entities.ContactObjetc
 import com.example.minhaagendakotlin.databinding.RecyclerContactLayoutBinding
-import java.util.logging.Handler
 
 //este adapter irá renderizar uma letra e a lista de contatos relacionado a esta letra para ser passada como parametro para o NestedAdapter aqui mesmo
 //ou seja a letra popula este adapter e a lista o adapter aninhado.
-class ContactAdapter(val listContact: ArrayList<ContactObjetc>, val context: Context?) : RecyclerView.Adapter<ContactHolder>() {
+class ContactAdapter(val listContact: List<ContactObjetc>, val context: Context?) : RecyclerView.Adapter<ContactHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactHolder {
         //retornamos para o holder um data binding do layout.
@@ -27,6 +23,12 @@ class ContactAdapter(val listContact: ArrayList<ContactObjetc>, val context: Con
 
     override fun getItemCount(): Int {
         return listContact.size
+    }
+
+    //retorna o item de acordo com a posição passada
+    //é utilizado no ScrollListener deste recyclerView para recuperar o item visivel no topo do recyclerView
+    fun getItem(position: Int): ContactObjetc {
+        return listContact.get(position)
     }
 
     override fun onBindViewHolder(holder: ContactHolder, @SuppressLint("RecyclerView") position: Int) {

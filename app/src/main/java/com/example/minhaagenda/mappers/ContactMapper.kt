@@ -6,7 +6,7 @@ import com.example.minhaagenda.entities.ContactObjetc
 //criação de um mapper para conversão de contact para contactObject(esperado pelo adapter)
 object ContactMapper {
     //função de conversão que recebe uma lista de contact e retorna uma lista de contactObject
-    fun contactListToAContactObjectList(contactList: List<Contact>): List<ContactObjetc> {
+    fun contactListToAContactObjectList(contactList: ArrayList<Contact>): List<ContactObjetc> {
         var contactObjetcList:ArrayList<ContactObjetc> = ArrayList<ContactObjetc>()
         var contactObjetc: ContactObjetc?
 
