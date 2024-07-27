@@ -18,7 +18,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/choose_camera"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="CAMERA"
@@ -34,7 +34,7 @@
             app:layout_constraintGuide_percent="0.5" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/choose_galery"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="GALERIA"

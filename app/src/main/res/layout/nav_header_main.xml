@@ -33,7 +33,7 @@
         android:layout_height="83dp"
         app:cardCornerRadius="50dp">
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/profile_image"
             android:layout_width="85dp"
             android:layout_height="85dp"
             android:scaleType="centerCrop"

@@ -1,13 +1,27 @@
 package com.example.minhaagenda
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
@@ -26,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var binding: ActivityMainBinding
     private lateinit var controller: NavController
+    private lateinit var permissionsLauncher : ActivityResultLauncher<Array<String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +57,88 @@ class MainActivity : AppCompatActivity() {
         setupDataDevice()
         // Configura o ViewModel para gerenciar o estado do AppBarLayout
         setupViewModel()
+        permissions()
+        profileImageChoice()
+
+    }
+
+    fun profileImageChoice(){
+        var imageView = binding.navView.getHeaderView(0).findViewById<ImageView>(R.id.profile_image)
+        imageView.setOnClickListener {
+            //A partir do Android 13 (API 33), não é mais necessário solicitar permissões amplas para leitura e escrita no armazenamento externo. O gerenciamento de permissões é feito automaticamente pelo launcher de arquivos, que concede acesso parcial apenas aos arquivos específicos que o usuário seleciona.
+            //se android for abaixo de 13, pedimos todas as permissôes
+            if(VERSION.SDK_INT < VERSION_CODES.TIRAMISU){
+                permissionsLauncher.launch(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA))
+            }else{//se for 13 ou acima somente pedimos a camera
+                permissionsLauncher.launch(arrayOf(Manifest.permission.CAMERA))
+
+            }
+        }
+    }
+
+    fun dialogImage(){
+        var dialogBuilder = AlertDialog.Builder(this)
+        dialogBuilder.setTitle("Escolha uma imagem")
+        dialogBuilder.setMessage("Escolha imagem da geleria ou capture uma nova imagem!")
+        dialogBuilder.setPositiveButton("Galeria"
+        ) { dialog, which ->
+
+        }
+
+        dialogBuilder.setNegativeButton("Câmera"
+        ) { dialog, which ->
+
+        }
+
+        var dialog = dialogBuilder.create()
+        dialog.show()
+    }
+
+
+
+    fun permissions(){
+        permissionsLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions(),
+            object : ActivityResultCallback<Map<String,Boolean>>{
+                override fun onActivityResult(result: Map<String, Boolean>) {
+                    if(result.values.size>0) {
+                        var denied = false
+                        for (permission in result.values) {
+                            if (!permission) {
+                                denied = true
+                            }
+                        }
+                        //se denied = true significa que há permissôes negadas
+                        if (denied) {
+                            requestPermissionAgain()
+                        }else{
+                            dialogImage()
+                        }
+                    }
+                }
+
+            })
+
+    }
+
+    //metodo para permissôes quando negadas
+    private fun requestPermissionAgain() {
+        val alertBuilder = AlertDialog.Builder(this)
+        alertBuilder.setTitle("Permissões Necessárias")
+        alertBuilder.setMessage("Para continuar, precisamos da sua permissão para acessar a câmera e a galeria. Isso é necessário para que você possa escolher ou capturar uma imagem para o perfil. Por favor, vá para as Configurações e habilite as permissões necessárias.")
+        alertBuilder.setPositiveButton("Ir para Configurações") { dialog, which ->
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                data = Uri.fromParts("package", packageName, null)
+            }
+            startActivity(intent)
+        }
+        alertBuilder.setNegativeButton("Cancelar") { dialog, which ->
+            dialog.dismiss()
+        }
+
+        val alert = alertBuilder.create()
+        alert.show()
+
 
 
     }
