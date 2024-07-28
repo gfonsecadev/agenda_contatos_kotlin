@@ -1,4 +1,4 @@
-package com.example.minhaagenda.ui.allContacts
+package com.example.minhaagenda.ui.fragments.allContacts
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
-import com.example.minhaagenda.SharedViewModel
+import com.example.minhaagenda.shared.AppBarViewModel
 import com.example.minhaagenda.adapters.ContactAdapter
 import com.example.minhaagenda.animations.fade.FadeToViews.fadeInImmediately
 import com.example.minhaagenda.animations.fade.FadeToViews.fadeOut
@@ -28,8 +28,8 @@ class AllContactsFragment : Fragment() {
     ): View {
         binding = FragmentAllContactsBinding.inflate(inflater)
 
-        //instãncia do SharedViewModel
-        val viewModelShare = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        //instãncia do AppBarViewModel
+        val viewModelShare = ViewModelProvider(requireActivity()).get(AppBarViewModel::class.java)
         //chamamos o metodo setAppBarLayoutState para alterar o valor do MutableLiveData  e disparar o observer na actity passando o boleano
         viewModelShare.setAppBarLayoutState(true)//appBar será exibida neste fragment
 

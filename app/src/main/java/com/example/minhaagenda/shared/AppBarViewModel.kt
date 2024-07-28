@@ -1,11 +1,11 @@
-package com.example.minhaagenda
+package com.example.minhaagenda.shared
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 //view model para exibição ou recolhimento da AppBar
-class SharedViewModel : ViewModel() {
+class AppBarViewModel : ViewModel() {
 
     //essa variavel que sofrerá mudançãs através do método setAppBarLayoutState
     private val _appBarLayoutState = MutableLiveData<Boolean>()

@@ -22,7 +22,7 @@
         android:theme="@style/Theme.MinhaAgenda"
         tools:targetApi="31">
         <activity
-            android:name="com.example.minhaagenda.MainActivity"
+            android:name="com.example.minhaagenda.ui.main.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:screenOrientation="fullSensor"

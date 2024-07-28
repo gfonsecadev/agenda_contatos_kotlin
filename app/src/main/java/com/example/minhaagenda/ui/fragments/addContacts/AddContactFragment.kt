@@ -1,4 +1,4 @@
-package com.example.minhaagenda.ui.addContacts
+package com.example.minhaagenda.ui.fragments.addContacts
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,8 +8,7 @@ import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.minhaagenda.MainActivity
-import com.example.minhaagenda.SharedViewModel
+import com.example.minhaagenda.shared.AppBarViewModel
 import com.example.minhaagendakotlin.R
 import com.example.minhaagendakotlin.databinding.FragmentAddContactBinding
 
@@ -28,8 +27,8 @@ class AddContactFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //instãncia do SharedViewModel
-        val viewModelShare = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        //instãncia do AppBarViewModel
+        val viewModelShare = ViewModelProvider(requireActivity()).get(AppBarViewModel::class.java)
         //chamamos o metodo setAppBarLayoutState para alterar o valor do MutableLiveData  e disparar o observer na actity passando o boleano
         viewModelShare.setAppBarLayoutState(false)//appBar não será exibida neste fragment
 

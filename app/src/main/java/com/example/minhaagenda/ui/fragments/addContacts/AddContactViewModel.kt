@@ -1,4 +1,4 @@
-package com.example.minhaagenda.ui.addContacts
+package com.example.minhaagenda.ui.fragments.addContacts
 
 import androidx.lifecycle.ViewModel
 

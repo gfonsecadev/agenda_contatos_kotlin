@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:background="@drawable/corner_contact"
+    android:padding="16dp"
+    android:orientation="horizontal">
+
+    <EditText
+        android:id="@+id/edit_name_profile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/black"
+        android:hint="Digite seu nome"
+        android:inputType="textPersonName"
+        android:padding="10dp"
+        android:contentDescription="Campo para editar o nome do perfil"/>
+
+    <Button
+        android:id="@+id/btn_save_name_profile"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textColor="@color/white"
+        android:background="@drawable/check_icon"
+        android:contentDescription="Botão para salvar o nome do perfil"/>
+
+</LinearLayout>

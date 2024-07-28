@@ -8,7 +8,7 @@
     android:paddingTop="15dp"
     android:background="@drawable/bg_layout_allcontacts"
     android:orientation="vertical"
-    tools:context="com.example.minhaagenda.ui.allContacts.AllContactsFragment">
+    tools:context="com.example.minhaagenda.ui.fragments.allContacts.AllContactsFragment">
 
 
 

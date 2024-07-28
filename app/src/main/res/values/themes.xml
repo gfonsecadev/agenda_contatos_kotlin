@@ -23,4 +23,22 @@
     <style name="Theme.MinhaAgenda.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.MinhaAgenda.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Theme.MinhaAgenda.CustomDialog" parent="Theme.AppCompat.Dialog">
+        <!-- Define um estilo personalizado chamado Theme.MinhaAgenda.CustomDialog que herda de Theme.AppCompat.Dialog.
+             Isso significa que o estilo base será o de um diálogo compatível com a biblioteca AppCompat. -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- Define o fundo da janela do diálogo como transparente. Isso é útil para permitir que o layout personalizado
+             com cantos arredondados seja exibido corretamente sem interferência de um fundo padrão. -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- Remove o título padrão do diálogo. Isso é útil se você quiser usar um layout completamente personalizado
+             e não precisar de um título padrão. -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- Define o diálogo como uma janela flutuante, ou seja, ele aparecerá acima de outras janelas e terá uma
+             borda flutuante padrão. Isso é típico para diálogos que se destacam do conteúdo principal. -->
+        <item name="android:backgroundDimEnabled">false</item>
+        <!-- Desativa o sombreamento de fundo quando o diálogo é exibido. Normalmente, quando um diálogo é mostrado,
+             o fundo é escurecido para focar a atenção no diálogo. Definir isso como false remove esse efeito de escurecimento. -->
+    </style>
+
 </resources>
