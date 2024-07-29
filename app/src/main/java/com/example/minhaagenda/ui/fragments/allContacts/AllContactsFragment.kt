@@ -14,13 +14,11 @@ import com.example.minhaagenda.adapters.ContactAdapter
 import com.example.minhaagenda.animations.fade.FadeToViews.fadeInImmediately
 import com.example.minhaagenda.animations.fade.FadeToViews.fadeOut
 import com.example.minhaagenda.entities.Contact
-import com.example.minhaagenda.entities.ContactObjetc
 import com.example.minhaagenda.mappers.ContactMapper.contactListToAContactObjectList
 import com.example.minhaagendakotlin.databinding.FragmentAllContactsBinding
 
 
 class AllContactsFragment : Fragment() {
-    var listAux: ArrayList<ContactObjetc> = ArrayList<ContactObjetc>()
 
     private lateinit var binding: FragmentAllContactsBinding
     override fun onCreateView(
@@ -28,13 +26,8 @@ class AllContactsFragment : Fragment() {
     ): View {
         binding = FragmentAllContactsBinding.inflate(inflater)
 
-        //instãncia do AppBarViewModel
-        val viewModelShare = ViewModelProvider(requireActivity()).get(AppBarViewModel::class.java)
-        //chamamos o metodo setAppBarLayoutState para alterar o valor do MutableLiveData  e disparar o observer na actity passando o boleano
-        viewModelShare.setAppBarLayoutState(true)//appBar será exibida neste fragment
 
-
-        var list = ArrayList<Contact>()
+        val list = ArrayList<Contact>()
         var contact = Contact()
         contact.name = "BRUNO"
         list.add(contact)
@@ -83,6 +76,8 @@ class AllContactsFragment : Fragment() {
 
         list.sortBy { it.name }
 
+        // Configura o ViewModel para gerenciar o estado do AppBarLayout
+        setupViewModelAppBar()
         //metodo com toda configuração do recyclerView
         recyclerSettings(list)
 
@@ -91,8 +86,16 @@ class AllContactsFragment : Fragment() {
 
     }
 
+    //Configura o comportamento da AppBar pela ViewModel
+    private fun setupViewModelAppBar() {
+        //instãncia do AppBarViewModel
+        val viewModelShare = ViewModelProvider(requireActivity()).get(AppBarViewModel::class.java)
+        //chamamos o metodo setAppBarLayoutState para alterar o valor do MutableLiveData  e disparar o observer na actity passando o boleano
+        viewModelShare.setAppBarLayoutState(false)//appBar não será exibida neste fragment
+    }
+
     //configuração do recyclerView Principal
-    fun recyclerSettings(list: ArrayList<Contact>){
+    private fun recyclerSettings(list: ArrayList<Contact>){
         //o contactAdapter recebe uma lista de contact onde o mapper contactToContactObject converte para contactObjeto que é o exigido pelo adapter
         val adapter = ContactAdapter(contactListToAContactObjectList(list), context)
 

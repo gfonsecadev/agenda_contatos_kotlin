@@ -37,7 +37,7 @@ class AddContactFragment : Fragment() {
     }
 
     //Configura o comportamento da AppBar pela ViewModel
-    fun setupViewModelAppBar(){
+    private fun setupViewModelAppBar(){
         //instãncia do AppBarViewModel
         val viewModelShare = ViewModelProvider(requireActivity()).get(AppBarViewModel::class.java)
         //chamamos o metodo setAppBarLayoutState para alterar o valor do MutableLiveData  e disparar o observer na actity passando o boleano
@@ -45,7 +45,7 @@ class AddContactFragment : Fragment() {
     }
 
     //Configuração do clique na imagem do contato, mudando o layout para escolha da imagem(galeria ou camera)
-    fun setupImageContact(){
+    private fun setupImageContact(){
         //no clique da imagem retorno um layout que é inflado com uma animação de scale
         binding.imageChooseButton.setOnClickListener {
             // Inflar o layout adicional
@@ -60,7 +60,7 @@ class AddContactFragment : Fragment() {
     }
 
     //Metodo que abre o teclado no primeiro editText do fragment
-    fun openKeyboard(){
+    private fun openKeyboard(){
         // Solicitar foco no primeiro EditText e mostrar o teclado
         binding.editName.requestFocus()
         binding.editName.postDelayed({

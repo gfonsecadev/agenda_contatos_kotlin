@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.minhaagenda.shared.AppBarViewModel
-import com.example.minhaagendakotlin.R
 import com.example.minhaagendakotlin.databinding.FragmentExitContactragmentBinding
 
 class ExitContactragment : Fragment() {
@@ -15,7 +14,7 @@ class ExitContactragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentExitContactragmentBinding.inflate(inflater,container,false)
         return binding.root
     }
