@@ -83,7 +83,6 @@ class AllContactsFragment : Fragment() {
 
         return binding.root
 
-
     }
 
     //Configura o comportamento da AppBar pela ViewModel
@@ -91,7 +90,7 @@ class AllContactsFragment : Fragment() {
         //instãncia do AppBarViewModel
         val viewModelShare = ViewModelProvider(requireActivity()).get(AppBarViewModel::class.java)
         //chamamos o metodo setAppBarLayoutState para alterar o valor do MutableLiveData  e disparar o observer na actity passando o boleano
-        viewModelShare.setAppBarLayoutState(false)//appBar não será exibida neste fragment
+        viewModelShare.setAppBarLayoutState(true)//appBar não será exibida neste fragment
     }
 
     //configuração do recyclerView Principal

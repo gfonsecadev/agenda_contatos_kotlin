@@ -19,23 +19,33 @@
           android:background="@color/white">
 
          <LinearLayout
-             android:id="@+id/linearLayout"
+             android:id="@+id/layoutImageAddContact"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:gravity="center"
              android:orientation="vertical"
-             android:layout_marginTop="70dp"
+             app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
              app:layout_constraintEnd_toEndOf="parent"
              app:layout_constraintStart_toStartOf="parent"
              app:layout_constraintTop_toTopOf="parent">
 
-            <ImageButton
-                android:id="@+id/image_choose_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:contentDescription="Escolha uma imagem para seu contato"
-                android:src="@drawable/choose_image" />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewImage"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="20dp"
+                app:cardCornerRadius="100dp">
+
+               <ImageButton
+                   android:id="@+id/image_choose_button"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:background="@color/white"
+                   android:contentDescription="Escolha uma imagem para seu contato"
+                   android:src="@drawable/choose_image" />
+
+            </androidx.cardview.widget.CardView>
+
          </LinearLayout>
 
          <LinearLayout
@@ -47,7 +57,7 @@
              app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
              app:layout_constraintEnd_toEndOf="parent"
              app:layout_constraintStart_toStartOf="parent"
-             app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+             app:layout_constraintTop_toBottomOf="@+id/layoutImageAddContact">
 
             <EditText
                 android:id="@+id/edit_name"

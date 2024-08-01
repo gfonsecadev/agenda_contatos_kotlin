@@ -1,51 +1,52 @@
 package com.example.minhaagenda.shared
 
-import android.content.Intent
-import android.net.Uri
-import android.provider.Settings
+import android.Manifest
+import android.os.Build
+import android.os.Build.VERSION_CODES
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
-import androidx.activity.ComponentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class PermissionsViewModel : ViewModel() {
+class PermissionsViewModel() : ViewModel() {
 
     private val _isPermissionGranted = MutableLiveData<Boolean>()
     val isPermissionGranted:LiveData<Boolean>  get() = _isPermissionGranted
 
-    lateinit var permissionsLauncher:ActivityResultLauncher<Array<String>>
+    private lateinit var permissionsLauncher:ActivityResultLauncher<Array<String>>
 
-    fun permissions(context : ComponentActivity){
-        permissionsLauncher = context.registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) { result ->
-            if (result.values.size > 0) {
-                var denied = false
-                for (permission in result.values) {
-                    if (!permission) {
-                        denied = true
-                    }
-                }
-                //se denied = true significa que há permissôes negadas
-                if (denied) {
-                    //pedimos permissão novamente de forma manual
-                    _isPermissionGranted.value = false
-                } else {
-                    //acesso liberado ao dialog de escolha da imagem
-                    _isPermissionGranted.value = true
-                }
-            }
-        }
-
+    fun registerLauncherPermissions(launcher: ActivityResultLauncher<Array<String>>){
+        permissionsLauncher = launcher
     }
 
-    fun askPermissions(permissions: Array<String>){
+
+    // Solicita as permissões necessárias para acessar a galeria ou câmera
+    // Este método adapta a solicitação de permissões com base na versão do sistema operacional,pois houveram mudanças de como isso deve ser feito
+    fun askPermissions(){
+        val permissions = if (Build.VERSION.SDK_INT < VERSION_CODES.TIRAMISU) {
+            // Se a versão do SDK for anterior à Android 13 (TIRAMISU)
+            arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE, // Permissão para ler arquivos de armazenamento externo
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE, // Permissão para gravar arquivos de armazenamento externo
+                    Manifest.permission.CAMERA // Permissão para usar a câmera do dispositivo
+                )
+
+        } else {
+            // Se a versão do SDK for Android 13 (TIRAMISU) ou superior
+            arrayOf(
+                    Manifest.permission.CAMERA, // Permissão para usar a câmera do dispositivo
+                    Manifest.permission.READ_MEDIA_IMAGES // Permissão para acessar imagens de mídia (substitui a permissão READ_EXTERNAL_STORAGE em Android 13)
+                )
+
+        }
         permissionsLauncher.launch(permissions)
     }
+
+    fun changeLiveData(value : Boolean){
+        _isPermissionGranted.value = value
+    }
+
+
 
 
 }
