@@ -1,18 +1,17 @@
 package com.example.minhaagenda.shared
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AlertDialog
 
-object Permissions {
+object PermissionsManager {
 
+    //metodo que dispara uma função se permissões concedidas e se negadas lança uma função que pedi permissôes manualmente ao usuário
     fun executeIfPermissionGranted(isGranted: Boolean, onPermissionGranted: () -> Unit,context: Context ) {
         if (isGranted) {
-            onPermissionGranted()
+            onPermissionGranted()//função personalizado passada por parametros
         } else {
             requestPermissionsAgain(context)
         }

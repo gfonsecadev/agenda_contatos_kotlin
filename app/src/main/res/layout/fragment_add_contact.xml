@@ -36,11 +36,11 @@
                 android:layout_marginTop="20dp"
                 app:cardCornerRadius="100dp">
 
-               <ImageButton
+               <ImageView
                    android:id="@+id/image_choose_button"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:background="@color/white"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:scaleType="centerCrop"
                    android:contentDescription="Escolha uma imagem para seu contato"
                    android:src="@drawable/choose_image" />
 
@@ -63,6 +63,7 @@
                 android:id="@+id/edit_name"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:autofillHints="name"
                 android:background="@drawable/corner_contact"
                 android:drawableStart="@drawable/ic_person"
                 android:drawablePadding="5dp"
@@ -75,6 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="30dp"
+                android:autofillHints="phone"
                 android:background="@drawable/corner_contact"
                 android:drawableStart="@drawable/ic_telephone"
                 android:drawablePadding="5dp"
@@ -87,6 +89,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="30dp"
+                android:autofillHints="email"
                 android:background="@drawable/corner_contact"
                 android:drawableStart="@drawable/ic_email"
                 android:drawablePadding="5dp"

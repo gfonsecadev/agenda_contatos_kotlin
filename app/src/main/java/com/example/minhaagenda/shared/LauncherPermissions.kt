@@ -4,23 +4,17 @@ import android.Manifest
 import android.os.Build
 import android.os.Build.VERSION_CODES
 import androidx.activity.result.ActivityResultLauncher
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 
-class PermissionsViewModel() : ViewModel() {
-
-    private val _isPermissionGranted = MutableLiveData<Boolean>()
-    val isPermissionGranted:LiveData<Boolean>  get() = _isPermissionGranted
-
+//classe de ajuda para lidar com permissôes(leitura, escrita e camera)
+class LauncherPermissions{
     private lateinit var permissionsLauncher:ActivityResultLauncher<Array<String>>
 
+    //recebe um register já configurado
     fun registerLauncherPermissions(launcher: ActivityResultLauncher<Array<String>>){
         permissionsLauncher = launcher
     }
 
-
-    // Solicita as permissões necessárias para acessar a galeria ou câmera
+    //chama o launcher de permissôes com o array de permissôes já definido
     // Este método adapta a solicitação de permissões com base na versão do sistema operacional,pois houveram mudanças de como isso deve ser feito
     fun askPermissions(){
         val permissions = if (Build.VERSION.SDK_INT < VERSION_CODES.TIRAMISU) {
@@ -41,12 +35,6 @@ class PermissionsViewModel() : ViewModel() {
         }
         permissionsLauncher.launch(permissions)
     }
-
-    fun changeLiveData(value : Boolean){
-        _isPermissionGranted.value = value
-    }
-
-
 
 
 }

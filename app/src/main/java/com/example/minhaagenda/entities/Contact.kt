@@ -14,4 +14,10 @@ class Contact() {
 
     @ColumnInfo("numero")
     var number: Int = 0
+
+    @ColumnInfo("email")
+    lateinit var email: String
+
+    @ColumnInfo("imagem")
+    lateinit var pathImage: String
 }

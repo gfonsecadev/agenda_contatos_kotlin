@@ -1,6 +1,7 @@
 package com.example.minhaagenda.ui.main
 
 import android.app.Dialog
+import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -21,16 +22,14 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import com.example.minhaagenda.entities.SharedPreferencesHelper
-import com.example.minhaagenda.shared.LaunchersViewModel
+import com.example.minhaagenda.shared.LaunchersImage
 import com.example.minhaagenda.shared.AppBarViewModel
-import com.example.minhaagenda.shared.Permissions
-import com.example.minhaagenda.shared.PermissionsViewModel
+import com.example.minhaagenda.shared.PermissionsManager
+import com.example.minhaagenda.shared.LauncherPermissions
 import com.example.minhaagendakotlin.R
 import com.example.minhaagendakotlin.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 
 
 // Classe principal da atividade que estende AppCompatActivity
@@ -39,8 +38,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var binding: ActivityMainBinding
     private lateinit var controller: NavController
-    private val permissionsViewModel: PermissionsViewModel by viewModels()
-    private  val launchersViewModel: LaunchersViewModel by viewModels()
+    private lateinit var launcherPermissions: LauncherPermissions
+    private  lateinit var launchersImage: LaunchersImage
     private lateinit var preferencesHelper: SharedPreferencesHelper
     private lateinit var imageProfile: ImageView
     private lateinit var textNameProfile: TextView
@@ -63,8 +62,8 @@ class MainActivity : AppCompatActivity() {
         setupDataDevice()
         //inicilalizando preferencias do usuário
         initializePreferences()
-        //inicializa o ViewModel de permissões
-        observeAndHandleRegisters()
+        //inicia os registerForActivityResult para permissôes e seleção de imagens(câmera e galeria)na activity
+        registerLaunchersActivity()
         // Configura o ViewModel para gerenciar o estado do AppBarLayout
         setupViewModelAppBar()
         // Configura o listener de clique na imagemView do perfil
@@ -74,95 +73,87 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Inicializa os ViewModels e registra os observadores de permissões e galerias
-    fun observeAndHandleRegisters() {
+    fun registerLaunchersActivity() {
         // Registra e observa permissões
-        registerAndObservePermissions()
+        hasPermissionsActivity()
         // Registra e observa a galeria para seleção de imagens
-        registerAndObserveLaucherGallery()
+        takeImageActivity()
         //registerAndObserveLaucherCamera()
     }
 
-    private fun registerAndObserveLaucherCamera() {
-        val intent = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            // Verifica se a atividade retornou com sucesso e dados não nulos
-            if (result.resultCode == RESULT_OK) {
-                // Atualiza o ViewModel com o URI da imagem selecionada
-                result.data?.data?.let {url->
-                    launchersViewModel.changeLiveData(url)}
-            }
-        }
-        launchersViewModel.registerLauncher(intent)
-        launchersViewModel.uri.observe(this,{
 
-        })
-    }
-
-    // Registra e observa permissões solicitadas
-    fun registerAndObservePermissions() {
+    //register para pedir permissão
+    fun hasPermissionsActivity() {
+        launcherPermissions = LauncherPermissions()
         // Cria um launcher para solicitar múltiplas permissões e lida com a resposta
         val laucherPermissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
             // Verifica se todas as permissões foram concedidas
             val isGranted = result.all { it.value }
-            // Atualiza o ViewModel com o resultado da permissão
-            permissionsViewModel.changeLiveData(isGranted)
+            //metodo que se permissão dada executa uma função (neste caso aqui chama um dialog para escolha da imagem)
+            PermissionsManager.executeIfPermissionGranted(isGranted, onPermissionGranted = { dialogImage() }, this)
+
         }
 
-        // Registra o launcher de permissões no ViewModel
-        permissionsViewModel.registerLauncherPermissions(laucherPermissions)
+        //atribui o register para a classe de ajuda (para poder ser lançada em outro momento)
+        launcherPermissions.registerLauncherPermissions(laucherPermissions)
 
-        // Observa o LiveData de permissões concedidas
-        permissionsViewModel.isPermissionGranted.observe(this) { isGranted ->
-            // Executa uma ação se as permissões forem concedidas
-            Permissions.executeIfPermissionGranted(isGranted, onPermissionGranted = { dialogImage() }, this)
-        }
     }
 
-    // Registra e observa o launcher da galeria para seleção de imagens
-    fun registerAndObserveLaucherGallery() {
+    //register para escolha da imagem (galeria ou camera)
+    fun takeImageActivity() {
+        launchersImage = LaunchersImage()
         // Cria um launcher para iniciar uma atividade e lida com o resultado
-        val intent = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            // Verifica se a atividade retornou com sucesso e dados não nulos
-            if (result.resultCode == RESULT_OK) {
-                // Atualiza o ViewModel com o URI da imagem selecionada
-                result.data?.data?.let {url->
-                launchersViewModel.changeLiveData(url)}
+        val intent = registerForActivityResult(
+                ActivityResultContracts.StartActivityForResult()) {result->
+
+            var bitmap: Bitmap? = null
+            //se galeria
+            val uri = result.data?.data
+            uri?.let {
+                // Define a URI da imagem no ImageView
+                imageProfile.setImageURI(uri)
+                // Inicializa o helper para acessar preferências
+                preferencesHelper = SharedPreferencesHelper(this)
+                // Converte a URI em um Bitmap
+                bitmap = MediaStore.Images.Media.getBitmap(contentResolver, it)
+
             }
+
+            //se camera
+            val data = result.data?.extras?.get("data")
+           data?.let { image->
+                bitmap = image as Bitmap
+                imageProfile.setImageBitmap(bitmap)
+            }
+
+            //se não nulo salva o Bitmap nas preferências convertendo-o para string
+            bitmap?.let {
+                preferencesHelper.editPreferencesImage(it) }
         }
 
-        // Registra o launcher da galeria no ViewModel
-        launchersViewModel.registerLauncher(intent)
+        //atribui o register para a classe de ajuda (para poder ser lançada em outro momento)
+        launchersImage.registerLauncher(intent)
 
-        // Observa o LiveData do URI da imagem selecionada
-        launchersViewModel.uri.observe(this) { uri ->
-            // Define a URI da imagem no ImageView
-            imageProfile.setImageURI(uri)
-
-            // Inicializa o helper para acessar preferências
-            preferencesHelper = SharedPreferencesHelper(this)
-
-            // Converte a URI em um Bitmap
-            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
-
-            // Salva o Bitmap nas preferências convertendo-o para string
-            preferencesHelper.editPreferencesImage(bitmap)
-        }
     }
 
 
     // Inicializa o objeto de ajuda para as preferências compartilhadas
     private fun initializePreferences() {
-        preferencesHelper = SharedPreferencesHelper(this)
+        //inicia os objetos para serem utilizados globalmente
         imageProfile = binding.navView.getHeaderView(0).findViewById(R.id.profile_image)
-        imageProfile.setImageBitmap(preferencesHelper.getPreferencesImage())
-
         textNameProfile = binding.navView.getHeaderView(0).findViewById(R.id.profile_name)
-        textNameProfile.text = preferencesHelper.getPreferencesName()
+
+        preferencesHelper = SharedPreferencesHelper(this)//classe de ajuda
+
+        //seta as preferencias se definidas
+        imageProfile.setImageBitmap(preferencesHelper.getPreferencesImage())//recupera a a imagem salva convertendo-a de string para Bitmap
+        textNameProfile.text = preferencesHelper.getPreferencesName()//recupera o nome salvo
     }
 
     // Método para definir o comportamento do clique na imagem do perfil
     private fun profileTextChoice() {
         textNameProfile.setOnClickListener {
-            showEditProfileDialog()
+            showEditProfileDialog()//mostra um dialog para edição do nome
         }
     }
 
@@ -170,16 +161,20 @@ class MainActivity : AppCompatActivity() {
     private fun showEditProfileDialog() {
         val layout = layoutInflater.inflate(R.layout.edit_text_profile_name, null, false)
         val alert = AlertDialog.Builder(this, R.style.Theme_MinhaAgenda_CustomDialog)
-        alert.setView(layout)
+        alert.setView(layout)//esse dialog possui um layout próprio
 
         val dialog: Dialog = alert.create()
         dialog.show()
 
+        // recupera as referência dos elementos do  layout do dialog
         val editText = dialog.findViewById<EditText>(R.id.edit_name_profile)
         val button = dialog.findViewById<Button>(R.id.btn_save_name_profile)
 
+        //preenche o editText com o nome atual salvo em preferências
+        //é necessário passar um Editable para um editText este metódo abaixo(nativo) o cria através de uma string(nome atual salvo em preferências)
         editText?.text = Editable.Factory.getInstance().newEditable(preferencesHelper.getPreferencesName())
 
+        //salva o nome digitado em preferências
         button?.setOnClickListener {
             val name = editText?.text.toString().trim()
             if (name.isNotEmpty()) {
@@ -200,7 +195,7 @@ class MainActivity : AppCompatActivity() {
     // Método para definir o comportamento do clique na imagem do perfil
     private fun profileImageChoice() {
         imageProfile.setOnClickListener {
-            permissionsViewModel.askPermissions()
+            launcherPermissions.askPermissions()
         }
     }
 
@@ -210,8 +205,8 @@ class MainActivity : AppCompatActivity() {
         val dialogBuilder = AlertDialog.Builder(this)
             .setTitle("Escolha uma imagem")
             .setMessage("Escolha imagem da galeria ou capture uma nova imagem!")
-            .setPositiveButton("Galeria") { _, _ -> launchersViewModel.openGallery() }
-            .setNegativeButton("Câmera") { _, _ -> launchersViewModel.openCamera()}
+            .setPositiveButton("Galeria") { _, _ -> launchersImage.openGallery() }
+            .setNegativeButton("Câmera") { _, _ -> launchersImage.openCamera()}
         dialogBuilder.show()
     }
 
