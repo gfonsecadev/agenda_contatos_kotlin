@@ -72,7 +72,7 @@
                 android:paddingStart="5dp" />
 
             <EditText
-                android:id="@+id/edit_number"
+                android:id="@+id/edit_phone"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="30dp"

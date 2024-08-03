@@ -10,19 +10,27 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.shared.AppBarViewModel
+import com.example.minhaagenda.shared.ImageFormatConverter
+import com.example.minhaagenda.shared.LauncherPermissions
 import com.example.minhaagenda.shared.LaunchersImage
 import com.example.minhaagenda.shared.PermissionsManager
-import com.example.minhaagenda.shared.LauncherPermissions
 import com.example.minhaagendakotlin.R
 import com.example.minhaagendakotlin.databinding.FragmentAddContactBinding
+import java.io.File
+import java.io.FileOutputStream
 
 class AddContactFragment : Fragment() {
     private lateinit var binding: FragmentAddContactBinding
     private lateinit var layout:View
     private  lateinit var launcherPermissions: LauncherPermissions
     private  lateinit var launchersImage: LaunchersImage
+    private val viewModelAddContact : AddContactViewModel by viewModels(){  AddContactViewModelFactory(application = requireActivity().application) }
+    private  var bitmapContactByteArray: ByteArray = ByteArray(1024)
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,7 +52,34 @@ class AddContactFragment : Fragment() {
         setupImageContact()
          //Abre o teclado virtual para que o usuário possa começar a digitar.
          openKeyboard()
+        saveContact()
 
+    }
+
+    private fun saveContact(){
+        binding.buttonSave.setOnClickListener {
+            binding.editName.error
+            val textName = binding.editName.text.toString()
+            val textPhone = binding.editPhone.text.toString()
+            val textEmail = binding.editEmail.text.toString()
+
+
+
+            val contact = Contact().apply {
+                name = textName
+                phone = textPhone
+                email = textEmail
+                image = bitmapContactByteArray
+            }
+
+            if(textName.isNotBlank() && textEmail.isNotBlank()){
+                viewModelAddContact.addContact(contact)
+            }
+
+            viewModelAddContact.isBlank(binding.editName)
+            viewModelAddContact.isBlank(binding.editPhone)
+
+        }
     }
 
     //inicia os registerForActivityResult para permissôes e seleção de imagens(câmera e galeria)
@@ -74,27 +109,29 @@ class AddContactFragment : Fragment() {
         launchersImage = LaunchersImage()
         val intent = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {result->
-            //se galeria
-            val url = result.data?.data
-            url?.let {uri->
-                binding.imageChooseButton.setImageURI(uri)//imagem principal é setada com o uri da imagem escolhida
+            //contém a lógica de negocio
+             viewModelAddContact.returnBitmap(result)
 
-            }
-
-            //se camera
-            val data = result.data?.extras?.get("data")
-            data?.let { image->
-                val bitmap = image as Bitmap
-                binding.imageChooseButton.setImageBitmap(bitmap)//imagem principal é setada com a imagem capturada pela camera
-            }
-            //layout principal volta a ser exibido e layout de escolha das imagens é ocultado
-            binding.cardViewImage.visibility = View.VISIBLE
-            layout.visibility = View.GONE
         }
         //atribui o register para a classe de ajuda (para poder ser lançada em outro momento)
         launchersImage.registerLauncher(intent)
-
+        //observamos a mudança do liveData do bitmap
+        observeBitmap()
         }
+
+    //responsável por verificar mudanças no bitmap
+    fun observeBitmap(){
+        viewModelAddContact.bitmapContact.observe(viewLifecycleOwner) { bitmap ->
+            //se existit um bitmap
+            bitmap?.let {
+                binding.imageChooseButton.setImageBitmap(it)//imagem principal é setada com a imagem capturada pela camera
+                //layout principal volta a ser exibido e layout de escolha das imagens é ocultado
+                binding.cardViewImage.visibility = View.VISIBLE
+                layout.visibility = View.GONE
+                bitmapContactByteArray = ImageFormatConverter.imageToByteArray(it)
+            }
+        }
+    }
 
     //Configura o comportamento da AppBar pela ViewModel
     private fun setupViewModelAppBar(){

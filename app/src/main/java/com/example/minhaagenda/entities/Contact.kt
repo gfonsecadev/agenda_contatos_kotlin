@@ -13,11 +13,11 @@ class Contact() {
     lateinit var name:String
 
     @ColumnInfo("numero")
-    var number: Int = 0
+    lateinit var phone: String
 
     @ColumnInfo("email")
     lateinit var email: String
 
     @ColumnInfo("imagem")
-    lateinit var pathImage: String
+    lateinit var image: ByteArray
 }

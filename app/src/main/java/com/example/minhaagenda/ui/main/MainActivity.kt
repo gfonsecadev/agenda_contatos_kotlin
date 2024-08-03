@@ -2,6 +2,7 @@ package com.example.minhaagenda.ui.main
 
 import android.app.Dialog
 import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -73,7 +74,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Inicializa os ViewModels e registra os observadores de permissões e galerias
-    fun registerLaunchersActivity() {
+    private fun registerLaunchersActivity() {
         // Registra e observa permissões
         hasPermissionsActivity()
         // Registra e observa a galeria para seleção de imagens
@@ -83,7 +84,7 @@ class MainActivity : AppCompatActivity() {
 
 
     //register para pedir permissão
-    fun hasPermissionsActivity() {
+    private fun hasPermissionsActivity() {
         launcherPermissions = LauncherPermissions()
         // Cria um launcher para solicitar múltiplas permissões e lida com a resposta
         val laucherPermissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
@@ -100,7 +101,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     //register para escolha da imagem (galeria ou camera)
-    fun takeImageActivity() {
+    private fun takeImageActivity() {
         launchersImage = LaunchersImage()
         // Cria um launcher para iniciar uma atividade e lida com o resultado
         val intent = registerForActivityResult(
@@ -110,25 +111,30 @@ class MainActivity : AppCompatActivity() {
             //se galeria
             val uri = result.data?.data
             uri?.let {
-                // Define a URI da imagem no ImageView
-                imageProfile.setImageURI(uri)
                 // Inicializa o helper para acessar preferências
                 preferencesHelper = SharedPreferencesHelper(this)
-                // Converte a URI em um Bitmap
-                bitmap = MediaStore.Images.Media.getBitmap(contentResolver, it)
 
+                //implementação para converter a URI em um Bitmap de acordo com o sdk
+                if (Build.VERSION.SDK_INT < 28) {
+                    bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, it)
+
+                } else {//se acima
+                    val source = ImageDecoder.createSource(this.contentResolver, it)
+                    bitmap = ImageDecoder.decodeBitmap(source)
+
+                }
             }
 
             //se camera
             val data = result.data?.extras?.get("data")
            data?.let { image->
                 bitmap = image as Bitmap
-                imageProfile.setImageBitmap(bitmap)
             }
 
             //se não nulo salva o Bitmap nas preferências convertendo-o para string
             bitmap?.let {
-                preferencesHelper.editPreferencesImage(it) }
+                preferencesHelper.editPreferencesImage(it)
+                imageProfile.setImageBitmap(it)}
         }
 
         //atribui o register para a classe de ajuda (para poder ser lançada em outro momento)
@@ -201,7 +207,7 @@ class MainActivity : AppCompatActivity() {
 
 
     // Exibe um diálogo para escolher a imagem de perfil
-    fun dialogImage() {
+    private fun dialogImage() {
         val dialogBuilder = AlertDialog.Builder(this)
             .setTitle("Escolha uma imagem")
             .setMessage("Escolha imagem da galeria ou capture uma nova imagem!")
