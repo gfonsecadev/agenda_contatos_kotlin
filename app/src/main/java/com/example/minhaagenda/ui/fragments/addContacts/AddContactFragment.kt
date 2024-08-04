@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -18,6 +19,7 @@ import com.example.minhaagenda.shared.ImageFormatConverter
 import com.example.minhaagenda.shared.LauncherPermissions
 import com.example.minhaagenda.shared.LaunchersImage
 import com.example.minhaagenda.shared.PermissionsManager
+import com.example.minhaagenda.ui.main.MainActivity
 import com.example.minhaagendakotlin.R
 import com.example.minhaagendakotlin.databinding.FragmentAddContactBinding
 import java.io.File
@@ -56,31 +58,45 @@ class AddContactFragment : Fragment() {
 
     }
 
-    private fun saveContact(){
+    //metodo que salva contatos
+    private fun saveContact() {
+        // Configura um clique listener para o botão de salvar
         binding.buttonSave.setOnClickListener {
-            binding.editName.error
-            val textName = binding.editName.text.toString()
-            val textPhone = binding.editPhone.text.toString()
-            val textEmail = binding.editEmail.text.toString()
+            // Obtém as referências para os campos de entrada
+            val editName = binding.editName
+            val editPhone = binding.editPhone
+            val editEmail = binding.editEmail
 
+            // Verifica se os campos editName e editPhone estão em branco
+            if (viewModelAddContact.isBlank(editName, editPhone)) {
+                // Se algum campo estiver em branco, retorna do clique listener
+                return@setOnClickListener
+            }
 
-
+            // Cria uma nova instância de Contact e atribui os valores dos campos
             val contact = Contact().apply {
-                name = textName
-                phone = textPhone
-                email = textEmail
-                image = bitmapContactByteArray
+                name = editName.text.toString()
+                phone = editPhone.text.toString()
+                email = editEmail.text.toString()
+                image = bitmapContactByteArray // Supõe que bitmapContactByteArray seja uma variável existente que contém os bytes da imagem
             }
 
-            if(textName.isNotBlank() && textEmail.isNotBlank()){
-                viewModelAddContact.addContact(contact)
-            }
-
-            viewModelAddContact.isBlank(binding.editName)
-            viewModelAddContact.isBlank(binding.editPhone)
-
+            // Chama o método addContact no ViewModel para adicionar o contato
+            // onSuccess: Função de callback a ser chamada em caso de sucesso
+            // onError: Função de callback a ser chamada em caso de erro
+            viewModelAddContact.addContact(contact,
+                onSuccess = {
+                    // Muda o fragmento usando o NavController para o id nav_all
+                    (requireActivity() as MainActivity).changeFragmentNavController(R.id.nav_all)
+                },
+                onError = {
+                    // Mostra uma mensagem de erro usando Toast
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                }
+            )
         }
     }
+
 
     //inicia os registerForActivityResult para permissôes e seleção de imagens(câmera e galeria)
     private fun registerLaunchersFragment(){

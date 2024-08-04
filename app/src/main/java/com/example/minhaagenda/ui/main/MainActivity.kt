@@ -241,7 +241,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Troca o fragmento de acordo com a opção do menu selecionada
-    private fun changeFragmentNavController(fragmentId: Int) {
+    fun changeFragmentNavController(fragmentId: Int) {
         val navOptions = NavOptions.Builder()
             .setEnterAnim(R.anim.enter_fragment)
             .setExitAnim(R.anim.close_fragment)

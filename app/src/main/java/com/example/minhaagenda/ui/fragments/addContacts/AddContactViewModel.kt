@@ -11,9 +11,13 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.repositories.contact_repository.ContactRepository
+import com.santalu.maskara.widget.MaskEditText
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class AddContactViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -23,18 +27,41 @@ class AddContactViewModel(application: Application) : AndroidViewModel(applicati
 
     private val repository = ContactRepository(application)
 
-    fun addContact(contact: Contact) {
-        return repository.insertContact(contact)
-    }
-
-    fun bitmapToByteArray(bitmap: Bitmap) {
-
-    }
-    fun isBlank(editText: EditText){
-       var text = editText.text.toString()
-        if (text.isBlank()){
-            editText.error = "preencha este campo!"
+    fun addContact(contact: Contact, onSuccess: () -> Unit, onError: (Exception) -> Unit) {
+        // Inicia uma coroutine no escopo do ViewModel
+        viewModelScope.launch {
+            try {
+                // Tenta inserir o contato no repositório
+                repository.insertContact(contact)
+                // Se bem-sucedido, chama a função onSuccess
+                onSuccess()
+            } catch (e: Exception) {
+                // Se ocorrer uma exceção, chama a função onError passando a exceção
+                onError(e)
+            }
         }
+    }
+
+
+    //metódo que valida os editTexts passados retornando um boleano para interromper o fluxo da aplicação se os mesmos estiverem em branco
+    //estou utilizando varargs de EditText pois nem todos são MaskEditText(telefone é MaskEditText)
+    fun isBlank(vararg editTexts: EditText):Boolean{
+        var textIsBlank = false
+
+        // Itera sobre cada EditText passado para a função
+        editTexts.forEach {
+            // Converte o conteúdo do EditText para uma string
+            val text = it.text.toString()
+
+            // Verifica se o texto está em branco
+            if (text.isBlank()) {
+                // Se o texto estiver em branco, exibe uma mensagem de erro abaixo do EditText
+                it.error = "Preencha este campo!"
+                textIsBlank = true
+            }
+        }
+        return textIsBlank
+
     }
 
     //register para escolha de imagem(camera ou galeria)
