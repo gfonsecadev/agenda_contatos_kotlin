@@ -33,6 +33,7 @@ class AddContactViewModel(application: Application) : AndroidViewModel(applicati
             try {
                 // Tenta inserir o contato no repositório
                 repository.insertContact(contact)
+                //delay para exibir o Snackbar
                 // Se bem-sucedido, chama a função onSuccess
                 onSuccess()
             } catch (e: Exception) {

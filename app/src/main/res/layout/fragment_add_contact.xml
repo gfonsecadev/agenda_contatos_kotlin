@@ -1,144 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    tools:context="com.example.minhaagenda.ui.fragments.addContacts.AddContactFragment">
+    android:layout_height="match_parent">
 
-   <LinearLayout
+   <ScrollView
+       xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:tools="http://schemas.android.com/tools"
+       xmlns:app="http://schemas.android.com/apk/res-auto"
        android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:orientation="vertical">
+       android:layout_height="match_parent"
+       android:fillViewport="true"
+       tools:context="com.example.minhaagenda.ui.fragments.addContacts.AddContactFragment">
 
-      <androidx.constraintlayout.widget.ConstraintLayout
+      <LinearLayout
           android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:background="@color/white">
-
-         <LinearLayout
-             android:id="@+id/layoutImageAddContact"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:gravity="center"
-             android:orientation="vertical"
-             app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-             app:layout_constraintEnd_toEndOf="parent"
-             app:layout_constraintStart_toStartOf="parent"
-             app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardViewImage"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_marginTop="20dp"
-                app:cardCornerRadius="100dp">
-
-               <ImageView
-                   android:id="@+id/image_choose_button"
-                   android:layout_width="match_parent"
-                   android:layout_height="match_parent"
-                   android:scaleType="centerCrop"
-                   android:contentDescription="Escolha uma imagem para seu contato"
-                   android:src="@drawable/choose_image" />
-
-            </androidx.cardview.widget.CardView>
-
-         </LinearLayout>
-
-         <LinearLayout
-             android:id="@+id/linearLayout2"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:orientation="vertical"
-             android:padding="15dp"
-             app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
-             app:layout_constraintEnd_toEndOf="parent"
-             app:layout_constraintStart_toStartOf="parent"
-             app:layout_constraintTop_toBottomOf="@+id/layoutImageAddContact">
-
-            <EditText
-                android:id="@+id/edit_name"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:autofillHints="name"
-                android:background="@drawable/corner_contact"
-                android:drawableStart="@drawable/ic_person"
-                android:drawablePadding="5dp"
-                android:hint="Nome"
-                android:inputType="text"
-                android:paddingStart="5dp" />
-
-            <com.santalu.maskara.widget.MaskEditText
-                android:id="@+id/edit_phone"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="30dp"
-                android:autofillHints="phone"
-                android:background="@drawable/corner_contact"
-                android:drawableStart="@drawable/ic_telephone"
-                android:drawablePadding="5dp"
-                android:hint="Telefone"
-                android:inputType="phone"
-                app:mask="(##) #####-####"
-                android:paddingStart="5dp" />
-
-            <EditText
-                android:id="@+id/edit_email"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="30dp"
-                android:autofillHints="email"
-                android:background="@drawable/corner_contact"
-                android:drawableStart="@drawable/ic_email"
-                android:drawablePadding="5dp"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
-                android:paddingStart="5dp" />
-         </LinearLayout>
+          android:layout_height="wrap_content"
+          android:orientation="vertical">
 
          <androidx.constraintlayout.widget.ConstraintLayout
-             android:id="@+id/constraintLayout"
              android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginBottom="10dp"
-             app:layout_constraintBottom_toBottomOf="parent">
+             android:layout_height="match_parent"
+             android:background="@color/white">
 
-            <Button
-                android:id="@+id/button_cancel"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/layoutImageAddContact"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ripple_button"
-                android:text="Cancelar"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/guideline3"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/button_save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ripple_button"
-                android:text="Salvar"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/guideline3"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline3"
+               <androidx.cardview.widget.CardView
+                   android:id="@+id/cardViewImage"
+                   android:layout_width="200dp"
+                   android:layout_height="200dp"
+                   android:layout_marginTop="20dp"
+                   app:cardCornerRadius="100dp">
+
+                  <ImageView
+                      android:id="@+id/image_choose_button"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:scaleType="centerCrop"
+                      android:contentDescription="Escolha uma imagem para seu contato"
+                      android:src="@drawable/choose_image" />
+
+               </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.5" />
+                android:padding="15dp"
+                app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layoutImageAddContact">
+
+               <EditText
+                   android:id="@+id/edit_name"
+                   android:layout_width="match_parent"
+                   android:layout_height="48dp"
+                   android:autofillHints="name"
+                   android:background="@drawable/corner_contact"
+                   android:drawableStart="@drawable/ic_person"
+                   android:drawablePadding="5dp"
+                   android:hint="Nome"
+                   android:inputType="text"
+                   android:paddingStart="5dp" />
+
+               <com.santalu.maskara.widget.MaskEditText
+                   android:id="@+id/edit_phone"
+                   android:layout_width="match_parent"
+                   android:layout_height="48dp"
+                   android:layout_marginTop="30dp"
+                   android:autofillHints="phone"
+                   android:background="@drawable/corner_contact"
+                   android:drawableStart="@drawable/ic_telephone"
+                   android:drawablePadding="5dp"
+                   android:hint="Telefone"
+                   android:inputType="phone"
+                   app:mask="(##) #####-####"
+                   android:paddingStart="5dp" />
+
+               <EditText
+                   android:id="@+id/edit_email"
+                   android:layout_width="match_parent"
+                   android:layout_height="48dp"
+                   android:layout_marginTop="30dp"
+                   android:autofillHints="email"
+                   android:background="@drawable/corner_contact"
+                   android:drawableStart="@drawable/ic_email"
+                   android:drawablePadding="5dp"
+                   android:hint="Email"
+                   android:inputType="textEmailAddress"
+                   android:paddingStart="5dp" />
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+               <Button
+                   android:id="@+id/button_cancel"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:background="@drawable/ripple_button"
+                   android:text="Cancelar"
+                   android:textStyle="bold"
+                   android:textColor="@color/black"
+                   app:layout_constraintBottom_toBottomOf="parent"
+                   app:layout_constraintEnd_toStartOf="@+id/guideline3"
+                   app:layout_constraintStart_toStartOf="parent"
+                   app:layout_constraintTop_toTopOf="parent" />
+
+               <Button
+                   android:id="@+id/button_save"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:background="@drawable/ripple_button"
+                   android:text="Salvar"
+                   android:textStyle="bold"
+                   android:textColor="@color/black"
+                   app:layout_constraintBottom_toBottomOf="parent"
+                   app:layout_constraintEnd_toEndOf="parent"
+                   app:layout_constraintStart_toStartOf="@+id/guideline3"
+                   app:layout_constraintTop_toTopOf="parent" />
+
+               <androidx.constraintlayout.widget.Guideline
+                   android:id="@+id/guideline3"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="vertical"
+                   app:layout_constraintGuide_percent="0.5" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
          </androidx.constraintlayout.widget.ConstraintLayout>
-      </androidx.constraintlayout.widget.ConstraintLayout>
-   </LinearLayout>
-</ScrollView>
+      </LinearLayout>
+   </ScrollView>
+
+   <FrameLayout
+       android:id="@+id/progressLayout"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:visibility="gone"
+       android:background="#80000000">
+
+      <ProgressBar
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"/>
+   </FrameLayout>
+
+</RelativeLayout>
+

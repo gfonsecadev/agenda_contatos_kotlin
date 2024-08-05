@@ -1,6 +1,4 @@
 package com.example.minhaagenda.ui.fragments.addContacts
-
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,15 +20,19 @@ import com.example.minhaagenda.shared.PermissionsManager
 import com.example.minhaagenda.ui.main.MainActivity
 import com.example.minhaagendakotlin.R
 import com.example.minhaagendakotlin.databinding.FragmentAddContactBinding
-import java.io.File
-import java.io.FileOutputStream
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
 
 class AddContactFragment : Fragment() {
     private lateinit var binding: FragmentAddContactBinding
     private lateinit var layout:View
     private  lateinit var launcherPermissions: LauncherPermissions
     private  lateinit var launchersImage: LaunchersImage
-    private val viewModelAddContact : AddContactViewModel by viewModels(){  AddContactViewModelFactory(application = requireActivity().application) }
+    private val viewModelAddContact : AddContactViewModel by viewModels {  AddContactViewModelFactory(application = requireActivity().application) }
     private  var bitmapContactByteArray: ByteArray = ByteArray(1024)
 
     override fun onCreateView(
@@ -57,6 +59,7 @@ class AddContactFragment : Fragment() {
         saveContact()
 
     }
+
 
     //metodo que salva contatos
     private fun saveContact() {
@@ -86,15 +89,34 @@ class AddContactFragment : Fragment() {
             // onError: Função de callback a ser chamada em caso de erro
             viewModelAddContact.addContact(contact,
                 onSuccess = {
-                    // Muda o fragmento usando o NavController para o id nav_all
-                    (requireActivity() as MainActivity).changeFragmentNavController(R.id.nav_all)
+                    contactSaveSuccess()
                 },
                 onError = {
-                    // Mostra uma mensagem de erro usando Toast
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                    contactSaveError(it.message.toString())
                 }
             )
         }
+    }
+
+    //sucesso ao salvar
+    private fun contactSaveSuccess(){
+        //exibição do progress oculto
+        binding.progressLayout.visibility= View.VISIBLE
+
+        //coroutine para simular um carregamento para o progressBar através de um delay
+        GlobalScope.launch(Dispatchers.Main) {
+            delay(1000)
+            //ocultação do progress após o delayc com exibição de um snackBar após
+            binding.progressLayout.visibility = View.GONE
+            Snackbar.make(binding.root, "Contato salvo com sucesso!",Snackbar.LENGTH_SHORT).show()
+            // Muda o fragmento usando o NavController para o id nav_all
+            (  requireActivity() as MainActivity).changeFragmentNavController(R.id.nav_all)}
+    }
+
+    //Erro ao salvar
+    private fun contactSaveError(error:String){
+        // Mostra uma mensagem de erro usando Toast
+        Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
     }
 
 
@@ -136,7 +158,7 @@ class AddContactFragment : Fragment() {
         }
 
     //responsável por verificar mudanças no bitmap
-    fun observeBitmap(){
+    private fun observeBitmap(){
         viewModelAddContact.bitmapContact.observe(viewLifecycleOwner) { bitmap ->
             //se existit um bitmap
             bitmap?.let {
