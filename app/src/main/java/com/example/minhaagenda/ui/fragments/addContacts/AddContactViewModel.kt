@@ -15,6 +15,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.repositories.contact_repository.ContactRepository
+import com.example.minhaagenda.ui.fragments.allContacts.AllContactsViewModel
 import com.santalu.maskara.widget.MaskEditText
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -94,12 +95,18 @@ class AddContactViewModel(application: Application) : AndroidViewModel(applicati
 }
 
 
-//para utilizar parametros em view model é necessário criar uma factory
+// Fábrica de ViewModel para AllContactsViewModel
 class AddContactViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
+
+    // Método para criar instâncias do ViewModel
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+        // Verifica se a classe solicitada é AllContactsViewModel
         if (modelClass.isAssignableFrom(AddContactViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST") return AddContactViewModel(application) as T
+            // Retorna uma instância de AllContactsViewModel passando o Application como argumento
+            @Suppress("UNCHECKED_CAST") //suprime avisos de conversões de tipo não verificáveis em tempo de execução quando você sabe que são seguras
+            return AddContactViewModel(application) as T
         }
+        // Lança uma exceção se a classe não for reconhecida
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

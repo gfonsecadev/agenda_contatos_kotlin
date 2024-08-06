@@ -33,7 +33,7 @@ class AddContactFragment : Fragment() {
     private  lateinit var launcherPermissions: LauncherPermissions
     private  lateinit var launchersImage: LaunchersImage
     private val viewModelAddContact : AddContactViewModel by viewModels {  AddContactViewModelFactory(application = requireActivity().application) }
-    private  var bitmapContactByteArray: ByteArray = ByteArray(1024)
+    private  var bitmapContactByteArray: ByteArray? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

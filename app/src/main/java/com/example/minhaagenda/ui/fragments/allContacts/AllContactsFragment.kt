@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
@@ -13,76 +15,38 @@ import com.example.minhaagenda.shared.AppBarViewModel
 import com.example.minhaagenda.adapters.ContactAdapter
 import com.example.minhaagenda.animations.fade.FadeToViews.fadeInImmediately
 import com.example.minhaagenda.animations.fade.FadeToViews.fadeOut
-import com.example.minhaagenda.entities.Contact
-import com.example.minhaagenda.mappers.ContactMapper.contactListToAContactObjectList
+import com.example.minhaagenda.entities.ContactsObjetc
+import com.example.minhaagenda.mappers.ContactMapper.contactsListToAContactsObjectList
 import com.example.minhaagendakotlin.databinding.FragmentAllContactsBinding
 
 
 class AllContactsFragment : Fragment() {
 
+    private val viewModelAllContacts : AllContactsViewModel by viewModels() { AllContactsViewModelFactory(requireActivity().application) }
     private lateinit var binding: FragmentAllContactsBinding
+    private lateinit var listContactsObject:List<ContactsObjetc>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentAllContactsBinding.inflate(inflater)
 
-
-        val list = ArrayList<Contact>()
-        var contact = Contact()
-        contact.name = "BRUNO"
-        list.add(contact)
-        contact = Contact()
-        contact.name = "ALICIA"
-        list.add(contact)
-        contact = Contact()
-        contact.name = "ARLO"
-        list.add(contact)
-        contact = Contact()
-        contact.name = "ATENCIO"
-        list.add(contact)
-        contact = Contact()
-        contact.name = "ALBERTO"
-        list.add(contact)
-        contact = Contact()
-        contact.name = "EVERTON"
-        list.add(contact)
-        contact = Contact()
-        contact.name = "ERICA"
-        list.add(contact)
-        contact = Contact()
-        contact.name = "Gilmar"
-        list.add(contact)
-        contact = Contact()
-        contact.name = "PEDRO"
-        list.add(contact)
-        contact = Contact()
-        contact.name = "QUEREN"
-        list.add(contact)
-        contact = Contact()
-        contact.name = "ADRIANO"
-        list.add(contact)
-        contact = Contact()
-        contact.name = "CARLO"
-        list.add(contact)
-        contact = Contact()
-        contact.name = "CATIA"
-        list.add(contact)
-        contact = Contact()
-        contact.name = "DENILSON"
-        list.add(contact)
-        contact = Contact()
-        contact.name = "DAVID"
-        list.add(contact)
-
-        list.sortBy { it.name }
-
         // Configura o ViewModel para gerenciar o estado do AppBarLayout
         setupViewModelAppBar()
+        //Configura o observador do viewModel
+        setupViewModelAllContacts()
         //metodo com toda configuração do recyclerView
-        recyclerSettings(list)
+        //recyclerSettings(listContactsObject)
 
         return binding.root
 
+    }
+
+    private  fun setupViewModelAllContacts(){
+        viewModelAllContacts.getAllContacts()
+        viewModelAllContacts.listContactsObject.observe(viewLifecycleOwner) {
+                listContactsObject = it
+                recyclerSettings(listContactsObject)
+        }
     }
 
     //Configura o comportamento da AppBar pela ViewModel
@@ -94,12 +58,11 @@ class AllContactsFragment : Fragment() {
     }
 
     //configuração do recyclerView Principal
-    private fun recyclerSettings(list: ArrayList<Contact>){
+    private fun recyclerSettings(list: List<ContactsObjetc>){
         //o contactAdapter recebe uma lista de contact onde o mapper contactToContactObject converte para contactObjeto que é o exigido pelo adapter
-        val adapter = ContactAdapter(contactListToAContactObjectList(list), context)
+        val adapter = ContactAdapter(list, context)
 
-        binding.recyclerContact.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        binding.recyclerContact.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.recyclerContact.adapter = adapter
 
        //utilizo o scrollListener para ouvir mudanças no scroll do recyclerView

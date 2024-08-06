@@ -19,5 +19,5 @@ class Contact() {
     lateinit var email: String
 
     @ColumnInfo("imagem")
-    lateinit var image: ByteArray
+    var image: ByteArray? = null
 }

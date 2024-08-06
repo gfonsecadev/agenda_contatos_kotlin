@@ -1,6 +1,6 @@
 package com.example.minhaagenda.entities
 //classe passada para o adapter principal
-class ContactObjetc {
+class ContactsObjetc {
     lateinit var letter:String
     var contactList:List<Contact> = ArrayList<Contact>()
 }

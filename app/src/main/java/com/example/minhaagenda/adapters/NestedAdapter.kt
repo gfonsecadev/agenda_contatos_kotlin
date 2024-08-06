@@ -2,6 +2,8 @@ package com.example.minhaagenda.adapters
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -13,6 +15,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.minhaagenda.entities.Contact
+import com.example.minhaagenda.shared.ImageFormatConverter
 import com.example.minhaagendakotlin.R
 
 //este adapter será renderizado dentro do ContactAdapter por um recyclerView
@@ -45,7 +48,11 @@ class NestedAdapter(val list: List<Contact>,val context:Context?) :
         val color = Color.rgb(red, green, blue)
 
         // Aplicando a view
-        holder.view.setBackgroundColor(color)
+        contact.image?.let{
+            holder.view.background =  BitmapDrawable(context?.resources,ImageFormatConverter.byteArrayToImage(it))
+        } ?: holder.view.setBackgroundColor(color)
+
+
         holder.letterImage.text = contact.name.first().toString()
 
     }
