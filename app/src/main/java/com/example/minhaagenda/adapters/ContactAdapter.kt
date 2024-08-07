@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.minhaagenda.DividerRecyclerView.CustomDivider
-import com.example.minhaagenda.entities.ContactsObjetc
+import com.example.minhaagenda.entities.ContactsObject
 import com.example.minhaagendakotlin.databinding.RecyclerContactLayoutBinding
 
 //este adapter irá renderizar uma letra e a lista de contatos relacionado a esta letra para ser passada como parametro para o NestedAdapter aqui mesmo
 //ou seja a letra popula este adapter e a lista o adapter aninhado.
-class ContactAdapter(val listContact: List<ContactsObjetc>, val context: Context?) : RecyclerView.Adapter<ContactHolder>() {
+class ContactAdapter(val listContact: List<ContactsObject>, val context: Context?) : RecyclerView.Adapter<ContactHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactHolder {
         //retornamos para o holder um data binding do layout.
@@ -27,7 +27,7 @@ class ContactAdapter(val listContact: List<ContactsObjetc>, val context: Context
 
     //retorna o item de acordo com a posição passada
     //é utilizado no ScrollListener deste recyclerView para recuperar o item visivel no topo do recyclerView
-    fun getItem(position: Int): ContactsObjetc {
+    fun getItem(position: Int): ContactsObject {
         return listContact.get(position)
     }
 

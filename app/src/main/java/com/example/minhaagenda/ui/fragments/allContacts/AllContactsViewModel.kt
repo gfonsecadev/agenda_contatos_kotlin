@@ -7,30 +7,26 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.minhaagenda.entities.Contact
-import com.example.minhaagenda.entities.ContactsObjetc
+import com.example.minhaagenda.entities.ContactsObject
 import com.example.minhaagenda.mappers.ContactMapper
 import com.example.minhaagenda.repositories.contact_repository.ContactRepository
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class AllContactsViewModel(application: Application) : AndroidViewModel(application) {
     var contactDatabase = ContactRepository(application).contactDatabase
 
-    private var _listContactsObject = MutableLiveData<List<ContactsObjetc>>()
-    val listContactsObject: MutableLiveData<List<ContactsObjetc>> get() = _listContactsObject
+    private var _listContactsObject = MutableLiveData<List<ContactsObject>>()
+    val listContactsObject: MutableLiveData<List<ContactsObject>> get() = _listContactsObject
 
 
     fun getAllContacts(): Job {
        return viewModelScope.launch {
-          var contacts = contactDatabase.getAllContact()
+          var contacts = contactDatabase.getAllContact().sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER){it.name})
            _listContactsObject.value = ContactMapper.contactsListToAContactsObjectList(contacts)
 
        }
     }
-
 
 
 }

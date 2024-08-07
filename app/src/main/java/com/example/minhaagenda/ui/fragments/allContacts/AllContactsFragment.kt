@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
@@ -15,8 +14,7 @@ import com.example.minhaagenda.shared.AppBarViewModel
 import com.example.minhaagenda.adapters.ContactAdapter
 import com.example.minhaagenda.animations.fade.FadeToViews.fadeInImmediately
 import com.example.minhaagenda.animations.fade.FadeToViews.fadeOut
-import com.example.minhaagenda.entities.ContactsObjetc
-import com.example.minhaagenda.mappers.ContactMapper.contactsListToAContactsObjectList
+import com.example.minhaagenda.entities.ContactsObject
 import com.example.minhaagendakotlin.databinding.FragmentAllContactsBinding
 
 
@@ -24,7 +22,7 @@ class AllContactsFragment : Fragment() {
 
     private val viewModelAllContacts : AllContactsViewModel by viewModels() { AllContactsViewModelFactory(requireActivity().application) }
     private lateinit var binding: FragmentAllContactsBinding
-    private lateinit var listContactsObject:List<ContactsObjetc>
+    private lateinit var listContactsObject:List<ContactsObject>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -58,7 +56,7 @@ class AllContactsFragment : Fragment() {
     }
 
     //configuração do recyclerView Principal
-    private fun recyclerSettings(list: List<ContactsObjetc>){
+    private fun recyclerSettings(list: List<ContactsObject>){
         //o contactAdapter recebe uma lista de contact onde o mapper contactToContactObject converte para contactObjeto que é o exigido pelo adapter
         val adapter = ContactAdapter(list, context)
 
