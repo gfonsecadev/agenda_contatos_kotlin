@@ -14,7 +14,7 @@ import com.example.minhaagenda.shared.AppBarViewModel
 import com.example.minhaagenda.adapters.ContactAdapter
 import com.example.minhaagenda.animations.fade.FadeToViews.fadeInImmediately
 import com.example.minhaagenda.animations.fade.FadeToViews.fadeOut
-import com.example.minhaagenda.entities.ContactsObject
+import com.example.minhaagenda.entities.ContactListByInitial
 import com.example.minhaagendakotlin.databinding.FragmentAllContactsBinding
 
 
@@ -22,7 +22,7 @@ class AllContactsFragment : Fragment() {
 
     private val viewModelAllContacts : AllContactsViewModel by viewModels() { AllContactsViewModelFactory(requireActivity().application) }
     private lateinit var binding: FragmentAllContactsBinding
-    private lateinit var listContactsObject:List<ContactsObject>
+    private lateinit var listContactListByInitial:List<ContactListByInitial>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -33,7 +33,7 @@ class AllContactsFragment : Fragment() {
         //Configura o observador do viewModel
         setupViewModelAllContacts()
         //metodo com toda configuração do recyclerView
-        //recyclerSettings(listContactsObject)
+        //recyclerSettings(listContactListByInitial)
 
         return binding.root
 
@@ -41,9 +41,9 @@ class AllContactsFragment : Fragment() {
 
     private  fun setupViewModelAllContacts(){
         viewModelAllContacts.getAllContacts()
-        viewModelAllContacts.listContactsObject.observe(viewLifecycleOwner) {
-                listContactsObject = it
-                recyclerSettings(listContactsObject)
+        viewModelAllContacts.listContactListByInitial.observe(viewLifecycleOwner) {
+                listContactListByInitial = it
+                recyclerSettings(listContactListByInitial)
         }
     }
 
@@ -56,7 +56,7 @@ class AllContactsFragment : Fragment() {
     }
 
     //configuração do recyclerView Principal
-    private fun recyclerSettings(list: List<ContactsObject>){
+    private fun recyclerSettings(list: List<ContactListByInitial>){
         //o contactAdapter recebe uma lista de contact onde o mapper contactToContactObject converte para contactObjeto que é o exigido pelo adapter
         val adapter = ContactAdapter(list, context)
 
