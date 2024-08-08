@@ -1,4 +1,4 @@
-package com.example.minhaagenda.ui.fragments.addContacts
+package com.example.minhaagenda.activities.main.fragments.addContacts
 
 import android.app.Application
 import android.graphics.Bitmap
@@ -15,7 +15,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.repositories.contact_repository.ContactRepository
-import com.example.minhaagenda.ui.fragments.allContacts.AllContactsViewModel
+import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsViewModel
 import com.santalu.maskara.widget.MaskEditText
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -28,15 +28,15 @@ class AddContactViewModel(application: Application) : AndroidViewModel(applicati
 
     private val repository = ContactRepository(application)
 
-    fun addContact(contact: Contact, onSuccess: () -> Unit, onError: (Exception) -> Unit) {
+    fun addContact(contact: Contact, onSuccess: (idSaved: Long) -> Unit, onError: (Exception) -> Unit) {
         // Inicia uma coroutine no escopo do ViewModel
         viewModelScope.launch {
             try {
                 // Tenta inserir o contato no repositório
-                repository.insertContact(contact)
+                val id = repository.insertContact(contact)
                 //delay para exibir o Snackbar
                 // Se bem-sucedido, chama a função onSuccess
-                onSuccess()
+                onSuccess(id)
             } catch (e: Exception) {
                 // Se ocorrer uma exceção, chama a função onError passando a exceção
                 onError(e)

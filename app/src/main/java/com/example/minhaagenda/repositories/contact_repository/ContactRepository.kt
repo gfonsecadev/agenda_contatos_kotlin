@@ -11,7 +11,7 @@ class ContactRepository(context: Context) {
     //recuperação da instância do database criado retornando o dao
     var contactDatabase: ContactDao = ContactDatabase.getContactDatabase(context).contactDAO()
 
-    fun insertContact(contact: Contact){
+    fun insertContact(contact: Contact):Long{
         return contactDatabase.insertContact(contact)
     }
 

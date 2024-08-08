@@ -1,4 +1,4 @@
-package com.example.minhaagenda.ui.fragments.exitContacts
+package com.example.minhaagenda.activities.main.fragments.exitContacts
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

@@ -1,4 +1,4 @@
-package com.example.minhaagenda.ui.fragments.allContacts
+package com.example.minhaagenda.activities.main.fragments.allContacts
 
 import android.os.Bundle
 import android.view.LayoutInflater

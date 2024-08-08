@@ -1,4 +1,5 @@
-package com.example.minhaagenda.ui.fragments.addContacts
+package com.example.minhaagenda.activities.main.fragments.addContacts
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +18,7 @@ import com.example.minhaagenda.shared.ImageFormatConverter
 import com.example.minhaagenda.shared.LauncherPermissions
 import com.example.minhaagenda.shared.LaunchersImage
 import com.example.minhaagenda.shared.PermissionsManager
-import com.example.minhaagenda.ui.main.MainActivity
+import com.example.minhaagenda.activities.showContact.ShowContactActivity
 import com.example.minhaagendakotlin.R
 import com.example.minhaagendakotlin.databinding.FragmentAddContactBinding
 import com.google.android.material.snackbar.Snackbar
@@ -88,8 +89,8 @@ class AddContactFragment : Fragment() {
             // onSuccess: Função de callback a ser chamada em caso de sucesso
             // onError: Função de callback a ser chamada em caso de erro
             viewModelAddContact.addContact(contact,
-                onSuccess = {
-                    contactSaveSuccess()
+                onSuccess = { idSaved->
+                    contactSaveSuccess(idSaved.toInt())
                 },
                 onError = {
                     contactSaveError(it.message.toString())
@@ -99,18 +100,22 @@ class AddContactFragment : Fragment() {
     }
 
     //sucesso ao salvar
-    private fun contactSaveSuccess(){
+    private fun contactSaveSuccess(contactId: Int) {
         //exibição do progress oculto
-        binding.progressLayout.visibility= View.VISIBLE
+        binding.progressLayout.visibility = View.VISIBLE
 
         //coroutine para simular um carregamento para o progressBar através de um delay
         GlobalScope.launch(Dispatchers.Main) {
             delay(1000)
             //ocultação do progress após o delayc com exibição de um snackBar após
             binding.progressLayout.visibility = View.GONE
-            Snackbar.make(binding.root, "Contato salvo com sucesso!",Snackbar.LENGTH_SHORT).show()
-            // Muda o fragmento usando o NavController para o id nav_all
-            (  requireActivity() as MainActivity).changeFragmentNavController(R.id.nav_all)}
+            Snackbar.make(binding.root, "Contato salvo com sucesso!", Snackbar.LENGTH_SHORT).show()
+
+            val intent = Intent(requireActivity(), ShowContactActivity::class.java)
+            intent.putExtra("contact_id", contactId)
+            startActivity(intent)
+            requireActivity().finish()
+        }
     }
 
     //Erro ao salvar

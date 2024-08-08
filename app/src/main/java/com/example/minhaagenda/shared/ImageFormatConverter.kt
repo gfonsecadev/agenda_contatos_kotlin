@@ -9,7 +9,7 @@ import java.util.Base64.Decoder
 object ImageFormatConverter {
     fun imageToByteArray(image: Bitmap) : ByteArray{
         var baos = ByteArrayOutputStream()
-        image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        image.compress(Bitmap.CompressFormat.JPEG, 30, baos)
         return baos.toByteArray()
     }
 

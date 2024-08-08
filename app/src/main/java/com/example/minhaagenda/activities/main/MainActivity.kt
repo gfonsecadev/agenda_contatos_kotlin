@@ -1,4 +1,4 @@
-package com.example.minhaagenda.ui.main
+package com.example.minhaagenda.activities.main
 
 import android.app.Dialog
 import android.graphics.Bitmap
@@ -256,9 +256,9 @@ class MainActivity : AppCompatActivity() {
         val navView: NavigationView = binding.navView
         navView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_all -> changeFragmentNavController(R.id.nav_all)
-                R.id.nav_config -> changeFragmentNavController(R.id.nav_config)
-                R.id.nav_exit -> changeFragmentNavController(R.id.nav_exit)
+                R.id.nav_item_all -> changeFragmentNavController(R.id.nav_all)
+                R.id.nav_item_add_contact -> changeFragmentNavController(R.id.nav_add_contact)
+                R.id.nav_item_exit -> changeFragmentNavController(R.id.nav_exit)
             }
             true
         }

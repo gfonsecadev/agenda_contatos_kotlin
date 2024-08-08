@@ -10,7 +10,7 @@ import com.example.minhaagenda.entities.Contact
 @Dao
 interface ContactDao {
     @Insert
-    fun insertContact(contact:Contact)
+    fun insertContact(contact:Contact):Long
 
     @Update
     fun updateContact(contact:Contact)

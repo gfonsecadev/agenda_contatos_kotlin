@@ -50,6 +50,10 @@ android {
         implementation(libs.androidx.navigation.ui.ktx)
         // Material Design
         implementation(libs.material)
+        implementation(libs.androidx.constraintlayout)
+        implementation(libs.androidx.lifecycle.livedata.ktx)
+        implementation(libs.androidx.lifecycle.viewmodel.ktx)
+        implementation(libs.androidx.navigation.fragment.ktx)
         // Testes
         testImplementation(libs.junit)
         androidTestImplementation(libs.androidx.junit)

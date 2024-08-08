@@ -1,4 +1,4 @@
-package com.example.minhaagenda.ui.fragments.allContacts
+package com.example.minhaagenda.activities.main.fragments.allContacts
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -22,7 +22,7 @@ class AllContactsViewModel(application: Application) : AndroidViewModel(applicat
 
     fun getAllContacts(): Job {
        return viewModelScope.launch {
-          var contacts = contactDatabase.getAllContact().sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER){it.name})
+          val contacts = contactDatabase.getAllContact().sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER){it.name})
            _listContactListByInitial.value = ContactMapper.contactsListToAContactsObjectList(contacts)
 
        }
