@@ -1,6 +1,7 @@
 package com.example.minhaagenda.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -10,10 +11,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.example.minhaagenda.activities.showContact.ShowContactActivity
 import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.shared.ImageFormatConverter
 import com.example.minhaagendakotlin.R
@@ -39,6 +42,7 @@ class NestedAdapter(val list: List<Contact>,val context:Context?) :
         var contact = list.get(position)
         holder.name.text = contact.name
 
+
         //gerando cores r,g,b aleatórias.
         val red = (0..255).random()
         val green = (0..255).random()
@@ -50,10 +54,16 @@ class NestedAdapter(val list: List<Contact>,val context:Context?) :
         // Aplicando a view
         contact.image?.let{
             holder.view.background =  BitmapDrawable(context?.resources,ImageFormatConverter.byteArrayToImage(it))
-        } ?: holder.view.setBackgroundColor(color)
+        } ?: run { holder.view.setBackgroundColor(color)
+               holder.letterImage.text = contact.name.first().toString()}
 
+            holder.layoutContact.setOnClickListener{
+                val intent = Intent(context,ShowContactActivity::class.java)
+                intent.putExtra("contact_id",contact.id)
+                context?.startActivity(intent)
 
-        holder.letterImage.text = contact.name.first().toString()
+            }
+
 
     }
 
@@ -64,6 +74,6 @@ class HolderNestedAdaper(itemView: View,context: Context?) : ViewHolder(itemView
     var view = itemView.findViewById<View>(R.id.contact_image)//circulo ao lado do contato
     var letterImage = itemView.findViewById<TextView>(R.id.letterImage)//letra do nome do contato dentro do circulo
     var name = itemView.findViewById<TextView>(R.id.contact_name)// nome do contato
-
+    var layoutContact = itemView.findViewById<LinearLayout>(R.id.recycler_nested_layout)
 
 }

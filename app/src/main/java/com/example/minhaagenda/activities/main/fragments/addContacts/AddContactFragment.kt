@@ -1,4 +1,7 @@
 package com.example.minhaagenda.activities.main.fragments.addContacts
+import android.app.Activity
+import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,10 +11,12 @@ import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment
 import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.shared.AppBarViewModel
 import com.example.minhaagenda.shared.ImageFormatConverter
@@ -28,7 +33,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-class AddContactFragment : Fragment() {
+class AddContactFragment() : Fragment() {
     private lateinit var binding: FragmentAddContactBinding
     private lateinit var layout:View
     private  lateinit var launcherPermissions: LauncherPermissions
@@ -48,7 +53,6 @@ class AddContactFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
          // Configura o ViewModel para gerenciar o estado do AppBarLayout
         setupViewModelAppBar()
          //inicia os registerForActivityResult para permissôes e seleção de imagens(câmera e galeria) neste fragment
@@ -57,7 +61,8 @@ class AddContactFragment : Fragment() {
         setupImageContact()
          //Abre o teclado virtual para que o usuário possa começar a digitar.
          openKeyboard()
-        saveContact()
+         saveContact()
+         cancelSave()
 
     }
 
@@ -96,6 +101,12 @@ class AddContactFragment : Fragment() {
                     contactSaveError(it.message.toString())
                 }
             )
+        }
+    }
+
+    private fun cancelSave(){
+        binding.buttonCancel.setOnClickListener{
+            goAllContactFragment()
         }
     }
 
@@ -231,5 +242,18 @@ class AddContactFragment : Fragment() {
             val keyboard = requireActivity().getSystemService(InputMethodManager::class.java)
             keyboard?.showSoftInput(binding.editName, InputMethodManager.SHOW_IMPLICIT)
         }, 500) // Reduzir o atraso para 500 ms
+    }
+
+    private fun backPressed(){
+        requireActivity().onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                goAllContactFragment()
+            }
+
+        })
+    }
+
+    private fun goAllContactFragment(){
+        startActivity(Intent(requireActivity(),AllContactsFragment::class.java))
     }
 }

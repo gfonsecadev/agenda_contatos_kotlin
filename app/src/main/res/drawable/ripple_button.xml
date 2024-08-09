@@ -1,3 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ripple xmlns:android="http://schemas.android.com/apk/res/android" android:color="#7A6C6C">
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/main_orange"> <!-- cor a que a ser mostrada com ondulação no ripple -->
+    <!-- Camada de máscara para limitar o ripple -->
+    <item android:id="@android:id/mask">
+        <shape >
+            <corners android:radius="20dp"/>
+            <solid android:color="#872202"/>
+        </shape>
+    </item>
 </ripple>

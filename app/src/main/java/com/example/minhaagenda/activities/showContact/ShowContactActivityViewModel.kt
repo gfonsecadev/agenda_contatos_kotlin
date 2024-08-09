@@ -22,6 +22,15 @@ class ShowContactActivityViewModel(application: Application) : AndroidViewModel(
             _contact.value = repositoryContact.getContact(id)
         }
     }
+
+    fun getDeleteContact(){
+        viewModelScope.launch {
+            _contact.value?.let {
+                repositoryContact.deleteContact(it)
+            }
+
+        }
+    }
 }
 
 class ShowContactActivityViewModelFactory(private val application: Application) : ViewModelProvider.Factory{

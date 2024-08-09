@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
@@ -39,6 +40,7 @@ class AllContactsFragment : Fragment() {
 
     }
 
+    //Configuração do viewModel deste fragment
     private  fun setupViewModelAllContacts(){
         viewModelAllContacts.getAllContacts()
         viewModelAllContacts.listContactListByInitial.observe(viewLifecycleOwner) {
@@ -79,12 +81,18 @@ class AllContactsFragment : Fragment() {
                 if(newState == RecyclerView.SCROLL_STATE_DRAGGING || newState == RecyclerView.SCROLL_STATE_SETTLING){
                     fadeInImmediately(binding.textLetter)
                 }else{
-                    fadeOut(binding.textLetter,500)
+                    fadeOut(binding.textLetter,200)
                 }
 
             }
+
         })
         
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModelAllContacts.getAllContacts()
     }
 
 

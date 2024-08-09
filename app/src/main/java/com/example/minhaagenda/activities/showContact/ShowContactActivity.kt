@@ -34,8 +34,8 @@ class ShowContactActivity : AppCompatActivity() {
            callFragment()
        }
        binding.clickDelete.setOnClickListener{
-           Toast.makeText(this,"Excluir",Toast.LENGTH_SHORT).show()
-
+           viewModelShowContact.getDeleteContact()
+           finish()
        }
    }
     private fun callFragment(){
