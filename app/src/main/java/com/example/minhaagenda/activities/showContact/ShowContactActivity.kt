@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.minhaagenda.activities.main.fragments.addContacts.AddContactFragment
+import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.shared.ImageFormatConverter
 import com.example.minhaagendakotlin.R
 import com.example.minhaagendakotlin.databinding.ActivityShowContactBinding
@@ -14,7 +15,7 @@ class ShowContactActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityShowContactBinding
     private val viewModelShowContact:ShowContactActivityViewModel by viewModels{ ShowContactActivityViewModelFactory(application)}
-
+    private lateinit var  contactReceived:Contact
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityShowContactBinding.inflate(layoutInflater)
@@ -39,8 +40,10 @@ class ShowContactActivity : AppCompatActivity() {
        }
    }
     private fun callFragment(){
+        val fragment = AddContactFragment().hasDataToUpdate(contactReceived)
         val fragmentTransition = supportFragmentManager.beginTransaction()
         fragmentTransition.replace(R.id.container, AddContactFragment())
+        fragmentTransition.setCustomAnimations(R.anim.enter_fragment,R.anim.close_fragment)
         fragmentTransition.commit()
     }
 
@@ -54,6 +57,8 @@ class ShowContactActivity : AppCompatActivity() {
     fun observeViewModel(){
         viewModelShowContact.contact.observe(this){
             contact->
+            contactReceived = contact
+
             contact.image?.let {
                 binding.showContactImage.setImageBitmap(ImageFormatConverter.byteArrayToImage(it))
             }

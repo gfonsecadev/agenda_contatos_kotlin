@@ -37,6 +37,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 class MainActivity : AppCompatActivity() {
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navView: NavigationView
     private lateinit var binding: ActivityMainBinding
     private lateinit var controller: NavController
     private lateinit var launcherPermissions: LauncherPermissions
@@ -57,8 +58,6 @@ class MainActivity : AppCompatActivity() {
         setupToolbar()
         // Configura o DrawerLayout e o ActionBarDrawerToggle para o menu lateral
         setupDrawerLayout()
-        // Configura o navView para exibir o fragment do  item clicado
-        setupNavView()
         // Atualiza o textView do NavHeader com informações do dispositivo
         setupDataDevice()
         //inicilalizando preferencias do usuário
@@ -241,24 +240,39 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Troca o fragmento de acordo com a opção do menu selecionada
-    fun changeFragmentNavController(fragmentId: Int) {
+    fun changeFragmentNavController(fragmentId: Int, itemId: Int? = null) {
         val navOptions = NavOptions.Builder()
             .setEnterAnim(R.anim.enter_fragment)
             .setExitAnim(R.anim.close_fragment)
             .build()
         controller = findNavController(R.id.nav_host_fragment_content_main)
-        controller.navigate(fragmentId, null, navOptions)
+        controller.navigate(fragmentId, null,navOptions)
         drawerLayout.closeDrawer(GravityCompat.START)
+        focusItem(itemId)
+    }
+
+    //retorna o foco no item chamado
+    fun focusItem(itemId: Int?){
+        itemId?.let { navView.menu.findItem(it).isChecked = true }
     }
 
     // Configura o NavigationView (menu lateral)
     private fun setupNavView() {
-        val navView: NavigationView = binding.navView
+        navView = binding.navView
         navView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_item_all -> changeFragmentNavController(R.id.nav_all)
-                R.id.nav_item_add_contact -> changeFragmentNavController(R.id.nav_add_contact)
-                R.id.nav_item_exit -> changeFragmentNavController(R.id.nav_exit)
+                R.id.nav_item_all -> {
+                    changeFragmentNavController(R.id.nav_all)
+                    focusItem(item.itemId)
+                }
+                R.id.nav_item_add_contact -> {
+                    changeFragmentNavController(R.id.nav_add_contact)
+                    focusItem(item.itemId)
+                }
+                R.id.nav_item_exit -> {
+                    changeFragmentNavController(R.id.nav_exit)
+                    focusItem(item.itemId)
+                }
             }
             true
         }
@@ -290,5 +304,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main2, menu)
         return true
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // Configura o navView para exibir o fragment do  item clicado
+        setupNavView()
+        //seleciona o focu na inicialização da activity no item que mostra todos os contatos
+        focusItem(R.id.nav_item_all)
     }
 }

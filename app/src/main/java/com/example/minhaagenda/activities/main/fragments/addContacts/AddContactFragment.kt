@@ -1,9 +1,7 @@
 package com.example.minhaagenda.activities.main.fragments.addContacts
-import android.app.Activity
-import android.app.Application
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,14 +14,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment
+import com.example.minhaagenda.activities.main.MainActivity
+import com.example.minhaagenda.activities.showContact.ShowContactActivity
 import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.shared.AppBarViewModel
+import com.example.minhaagenda.shared.EditableToString
+import com.example.minhaagenda.shared.EditableToString.editableToString
 import com.example.minhaagenda.shared.ImageFormatConverter
 import com.example.minhaagenda.shared.LauncherPermissions
 import com.example.minhaagenda.shared.LaunchersImage
 import com.example.minhaagenda.shared.PermissionsManager
-import com.example.minhaagenda.activities.showContact.ShowContactActivity
 import com.example.minhaagendakotlin.R
 import com.example.minhaagendakotlin.databinding.FragmentAddContactBinding
 import com.google.android.material.snackbar.Snackbar
@@ -33,13 +33,39 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-class AddContactFragment() : Fragment() {
+class AddContactFragment : Fragment() {
+    companion object {
+        @JvmStatic
+        fun hasDataToUpdate(contact: Contact): AddContactFragment {
+            val fragment = AddContactFragment()
+            val args = Bundle()
+            args.putParcelable("contactToUpdate", contact)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
     private lateinit var binding: FragmentAddContactBinding
     private lateinit var layout:View
     private  lateinit var launcherPermissions: LauncherPermissions
     private  lateinit var launchersImage: LaunchersImage
     private val viewModelAddContact : AddContactViewModel by viewModels {  AddContactViewModelFactory(application = requireActivity().application) }
     private  var bitmapContactByteArray: ByteArray? = null
+
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            // Utiliza o método genérico para obter o Parcelable do Bundle
+            val contact = it.getParcelable<Contact>("contactToUpdate")
+            contact?.let {
+                viewModelAddContact.toUpdate(it)
+            }
+        }
+    }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +74,8 @@ class AddContactFragment() : Fragment() {
         binding = FragmentAddContactBinding.inflate(inflater, container, false)
 
         return binding.root
+
+
     }
 
 
@@ -63,6 +91,7 @@ class AddContactFragment() : Fragment() {
          openKeyboard()
          saveContact()
          cancelSave()
+         backPressed()
 
     }
 
@@ -104,11 +133,14 @@ class AddContactFragment() : Fragment() {
         }
     }
 
-    private fun cancelSave(){
-        binding.buttonCancel.setOnClickListener{
+    private fun cancelSave() {
+        // Configura um listener para o botão "Cancelar"
+        binding.buttonCancel.setOnClickListener {
+            // Quando o botão é clicado, chama o método goAllContactFragment que retorna ao fragment que mostra todos os contatos
             goAllContactFragment()
         }
     }
+
 
     //sucesso ao salvar
     private fun contactSaveSuccess(contactId: Int) {
@@ -141,6 +173,18 @@ class AddContactFragment() : Fragment() {
         hasPermissionsFragment()
         takeImageFragment()
     }
+
+    private fun hasDataToUpdateFragment(){
+        viewModelAddContact.contactToUpdate.observe(viewLifecycleOwner) {
+            contact->
+            contact?.let {
+                binding.editName.text = editableToString(contact.name)
+                binding.editPhone.text = editableToString(contact.phone)
+                binding.editEmail.text = editableToString(contact.email)
+            }
+        }
+    }
+
 
     //register para pedir permissão
     private fun hasPermissionsFragment() {
@@ -244,16 +288,33 @@ class AddContactFragment() : Fragment() {
         }, 500) // Reduzir o atraso para 500 ms
     }
 
-    private fun backPressed(){
-        requireActivity().onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true){
+    // Método que configura o comportamento ao pressionar o botão "voltar"
+    private fun backPressed() {
+        // Adiciona um callback ao OnBackPressedDispatcher da atividade
+        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            // Método chamado quando o botão "voltar" é pressionado
             override fun handleOnBackPressed() {
+                // Chama o método goAllContactFragment para navegação
                 goAllContactFragment()
             }
-
         })
     }
 
-    private fun goAllContactFragment(){
-        startActivity(Intent(requireActivity(),AllContactsFragment::class.java))
+    // Método para navegar para o fragmento "AllContactsFragment"
+    private fun goAllContactFragment() {
+        // Verifica se a atividade atual é uma instância de MainActivity
+        if (requireActivity() is MainActivity) {
+            // Cast para MainActivity e chama o método para alterar o fragmento
+            (requireActivity() as MainActivity).changeFragmentNavController(R.id.nav_all, R.id.nav_item_all)
+        } else {
+            // Se a atividade atual não for MainActivity, inicia uma nova instância de MainActivity
+            startActivity(Intent(requireActivity(), MainActivity::class.java))
+            // Finaliza a atividade atual para evitar empilhamento
+            requireActivity().finish()
+        }
     }
+
+
+
+
 }

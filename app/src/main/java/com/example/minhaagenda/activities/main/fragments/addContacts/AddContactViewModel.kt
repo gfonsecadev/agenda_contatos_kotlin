@@ -15,9 +15,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.repositories.contact_repository.ContactRepository
-import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsViewModel
-import com.santalu.maskara.widget.MaskEditText
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class AddContactViewModel(application: Application) : AndroidViewModel(application) {
@@ -25,6 +22,8 @@ class AddContactViewModel(application: Application) : AndroidViewModel(applicati
     private val _bitmapContact = MutableLiveData<Bitmap>()
     val bitmapContact: MutableLiveData<Bitmap> get() = _bitmapContact
 
+    private val _contactToUpdate = MutableLiveData<Contact>()
+    val contactToUpdate: MutableLiveData<Contact> get () = _contactToUpdate
 
     private val repository = ContactRepository(application)
 
@@ -89,6 +88,11 @@ class AddContactViewModel(application: Application) : AndroidViewModel(applicati
             _bitmapContact.value = image as Bitmap
         }
 
+    }
+
+
+    fun toUpdate(contact: Contact){
+        _contactToUpdate.value = contact
     }
 
 
