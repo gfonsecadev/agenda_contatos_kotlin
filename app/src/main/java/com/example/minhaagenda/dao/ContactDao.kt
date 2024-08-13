@@ -19,7 +19,7 @@ interface ContactDao {
     fun deleteContact(contact: Contact)
 
     @Query("SELECT * FROM Contato WHERE id = :id")
-    fun getContact(id:Int):Contact
+    fun getContact(id:Long):Contact
 
     @Query("SELECT * FROM Contato")
     fun getAllContact(): List<Contact>

@@ -5,12 +5,11 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.io.Serializable
 
 @Entity("Contato")
 class Contact() : Parcelable {
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
+    var id: Long = 0
 
     @ColumnInfo("nome")
     lateinit var name:String
@@ -25,7 +24,7 @@ class Contact() : Parcelable {
     var image: ByteArray? = null
 
     constructor(parcel: Parcel) : this() {
-        id = parcel.readInt()
+        id = parcel.readInt().toLong()
         name = parcel.readString().toString()
         phone = parcel.readString().toString()
         email = parcel.readString().toString()
@@ -33,7 +32,7 @@ class Contact() : Parcelable {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeInt(id)
+        parcel.writeLong(id)
         parcel.writeString(name)
         parcel.writeString(phone)
         parcel.writeString(email)

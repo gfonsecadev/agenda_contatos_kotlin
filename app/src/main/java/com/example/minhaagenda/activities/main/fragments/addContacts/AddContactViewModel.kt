@@ -27,19 +27,46 @@ class AddContactViewModel(application: Application) : AndroidViewModel(applicati
 
     private val repository = ContactRepository(application)
 
-    fun addContact(contact: Contact, onSuccess: (idSaved: Long) -> Unit, onError: (Exception) -> Unit) {
+    /**
+     * Adiciona ou atualiza um contato no repositório.
+     *
+     * @param contact O contato a ser adicionado ou atualizado.
+     * @param onSuccess Função de callback a ser chamada quando a operação for bem-sucedida, recebendo o ID do contato salvo ou atualizado
+     * @param onError Função de callback a ser chamada quando ocorrer um erro, recebendo a exceção gerada.
+     */
+    fun addOrUpdateContact(contact: Contact, onSuccess: (idSaved: Long) -> Unit, onError: (Exception) -> Unit) {
         // Inicia uma coroutine no escopo do ViewModel
         viewModelScope.launch {
             try {
-                // Tenta inserir o contato no repositório
-                val id = repository.insertContact(contact)
-                //delay para exibir o Snackbar
-                // Se bem-sucedido, chama a função onSuccess
+                // Tenta adicionar ou atualizar o contato no repositório e obtém o ID salvo
+                val id = saveContact(contact)
+
+                // (Opcional) Adiciona um delay se precisar exibir um Snackbar ou outro feedback visual
+                // delay(1000) // Exemplo de delay (se necessário)
+
+                // Se a operação for bem-sucedida, chama a função onSuccess passando o ID do contato salvo
                 onSuccess(id)
             } catch (e: Exception) {
-                // Se ocorrer uma exceção, chama a função onError passando a exceção
+                // Se ocorrer uma exceção durante a operação, chama a função onError passando a exceção
                 onError(e)
             }
+        }
+    }
+
+    /**
+     * Determina se deve atualizar um contato existente ou inserir um novo.
+     *
+     * @param contact O contato a ser salvo.
+     * @return O ID do contato salvo (seja inserido ou atualizado).
+     */
+    fun saveContact(contact: Contact): Long {
+        return if (contact.id > 0) {
+            // Atualiza o contato existente e retorna o ID do contato
+            repository.updateContact(contact)
+            return contact.id.toLong()
+        } else {
+            // Insere um novo contato e retorna o ID do novo contato(o metodo insertContact tem como retorno o id do contato salvo)
+            repository.insertContact(contact)
         }
     }
 

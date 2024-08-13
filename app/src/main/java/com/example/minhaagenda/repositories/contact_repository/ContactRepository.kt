@@ -15,7 +15,7 @@ class ContactRepository(context: Context) {
         return contactDatabase.insertContact(contact)
     }
 
-    fun getContact(id: Int): Contact {
+    fun getContact(id: Long): Contact {
         return contactDatabase.getContact(id)
     }
 

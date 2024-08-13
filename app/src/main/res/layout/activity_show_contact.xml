@@ -31,9 +31,9 @@
                 android:scaleType="centerCrop"
                 android:background="@color/main_orange"/>
             <TextView
+                android:id="@+id/show_contact_letter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="G"
                 android:textSize="35sp"
                 android:layout_gravity="center"
                 android:textStyle="bold"

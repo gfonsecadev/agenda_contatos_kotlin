@@ -7,14 +7,28 @@ import java.io.ByteArrayOutputStream
 import java.util.Base64.Decoder
 
 object ImageFormatConverter {
-    fun imageToByteArray(image: Bitmap) : ByteArray{
-        var baos = ByteArrayOutputStream()
-        image.compress(Bitmap.CompressFormat.JPEG, 30, baos)
-        return baos.toByteArray()
+    fun imageToByteArray(image: Bitmap): ByteArray {
+        return try {
+            val baos = ByteArrayOutputStream()
+            image.compress(Bitmap.CompressFormat.JPEG, 10, baos)
+            baos.toByteArray()
+        } catch (e: Exception) {
+            // Log de erro ou tratamento apropriado
+            e.printStackTrace()
+            ByteArray(0) // Retorna um array de bytes vazio em caso de falha
+        }
     }
 
-    fun byteArrayToImage(byteArrayImage: ByteArray) : Bitmap{
-        return BitmapFactory.decodeByteArray(byteArrayImage,0,byteArrayImage.size)
+
+    fun byteArrayToImage(byteArrayImage: ByteArray): Bitmap? {
+        return try {
+            BitmapFactory.decodeByteArray(byteArrayImage, 0, byteArrayImage.size)
+        } catch (e: Exception) {
+            // Log de erro ou tratamento apropriado
+            e.printStackTrace()
+            null // Retorna null em caso de falha
+        }
     }
+
 
 }

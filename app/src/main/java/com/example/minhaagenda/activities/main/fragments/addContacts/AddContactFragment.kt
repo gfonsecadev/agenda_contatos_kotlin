@@ -1,7 +1,7 @@
 package com.example.minhaagenda.activities.main.fragments.addContacts
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,86 +14,95 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.minhaagenda.activities.main.MainActivity
 import com.example.minhaagenda.activities.showContact.ShowContactActivity
 import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.shared.AppBarViewModel
-import com.example.minhaagenda.shared.EditableToString
-import com.example.minhaagenda.shared.EditableToString.editableToString
 import com.example.minhaagenda.shared.ImageFormatConverter
 import com.example.minhaagenda.shared.LauncherPermissions
 import com.example.minhaagenda.shared.LaunchersImage
 import com.example.minhaagenda.shared.PermissionsManager
+import com.example.minhaagenda.shared.stringToEditable
 import com.example.minhaagendakotlin.R
 import com.example.minhaagendakotlin.databinding.FragmentAddContactBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
 class AddContactFragment : Fragment() {
-    companion object {
-        @JvmStatic
-        fun hasDataToUpdate(contact: Contact): AddContactFragment {
-            val fragment = AddContactFragment()
-            val args = Bundle()
-            args.putParcelable("contactToUpdate", contact)
-            fragment.arguments = args
-            return fragment
-        }
-    }
-
     private lateinit var binding: FragmentAddContactBinding
     private lateinit var layout:View
     private  lateinit var launcherPermissions: LauncherPermissions
     private  lateinit var launchersImage: LaunchersImage
     private val viewModelAddContact : AddContactViewModel by viewModels {  AddContactViewModelFactory(application = requireActivity().application) }
     private  var bitmapContactByteArray: ByteArray? = null
+    private lateinit var contactToUpdate: Contact
 
 
 
+    /**
+     * Método chamado quando o fragmento é criado.
+     * Recupera os argumentos e configura o ViewModel.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            // Utiliza o método genérico para obter o Parcelable do Bundle
-            val contact = it.getParcelable<Contact>("contactToUpdate")
+
+        // Recupera os argumentos do Bundle e configura o ViewModel
+        arguments?.let { bundle ->
+            val contact = getCorrectParcelable(bundle)
             contact?.let {
                 viewModelAddContact.toUpdate(it)
             }
         }
     }
 
+    /**
+     * Recupera um objeto [Contact] do [Bundle] com compatibilidade para diferentes versões do Android.
+     */
+    private fun getCorrectParcelable(bundle: Bundle): Contact? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            bundle.getParcelable("contactToUpdate", Contact::class.java)
+        } else {
+            bundle.getParcelable("contactToUpdate")
+        }
+    }
 
-
+    /**
+     * Infla o layout do fragmento e retorna a raiz da visão.
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentAddContactBinding.inflate(inflater, container, false)
-
         return binding.root
-
-
     }
 
-
+    /**
+     * Configura a interface do usuário e gerencia eventos após a criação da visão.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-         // Configura o ViewModel para gerenciar o estado do AppBarLayout
-        setupViewModelAppBar()
-         //inicia os registerForActivityResult para permissôes e seleção de imagens(câmera e galeria) neste fragment
-        registerLaunchersFragment()
-        //metodo que dispara o launcher de permissões( infla um layout para escolha de imagens se permissões aceitas ou pede permissão novamente se as mesmas fora negadas
-        setupImageContact()
-         //Abre o teclado virtual para que o usuário possa começar a digitar.
-         openKeyboard()
-         saveContact()
-         cancelSave()
-         backPressed()
 
+        // Configura o ViewModel para gerenciar o estado do AppBarLayout
+        setupViewModelAppBar()
+        // Inicializa os lançadores para permissões e seleção de imagens
+        registerLaunchersFragment()
+        // Configura o layout para escolha de imagens e permissões
+        setupImageContact()
+        // Abre o teclado virtual para entrada de dados
+        openKeyboard()
+        // Configura o listener para salvar ou atualizar um contato
+        saveContact()
+        //Configura o listener para deixar o fragment
+        cancelSave()
+        //Configura  a ação ao clicar no botão de voltar do dispositivo
+        backPressed()
     }
+
 
 
     //metodo que salva contatos
@@ -111,8 +120,10 @@ class AddContactFragment : Fragment() {
                 return@setOnClickListener
             }
 
+
             // Cria uma nova instância de Contact e atribui os valores dos campos
             val contact = Contact().apply {
+                id = if (::contactToUpdate.isInitialized) contactToUpdate.id else 0
                 name = editName.text.toString()
                 phone = editPhone.text.toString()
                 email = editEmail.text.toString()
@@ -122,9 +133,9 @@ class AddContactFragment : Fragment() {
             // Chama o método addContact no ViewModel para adicionar o contato
             // onSuccess: Função de callback a ser chamada em caso de sucesso
             // onError: Função de callback a ser chamada em caso de erro
-            viewModelAddContact.addContact(contact,
+            viewModelAddContact.addOrUpdateContact(contact,
                 onSuccess = { idSaved->
-                    contactSaveSuccess(idSaved.toInt())
+                    contactSaveSuccess(idSaved)
                 },
                 onError = {
                     contactSaveError(it.message.toString())
@@ -143,12 +154,12 @@ class AddContactFragment : Fragment() {
 
 
     //sucesso ao salvar
-    private fun contactSaveSuccess(contactId: Int) {
+    private fun contactSaveSuccess(contactId: Long) {
         //exibição do progress oculto
         binding.progressLayout.visibility = View.VISIBLE
 
         //coroutine para simular um carregamento para o progressBar através de um delay
-        GlobalScope.launch(Dispatchers.Main) {
+        lifecycleScope.launch(Dispatchers.Main) {
             delay(1000)
             //ocultação do progress após o delayc com exibição de um snackBar após
             binding.progressLayout.visibility = View.GONE
@@ -172,18 +183,44 @@ class AddContactFragment : Fragment() {
     private fun registerLaunchersFragment(){
         hasPermissionsFragment()
         takeImageFragment()
+        hasDataToUpdateFragment()
     }
 
-    private fun hasDataToUpdateFragment(){
-        viewModelAddContact.contactToUpdate.observe(viewLifecycleOwner) {
-            contact->
-            contact?.let {
-                binding.editName.text = editableToString(contact.name)
-                binding.editPhone.text = editableToString(contact.phone)
-                binding.editEmail.text = editableToString(contact.email)
+    //metodo para lidar quando o fragment recebe argumentos(se receber significa que se trata de edição)
+    private fun hasDataToUpdateFragment() {
+        // Observa o LiveData 'contactToUpdate' no ViewModel, atrelando o ciclo de vida ao do Fragmento.
+        viewModelAddContact.contactToUpdate.observe(viewLifecycleOwner) { contact ->
+
+            // Verifica se 'contact' não é nulo. Se for nulo, o código abaixo não será executado.
+            if (contact != null) {
+                //inicio os objetos globalmente indicando que a partir daqui se trata de edição e não adição de contatos
+                contactToUpdate = contact
+                bitmapContactByteArray = contact.image
+
+                // Utiliza o método 'apply' para configurar múltiplos componentes de UI relacionados ao binding.
+                binding.apply {
+                    // Atualiza o campo 'editName' com o nome do contato, convertendo para Editable, através da extensão criada(stringToEditable)
+                    editName.text = contact.name.stringToEditable()
+                    // Atualiza o campo 'editPhone' com o telefone do contato, convertendo para Editable, através da extensão criada(stringToEditable)
+                    editPhone.text = contact.phone.stringToEditable()
+                    // Atualiza o campo 'editEmail' com o email do contato, convertendo para Editable, através da extensão criada(stringToEditable)
+                    editEmail.text = contact.email.stringToEditable()
+                }
+
+                // Verifica se o contato tem uma imagem associada. Se 'image' não for nulo, executa o bloco 'let'.
+                contact.image?.let {
+                    // Lança uma coroutine no 'lifecycleScope', garantindo que o código seja executado na Main Thread.
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        // Converte o array de bytes (image) para Bitmap e define como imagem do botão 'imageChooseButton'.
+                        binding.imageChooseButton.setImageBitmap(
+                            ImageFormatConverter.byteArrayToImage(it)
+                        )
+                    }
+                }
             }
         }
     }
+
 
 
     //register para pedir permissão
