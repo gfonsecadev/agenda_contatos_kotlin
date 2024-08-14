@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import com.example.minhaagenda.activities.main.MainActivity
 import com.example.minhaagenda.activities.main.fragments.addContacts.AddContactFragment
+import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment
+import com.example.minhaagenda.activities.main.fragments.exitContacts.ExitContactragment
 import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.shared.ImageFormatConverter
 import com.example.minhaagenda.shared.firstLetter
@@ -89,6 +91,7 @@ class ShowContactActivity : AppCompatActivity() {
         fragmentTransition.replace(R.id.container, AddContactFragment::class.java, bundleContact)
         fragmentTransition.setCustomAnimations(R.anim.enter_fragment, R.anim.close_fragment)
         fragmentTransition.commit()
+
     }
 
     /**

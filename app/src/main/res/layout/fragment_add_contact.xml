@@ -1,146 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white">
+    android:fillViewport="true">
 
-   <LinearLayout
-       android:id="@+id/layoutImageAddContact"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:gravity="center"
-       android:orientation="vertical"
-       app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-       app:layout_constraintEnd_toEndOf="parent"
-       app:layout_constraintStart_toStartOf="parent"
-       app:layout_constraintTop_toTopOf="parent">
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
 
-      <androidx.cardview.widget.CardView
-          android:id="@+id/cardViewImage"
-          android:layout_width="200dp"
-          android:layout_height="200dp"
-          android:layout_marginTop="20dp"
-          app:cardCornerRadius="100dp">
+        <!-- Seção de imagem para adicionar contato -->
+        <LinearLayout
+            android:id="@+id/layoutImageAddContact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-         <ImageView
-             android:id="@+id/image_choose_button"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:contentDescription="Escolha uma imagem para seu contato"
-             android:scaleType="centerCrop"
-             android:src="@drawable/choose_image" />
+            <!-- CardView com imagem circular para selecionar -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewImage"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="20dp"
+                app:cardCornerRadius="100dp">
 
-      </androidx.cardview.widget.CardView>
+                <!-- ImageView dentro do CardView para escolha da imagem -->
+                <ImageView
+                    android:id="@+id/image_choose_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="Escolha uma imagem para seu contato"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/choose_image" />
 
-   </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-   <LinearLayout
-       android:id="@+id/linearLayout2"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:orientation="vertical"
-       android:padding="15dp"
-       app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
-       app:layout_constraintEnd_toEndOf="parent"
-       app:layout_constraintStart_toStartOf="parent"
-       app:layout_constraintTop_toBottomOf="@+id/layoutImageAddContact">
+        </LinearLayout>
 
-      <EditText
-          android:id="@+id/edit_name"
-          android:layout_width="match_parent"
-          android:layout_height="48dp"
-          android:autofillHints="name"
-          android:background="@drawable/corner_contact"
-          android:drawableStart="@drawable/ic_person"
-          android:drawablePadding="5dp"
-          android:hint="Nome"
-          android:inputType="text"
-          android:paddingStart="5dp" />
+        <!-- Seção de campos de entrada de dados do contato -->
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutImageAddContact">
 
-      <com.santalu.maskara.widget.MaskEditText
-          android:id="@+id/edit_phone"
-          android:layout_width="match_parent"
-          android:layout_height="48dp"
-          android:layout_marginTop="30dp"
-          android:autofillHints="phone"
-          android:background="@drawable/corner_contact"
-          android:drawableStart="@drawable/ic_telephone"
-          android:drawablePadding="5dp"
-          android:hint="Telefone"
-          android:inputType="phone"
-          android:paddingStart="5dp"
-          app:mask="(##) #####-####" />
+            <!-- Campo de entrada para o nome do contato -->
+            <EditText
+                android:id="@+id/edit_name"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:autofillHints="name"
+                android:background="@drawable/corner_contact"
+                android:drawableStart="@drawable/ic_person"
+                android:drawablePadding="5dp"
+                android:hint="Nome"
+                android:inputType="text"
+                android:paddingStart="5dp" />
 
-      <EditText
-          android:id="@+id/edit_email"
-          android:layout_width="match_parent"
-          android:layout_height="48dp"
-          android:layout_marginTop="30dp"
-          android:autofillHints="email"
-          android:background="@drawable/corner_contact"
-          android:drawableStart="@drawable/ic_email"
-          android:drawablePadding="5dp"
-          android:hint="Email"
-          android:inputType="textEmailAddress"
-          android:paddingStart="5dp" />
-   </LinearLayout>
+            <!-- Campo de entrada para o telefone com máscara -->
+            <com.santalu.maskara.widget.MaskEditText
+                android:id="@+id/edit_phone"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="30dp"
+                android:autofillHints="phone"
+                android:background="@drawable/corner_contact"
+                android:drawableStart="@drawable/ic_telephone"
+                android:drawablePadding="5dp"
+                android:hint="Telefone"
+                android:inputType="phone"
+                android:paddingStart="5dp"
+                app:mask="(##) #####-####" />
 
-   <androidx.constraintlayout.widget.ConstraintLayout
-       android:id="@+id/constraintLayout"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_marginBottom="10dp"
-       app:layout_constraintBottom_toBottomOf="parent">
+            <!-- Campo de entrada para o e-mail -->
+            <EditText
+                android:id="@+id/edit_email"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="30dp"
+                android:autofillHints="email"
+                android:background="@drawable/corner_contact"
+                android:drawableStart="@drawable/ic_email"
+                android:drawablePadding="5dp"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:paddingStart="5dp" />
 
-      <Button
-          android:id="@+id/button_cancel"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:background="@drawable/ripple_button"
-          android:text="Cancelar"
-          android:textColor="@color/black"
-          android:textStyle="bold"
-          app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintEnd_toStartOf="@+id/guideline3"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="parent" />
+        </LinearLayout>
 
-      <Button
-          android:id="@+id/button_save"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:background="@drawable/ripple_button"
-          android:text="Salvar"
-          android:textColor="@color/black"
-          android:textStyle="bold"
-          app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="@+id/guideline3"
-          app:layout_constraintTop_toTopOf="parent" />
+        <!-- Seção de botões Cancelar e Salvar -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-      <androidx.constraintlayout.widget.Guideline
-          android:id="@+id/guideline3"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="vertical"
-          app:layout_constraintGuide_percent="0.5" />
-   </androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- Botão para cancelar a ação -->
+            <Button
+                android:id="@+id/button_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ripple_button"
+                android:text="Cancelar"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
+            <!-- Botão para salvar os dados -->
+            <Button
+                android:id="@+id/button_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ripple_button"
+                android:text="Salvar"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/guideline3"
+                app:layout_constraintTop_toTopOf="parent" />
 
-   <FrameLayout
-       android:id="@+id/progressLayout"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       android:background="#80000000"
-       android:visibility="gone">
+            <!-- Diretriz para alinhar os botões -->
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
 
-      <ProgressBar
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center" />
-   </FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <!-- Layout de carregamento com ProgressBar -->
+        <FrameLayout
+            android:id="@+id/progressLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80000000"
+            android:visibility="gone">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- Indicador de progresso centralizado -->
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
