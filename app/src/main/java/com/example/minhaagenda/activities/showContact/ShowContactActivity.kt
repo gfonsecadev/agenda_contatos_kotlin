@@ -121,10 +121,11 @@ class ShowContactActivity : AppCompatActivity() {
                 binding.showTextName.text = contact.name
                 binding.showTextPhone.text = contact.phone
 
-                // Esconde o campo de email se estiver em branco
+                // se não houver email o layout que abriga o textView é Ocultado
                 if (contact.email.isBlank()) {
-                    binding.showTextEmail.visibility = View.GONE
-                } else {
+                    binding.showLayoutTextEmail.visibility = View.INVISIBLE
+                } else {//senão o textView recebe um valor
+                    binding.showLayoutTextEmail.visibility = View.VISIBLE
                     binding.showTextEmail.text = contact.email
                 }
             }

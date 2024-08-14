@@ -10,7 +10,6 @@
     android:orientation="vertical"
     tools:context="com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment">
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_contact"
             android:layout_width="match_parent"
