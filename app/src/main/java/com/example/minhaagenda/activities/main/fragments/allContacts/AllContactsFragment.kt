@@ -60,7 +60,7 @@ class AllContactsFragment : Fragment() {
     //configuração do recyclerView Principal
     private fun recyclerSettings(list: List<ContactListByInitial>){
         //o contactAdapter recebe uma lista de contact onde o mapper contactToContactObject converte para contactObjeto que é o exigido pelo adapter
-        val adapter = ContactAdapter(list, context)
+        val adapter = ContactAdapter(list, requireContext())
 
         binding.recyclerContact.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.recyclerContact.adapter = adapter

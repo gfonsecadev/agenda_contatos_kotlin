@@ -1,4 +1,5 @@
 package com.example.minhaagenda.activities.main.fragments.addContacts
+import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -15,6 +16,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
+import com.bumptech.glide.Glide
 import com.example.minhaagenda.activities.main.MainActivity
 import com.example.minhaagenda.activities.showContact.ShowContactActivity
 import com.example.minhaagenda.entities.Contact
@@ -211,9 +214,7 @@ class AddContactFragment : Fragment() {
                     // Lança uma coroutine no 'lifecycleScope', garantindo que o código seja executado na Main Thread.
                     lifecycleScope.launch(Dispatchers.Main) {
                         // Converte o array de bytes (image) para Bitmap e define como imagem do botão 'imageChooseButton'.
-                        binding.imageChooseButton.setImageBitmap(
-                            ImageFormatConverter.byteArrayToImage(it)
-                        )
+                        Glide.with(requireActivity()).load(it).into(binding.imageChooseButton)
                     }
                 }
             }
@@ -238,27 +239,51 @@ class AddContactFragment : Fragment() {
 
         }
 
-    //register para escolha de imagem(camera ou galeria)
-    private fun takeImageFragment(){
+    // Função para iniciar o processo de escolha de imagem, seja da câmera ou da galeria
+    private fun takeImageFragment() {
+        // Inicializa um launcher para o resultado da atividade
         launchersImage = LaunchersImage()
-        val intent = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()) {result->
-            //contém a lógica de negocio
-             viewModelAddContact.returnBitmap(result)
 
+        // Registra um ActivityResultLauncher com o contrato StartActivityForResult
+        // Para iniciar uma atividade que retorna um resultado
+        val intent = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            // Este bloco de código é chamado quando a atividade retorna um resultado
+
+            // Verifica se o código de resultado indica que a operação foi bem-sucedida
+            if (result.resultCode == Activity.RESULT_OK) {
+                // Inicia uma coroutine na Main Thread para garantir que a UI seja atualizada corretamente
+                lifecycleScope.launch(Dispatchers.Main) {
+                    // Torna o ProgressBar visível para indicar que uma operação está em andamento
+                    binding.progressLayout.visibility = View.VISIBLE
+
+                    // Adiciona um pequeno atraso (300ms) para garantir que o ProgressBar seja exibido
+                    delay(300)
+
+                    // Chama a função viewModelAddContact.returnBitmap() para processar o resultado da imagem
+                    viewModelAddContact.returnBitmap(result)
+
+                    // Torna o ProgressBar invisível após o processamento da imagem
+                    binding.progressLayout.visibility = View.GONE
+                }
+            }
         }
-        //atribui o register para a classe de ajuda (para poder ser lançada em outro momento)
+
+        // Atribui o ActivityResultLauncher à classe de ajuda para que possa ser iniciado em outro momento
         launchersImage.registerLauncher(intent)
-        //observamos a mudança do liveData do bitmap
+
+        // Observa as mudanças no LiveData do bitmap para atualizar a UI conforme necessário
         observeBitmap()
-        }
+    }
+
 
     //responsável por verificar mudanças no bitmap
     private fun observeBitmap(){
         viewModelAddContact.bitmapContact.observe(viewLifecycleOwner) { bitmap ->
             //se existit um bitmap
             bitmap?.let {
-                binding.imageChooseButton.setImageBitmap(it)//imagem principal é setada com a imagem capturada pela camera
+                Glide.with(requireActivity()).load(it).into(binding.imageChooseButton) //imagem principal é setada com a imagem capturada pela camera
                 //layout principal volta a ser exibido e layout de escolha das imagens é ocultado
                 binding.cardViewImage.visibility = View.VISIBLE
                 layout.visibility = View.GONE

@@ -31,6 +31,7 @@ import com.example.minhaagendakotlin.R
 import com.example.minhaagendakotlin.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
 import androidx.activity.result.contract.ActivityResultContracts
+import com.bumptech.glide.Glide
 
 
 // Classe principal da atividade que estende AppCompatActivity
@@ -133,7 +134,7 @@ class MainActivity : AppCompatActivity() {
             //se não nulo salva o Bitmap nas preferências convertendo-o para string
             bitmap?.let {
                 preferencesHelper.editPreferencesImage(it)
-                imageProfile.setImageBitmap(it)}
+                Glide.with(this).load(it).into(imageProfile)}
         }
 
         //atribui o register para a classe de ajuda (para poder ser lançada em outro momento)
@@ -151,7 +152,7 @@ class MainActivity : AppCompatActivity() {
         preferencesHelper = SharedPreferencesHelper(this)//classe de ajuda
 
         //seta as preferencias se definidas
-        imageProfile.setImageBitmap(preferencesHelper.getPreferencesImage())//recupera a a imagem salva convertendo-a de string para Bitmap
+        Glide.with(this).load(preferencesHelper.getPreferencesImage()).into(imageProfile) //recupera a a imagem salva convertendo-a de string para Bitmap
         textNameProfile.text = preferencesHelper.getPreferencesName()//recupera o nome salvo
     }
 

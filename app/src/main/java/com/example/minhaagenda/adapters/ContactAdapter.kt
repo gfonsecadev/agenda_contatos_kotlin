@@ -13,7 +13,7 @@ import com.example.minhaagendakotlin.databinding.RecyclerContactLayoutBinding
 
 //este adapter irá renderizar uma letra e a lista de contatos relacionado a esta letra para ser passada como parametro para o NestedAdapter aqui mesmo
 //ou seja a letra popula este adapter e a lista o adapter aninhado.
-class ContactAdapter(val listContact: List<ContactListByInitial>, val context: Context?) : RecyclerView.Adapter<ContactHolder>() {
+class ContactAdapter(val listContact: List<ContactListByInitial>, val context: Context) : RecyclerView.Adapter<ContactHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactHolder {
         //retornamos para o holder um data binding do layout.

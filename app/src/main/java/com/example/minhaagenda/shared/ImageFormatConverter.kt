@@ -10,7 +10,7 @@ object ImageFormatConverter {
     fun imageToByteArray(image: Bitmap): ByteArray {
         return try {
             val baos = ByteArrayOutputStream()
-            image.compress(Bitmap.CompressFormat.JPEG, 10, baos)
+            image.compress(Bitmap.CompressFormat.JPEG, 50, baos)
             baos.toByteArray()
         } catch (e: Exception) {
             // Log de erro ou tratamento apropriado
