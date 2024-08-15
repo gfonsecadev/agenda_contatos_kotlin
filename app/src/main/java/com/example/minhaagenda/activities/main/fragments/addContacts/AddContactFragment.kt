@@ -41,7 +41,7 @@ class AddContactFragment : Fragment() {
     private  var bitmapContactByteArray: ByteArray? = null
     private lateinit var contactToUpdate: Contact
 
-    
+
     /**
      * Método chamado quando o fragmento é criado.
      * Recupera os argumentos e configura o ViewModel.

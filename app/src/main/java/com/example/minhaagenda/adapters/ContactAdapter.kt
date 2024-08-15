@@ -41,7 +41,6 @@ class ContactAdapter(val listContact: List<ContactListByInitial>, val context: C
         holder.recyclerNested.addItemDecoration(CustomDivider())
         val adapter = NestedAdapter(contactObject.contactList, context)
         holder.recyclerNested.adapter = adapter
-
     }
 
 }

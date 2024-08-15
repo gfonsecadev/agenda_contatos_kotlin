@@ -64,6 +64,8 @@ android {
         ksp(libs.androidx.room.compiler)
         // Máscaras
         implementation(libs.mask.edittext)
+        // Carregamento de imagens
+        implementation(libs.glide)
     }
 
 
