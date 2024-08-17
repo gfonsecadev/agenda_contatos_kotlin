@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -31,7 +32,14 @@ import com.example.minhaagendakotlin.R
 import com.example.minhaagendakotlin.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
+import androidx.navigation.fragment.NavHostFragment
 import com.bumptech.glide.Glide
+import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment
+import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment.Companion.clearListSelectedContact
+import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment.Companion.getListSelectedContacts
+import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment.Companion.getSizeSelectedContacts
+import com.google.android.material.snackbar.Snackbar
 
 
 // Classe principal da atividade que estende AppCompatActivity
@@ -46,6 +54,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var preferencesHelper: SharedPreferencesHelper
     private lateinit var imageProfile: ImageView
     private lateinit var textNameProfile: TextView
+    private val viewModelMain : ViewModelMain by viewModels() {ViewModelMainFactory(application) }
 
     // Método chamado na criação da atividade
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -281,17 +290,12 @@ class MainActivity : AppCompatActivity() {
 
     // Configura os dados do dispositivo no cabeçalho do NavigationView
     private fun setupDataDevice() {
-        val brand = Build.BRAND.takeIf { it.isNotBlank() }?.replaceFirstChar { it.uppercase() } ?: "Unknown"
-        val model = Build.MODEL.takeIf { it.isNotBlank() } ?: "Unknown"
-        val dataDevice = "$brand $model"
-        setDeviceNavHeaderName(dataDevice)
+        //recupera acesso ao textView na navView para alterar o nome do dispositivo
+        val textHeader = binding.navView.getHeaderView(0).findViewById<TextView>(R.id.textHeader)
+        // Define o nome do dispositivo no cabeçalho do NavigationView
+        textHeader.text = viewModelMain.dataDevice()
     }
 
-    // Define o nome do dispositivo no cabeçalho do NavigationView
-    private fun setDeviceNavHeaderName(data: String) {
-        val textHeader = binding.navView.getHeaderView(0).findViewById<TextView>(R.id.textHeader)
-        textHeader.text = data
-    }
 
     // Configura o AppBarViewModel para controlar o estado da AppBar
     private fun setupViewModelAppBar() {
@@ -301,10 +305,52 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Infla o menu de opções na barra de ferramentas
+    // Infla o menu de opções na barra de ferramentas com base na condição 'isSelected'
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main2, menu)
+        // Verifica se a condição 'isSelected' é verdadeira para inflar o menu
+        return if (getSizeSelectedContacts() > 0) {
+            // Infla o menu definido em 'main2.xml' na barra de ferramentas
+            menuInflater.inflate(R.menu.main2, menu)
+            true // Retorna true para indicar que o menu foi inflado com sucesso
+        } else {
+            false // Retorna false se a condição não for satisfeita, e o menu não será inflado
+        }
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.delete_menu -> {
+                if (getSizeSelectedContacts() > 0) {
+                    // Deleta os contatos selecionados
+                    viewModelMain.deleteSelectedContacts(getListSelectedContacts())
+
+                    // Exibe o Snackbar informando o sucesso da operação
+                    Snackbar.make(binding.root, "${getSizeSelectedContacts()} contatos excluídos!", Snackbar.LENGTH_LONG).show()
+
+                    // Recarrega a lista de contatos para refletir a exclusão
+                    reloadContactList()
+
+                    // Limpa os contatos selecionados
+                    clearListSelectedContact()
+
+                    // Invalida o menu para remover o ícone de delete
+                    invalidateOptionsMenu()
+                }
+            }
+        }
         return true
+    }
+
+
+    // Função para recarregar a lista de contatos após uma alteração
+    fun reloadContactList() {
+        // Encontra o NavHostFragment dentro do layout atual
+        val navFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
+        // Recupera o fragmento que contém todos os contatos
+        val allFragment = navFragment.childFragmentManager.primaryNavigationFragment as AllContactsFragment
+        // Chama o método do fragmento para recarregar a lista de contatos
+        allFragment.reloadContactList()
     }
 
     override fun onStart() {
@@ -314,4 +360,5 @@ class MainActivity : AppCompatActivity() {
         //seleciona o focu na inicialização da activity no item que mostra todos os contatos
         focusItem(R.id.nav_item_all)
     }
+
 }

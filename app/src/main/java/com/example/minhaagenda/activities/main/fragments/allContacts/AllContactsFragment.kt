@@ -1,29 +1,75 @@
 package com.example.minhaagenda.activities.main.fragments.allContacts
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.lifecycle.lifecycleScope
+
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
+
 import com.example.minhaagenda.shared.AppBarViewModel
 import com.example.minhaagenda.adapters.ContactAdapter
 import com.example.minhaagenda.animations.fade.FadeToViews.fadeInImmediately
 import com.example.minhaagenda.animations.fade.FadeToViews.fadeOut
+import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.entities.ContactListByInitial
 import com.example.minhaagendakotlin.databinding.FragmentAllContactsBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class AllContactsFragment : Fragment() {
 
+    //objeto estático para gerenciar contatos selecionados no recyclerView(está sendo utilizado em várias partes da aplicação )
+    companion object {
+        // Conjunto mutável para armazenar os contatos selecionados
+        private var selectedContacts = mutableSetOf<Contact>()
+
+        // Retorna a lista de contatos selecionados
+        fun getListSelectedContacts(): MutableSet<Contact> {
+            return selectedContacts
+        }
+
+        // Verifica se um contato está na lista de selecionados
+        fun alreadySelected(contact: Contact): Boolean {
+            return selectedContacts.contains(contact)
+        }
+
+        // Retorna o número total de contatos selecionados
+        fun getSizeSelectedContacts(): Int {
+            return selectedContacts.size
+        }
+
+        // Adiciona um contato à lista de selecionados
+        fun addSelectedContact(contact: Contact) {
+            selectedContacts.add(contact)
+        }
+
+        // Remove um contato da lista de selecionados
+        fun removeSelectedContact(contact: Contact) {
+            selectedContacts.remove(contact)
+        }
+
+        // Limpa todos os contatos da lista de selecionados
+        fun clearListSelectedContact() {
+            selectedContacts.clear()
+        }
+    }
+
+
     private val viewModelAllContacts : AllContactsViewModel by viewModels() { AllContactsViewModelFactory(requireActivity().application) }
     private lateinit var binding: FragmentAllContactsBinding
     private lateinit var listContactListByInitial:List<ContactListByInitial>
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -33,12 +79,13 @@ class AllContactsFragment : Fragment() {
         setupViewModelAppBar()
         //Configura o observador do viewModel
         setupViewModelAllContacts()
-        //metodo com toda configuração do recyclerView
-        //recyclerSettings(listContactListByInitial)
+        //Configura o clique no botão de voltar do dispositivo
+        backPressed()
 
         return binding.root
 
     }
+
 
     //Configuração do viewModel deste fragment
     private  fun setupViewModelAllContacts(){
@@ -60,7 +107,7 @@ class AllContactsFragment : Fragment() {
     //configuração do recyclerView Principal
     private fun recyclerSettings(list: List<ContactListByInitial>){
         //o contactAdapter recebe uma lista de contact onde o mapper contactToContactObject converte para contactObjeto que é o exigido pelo adapter
-        val adapter = ContactAdapter(list, requireContext())
+        val adapter = ContactAdapter(list, requireActivity())
 
         binding.recyclerContact.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.recyclerContact.adapter = adapter
@@ -93,6 +140,51 @@ class AllContactsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModelAllContacts.getAllContacts()
+    }
+
+    // Método para lidar com o evento de pressionar o botão "Voltar"
+    fun backPressed() {
+        // Adiciona um callback ao onBackPressedDispatcher para personalizar o comportamento do botão "Voltar"
+        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Verifica se há contatos selecionados
+                if (getSizeSelectedContacts() > 0) {
+                    // Se houver contatos selecionados, limpa a lista de contatos selecionados
+                    clearListSelectedContact()
+                    // Recarrega o RecyclerView para atualizar a interface do usuário
+                    reload_recyclerView()
+                    // Atualiza o menu de opções para refletir as mudanças(não há contatos selecionado, então menu deve sumir)
+                    requireActivity().invalidateOptionsMenu()
+                } else {
+                    // Se não houver contatos selecionados, finaliza a atividade
+                    requireActivity().finish()
+                }
+            }
+        })
+    }
+
+    // Método para recarregar o RecyclerView
+    @SuppressLint("NotifyDataSetChanged")
+    fun reload_recyclerView() {
+        // Lança uma coroutine na Main Thread para atualizar a UI
+        lifecycleScope.launch(Dispatchers.Main) {
+            // Torna visível o layout de progresso enquanto a lista está sendo recarregada
+            binding.progressReloadList.progressLayout.visibility = View.VISIBLE
+            // Aguarda 300 milissegundos para simular o carregamento
+            delay(300)
+            // Notifica o adaptador do RecyclerView para atualizar a lista exibida
+            binding.recyclerContact.adapter?.notifyDataSetChanged()
+            // Oculta o layout de progresso após a atualização
+            binding.progressReloadList.progressLayout.visibility = View.GONE
+        }
+    }
+
+    // Método para recarregar a lista de contatos
+    fun reloadContactList() {
+        // Solicita ao ViewModel para obter todos os contatos
+        viewModelAllContacts.getAllContacts()
+        // Recarrega o RecyclerView para atualizar a interface do usuário com os novos dados
+        reload_recyclerView()
     }
 
 

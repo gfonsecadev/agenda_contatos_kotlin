@@ -24,4 +24,6 @@
             android:background="@drawable/text_letter_background"
             android:visibility="invisible"/>
 
+    <!-- Layout de carregamento com ProgressBar -->
+    <include android:id="@+id/progress_reload_list" layout="@layout/progressbar_layout"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

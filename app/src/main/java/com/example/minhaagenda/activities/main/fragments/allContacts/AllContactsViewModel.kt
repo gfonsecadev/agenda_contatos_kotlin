@@ -20,7 +20,7 @@ class AllContactsViewModel(application: Application) : AndroidViewModel(applicat
     private var _listContactListByInitial = MutableLiveData<List<ContactListByInitial>>()
     val listContactListByInitial: MutableLiveData<List<ContactListByInitial>> get() = _listContactListByInitial
 
-
+    // recupera todos contatos salvos e salva no LiveData
     fun getAllContacts(): Job {
        return viewModelScope.launch {
           val contacts = contactDatabase.getAllContact().sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER){it.name})
@@ -28,7 +28,6 @@ class AllContactsViewModel(application: Application) : AndroidViewModel(applicat
 
        }
     }
-
 
 }
 

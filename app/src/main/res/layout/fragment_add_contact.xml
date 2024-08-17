@@ -146,20 +146,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- Layout de carregamento com ProgressBar -->
-        <FrameLayout
-            android:id="@+id/progressLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#80000000"
-            android:visibility="gone">
-
-            <!-- Indicador de progresso centralizado -->
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-
-        </FrameLayout>
+        <include android:id="@+id/progress_save_contact" layout="@layout/progressbar_layout"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

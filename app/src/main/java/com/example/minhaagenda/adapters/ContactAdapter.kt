@@ -1,6 +1,7 @@
 package com.example.minhaagenda.adapters
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -13,7 +14,7 @@ import com.example.minhaagendakotlin.databinding.RecyclerContactLayoutBinding
 
 //este adapter irá renderizar uma letra e a lista de contatos relacionado a esta letra para ser passada como parametro para o NestedAdapter aqui mesmo
 //ou seja a letra popula este adapter e a lista o adapter aninhado.
-class ContactAdapter(val listContact: List<ContactListByInitial>, val context: Context) : RecyclerView.Adapter<ContactHolder>() {
+class ContactAdapter(val listContact: List<ContactListByInitial>, val context: Activity) : RecyclerView.Adapter<ContactHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactHolder {
         //retornamos para o holder um data binding do layout.
@@ -39,7 +40,7 @@ class ContactAdapter(val listContact: List<ContactListByInitial>, val context: C
         holder.recyclerNested.layoutManager = LinearLayoutManager(context)
         //holder.recyclerNested.addItemDecoration(DividerItemDecoration(context,LinearLayout.VERTICAL)) //ou
         holder.recyclerNested.addItemDecoration(CustomDivider())
-        val adapter = NestedAdapter(contactObject.contactList, context)
+        val adapter = NestedAdapter(contactObject, context)
         holder.recyclerNested.adapter = adapter
     }
 
@@ -49,6 +50,5 @@ class ContactAdapter(val listContact: List<ContactListByInitial>, val context: C
 class ContactHolder(private val binding: RecyclerContactLayoutBinding,context: Context?) : ViewHolder(binding.root) {
     val firstLetter = binding.firstLetter
     val recyclerNested = binding.recyclerNested
-
 
 }

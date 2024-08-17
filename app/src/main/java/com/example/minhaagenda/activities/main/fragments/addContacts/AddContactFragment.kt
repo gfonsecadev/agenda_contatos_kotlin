@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
 import com.example.minhaagenda.activities.main.MainActivity
 import com.example.minhaagenda.activities.showContact.ShowContactActivity
@@ -158,13 +157,13 @@ class AddContactFragment : Fragment() {
     //sucesso ao salvar
     private fun contactSaveSuccess(contactId: Long) {
         //exibição do progress oculto
-        binding.progressLayout.visibility = View.VISIBLE
+        binding.progressSaveContact.progressLayout.visibility = View.VISIBLE
 
         //coroutine para simular um carregamento para o progressBar através de um delay
         lifecycleScope.launch(Dispatchers.Main) {
             delay(1000)
             //ocultação do progress após o delayc com exibição de um snackBar após
-            binding.progressLayout.visibility = View.GONE
+            binding.progressSaveContact.progressLayout.visibility = View.GONE
             Snackbar.make(binding.root, "Contato salvo com sucesso!", Snackbar.LENGTH_SHORT).show()
 
             val intent = Intent(requireActivity(), ShowContactActivity::class.java)
@@ -256,7 +255,7 @@ class AddContactFragment : Fragment() {
                 // Inicia uma coroutine na Main Thread para garantir que a UI seja atualizada corretamente
                 lifecycleScope.launch(Dispatchers.Main) {
                     // Torna o ProgressBar visível para indicar que uma operação está em andamento
-                    binding.progressLayout.visibility = View.VISIBLE
+                    binding.progressSaveContact.progressLayout.visibility = View.VISIBLE
 
                     // Adiciona um pequeno atraso (300ms) para garantir que o ProgressBar seja exibido
                     delay(300)
@@ -265,7 +264,7 @@ class AddContactFragment : Fragment() {
                     viewModelAddContact.returnBitmap(result)
 
                     // Torna o ProgressBar invisível após o processamento da imagem
-                    binding.progressLayout.visibility = View.GONE
+                    binding.progressSaveContact.progressLayout.visibility = View.GONE
                 }
             }
         }
