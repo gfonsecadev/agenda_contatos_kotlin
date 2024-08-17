@@ -1,7 +1,6 @@
 package com.example.minhaagenda.adapters
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
@@ -21,17 +20,16 @@ import com.example.minhaagenda.activities.main.fragments.allContacts.AllContacts
 import com.example.minhaagenda.activities.showContact.ShowContactActivity
 import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.entities.ContactListByInitial
-import com.example.minhaagenda.shared.ImageFormatConverter
 import com.example.minhaagenda.shared.randomColor
 import com.example.minhaagendakotlin.R
 
 //este adapter será renderizado dentro do ContactAdapter por um recyclerView
-class NestedAdapter(val list: ContactListByInitial, val context:Activity) :
+class NestedAdapter(val list: ContactListByInitial, val activity:Activity) :
     RecyclerView.Adapter<HolderNestedAdaper>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HolderNestedAdaper {
         val layout = LayoutInflater.from(parent.context).inflate(R.layout.recycler_nested, parent, false)
-        return HolderNestedAdaper(layout,context)
+        return HolderNestedAdaper(layout)
     }
 
     override fun getItemCount(): Int {
@@ -51,15 +49,14 @@ class NestedAdapter(val list: ContactListByInitial, val context:Activity) :
 
         // Configura a imagem do contato
         contact.image?.let {
-            // Se o contato tem uma imagem, converte o byte array para imagem e carrega com Glide
-            val image = ImageFormatConverter.byteArrayToImage(it)
-            Glide.with(context)
-                .load(image)
+            // Se o contato tem uma imagem, converte o byte array com Glide para setar a imagem
+            Glide.with(activity.application)
+                .load(it)
                 .placeholder(R.drawable.choose_image) // Imagem de placeholder enquanto carrega
                 .into(holder.imageContact)
         } ?: run {
             // Se o contato não tem imagem, usa uma cor de fundo aleatória
-            Glide.with(context)
+            Glide.with(activity.application)
                 .load(ColorDrawable(color)) // Converte a cor para Drawable
                 .into(holder.imageContact)
             // Define a letra inicial do nome do contato
@@ -69,7 +66,7 @@ class NestedAdapter(val list: ContactListByInitial, val context:Activity) :
         // Configura o comportamento ao realizar um clique longo
         holder.layoutContact.setOnLongClickListener {
             // Invalida o menu para atualizar a interface
-            context.invalidateOptionsMenu()
+            activity.invalidateOptionsMenu()
             // Seleciona o contato e atualiza a visualização
             selectContact(holder, contact)
             true // Indica que o clique longo foi processado
@@ -80,13 +77,13 @@ class NestedAdapter(val list: ContactListByInitial, val context:Activity) :
             if (getSizeSelectedContacts() > 0) {
                 // Se o modo de seleção está ativado, seleciona o contato e mostra o número de contatos selecionados
                 selectContact(holder, contact)
-                Toast.makeText(context, "${getSizeSelectedContacts()}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "${getSizeSelectedContacts()}", Toast.LENGTH_SHORT).show()
             } else {
                 // Se o modo de seleção não está ativado, abre a atividade de detalhes do contato
-                val intent = Intent(context, ShowContactActivity::class.java).apply {
+                val intent = Intent(activity, ShowContactActivity::class.java).apply {
                     putExtra("contact_id", contact.id) // Passa o ID do contato para a nova atividade
                 }
-                context.startActivity(intent)
+                activity.startActivity(intent)
             }
         }
     }
@@ -108,7 +105,7 @@ class NestedAdapter(val list: ContactListByInitial, val context:Activity) :
 
 }
 
-class HolderNestedAdaper(itemView: View,context: Context?) : ViewHolder(itemView) {
+class HolderNestedAdaper(itemView: View) : ViewHolder(itemView) {
     var imageContact: ImageView = itemView.findViewById(R.id.contact_image)//circulo ao lado do contato
     var letterImageContact: TextView = itemView.findViewById(R.id.letterImage)//letra do nome do contato dentro do circulo
     var nameContact: TextView = itemView.findViewById(R.id.contact_name)// nome do contato

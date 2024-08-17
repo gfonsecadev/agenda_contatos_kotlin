@@ -4,17 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import android.window.OnBackInvokedDispatcher
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import com.bumptech.glide.Glide
 import com.example.minhaagenda.activities.main.MainActivity
 import com.example.minhaagenda.activities.main.fragments.addContacts.AddContactFragment
-import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment
-import com.example.minhaagenda.activities.main.fragments.exitContacts.ExitContactragment
 import com.example.minhaagenda.entities.Contact
-import com.example.minhaagenda.shared.ImageFormatConverter
 import com.example.minhaagenda.shared.firstLetter
 import com.example.minhaagendakotlin.R
 import com.example.minhaagendakotlin.databinding.ActivityShowContactBinding
@@ -115,7 +112,7 @@ class ShowContactActivity : AppCompatActivity() {
 
                 // Se o contato tiver uma imagem, converte e exibe na ImageView
                 contact.image?.let {
-                    binding.showContactImage.setImageBitmap(ImageFormatConverter.byteArrayToImage(it))
+                    Glide.with(this).load(it).into(binding.showContactImage)
                 } ?: run {
                     binding.showContactLetter.text = contact.name.firstLetter()//extension criada para exibir a primeira letra
                 }
@@ -136,7 +133,7 @@ class ShowContactActivity : AppCompatActivity() {
     }
 
 
-    fun backPressed(){
+    private fun backPressed(){
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
                 startActivity(Intent(baseContext,MainActivity::class.java))

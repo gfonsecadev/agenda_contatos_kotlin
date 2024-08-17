@@ -19,8 +19,9 @@ object ImageFormatConverter {
         }
     }
 
-
-    fun byteArrayToImage(byteArrayImage: ByteArray): Bitmap? {
+    //apenas para didática
+    //função criada mas não será utilizada pois utilizarei o Glide
+    private fun byteArrayToImage(byteArrayImage: ByteArray): Bitmap? {
         return try {
             BitmapFactory.decodeByteArray(byteArrayImage, 0, byteArrayImage.size)
         } catch (e: Exception) {

@@ -157,7 +157,10 @@ class AddContactFragment : Fragment() {
     //sucesso ao salvar
     private fun contactSaveSuccess(contactId: Long) {
         //exibição do progress oculto
-        binding.progressSaveContact.progressLayout.visibility = View.VISIBLE
+        binding.progressSaveContact.apply {
+            progressLayout.visibility = View.VISIBLE
+            textProgressBar.text = "Salvando contato"
+        }
 
         //coroutine para simular um carregamento para o progressBar através de um delay
         lifecycleScope.launch(Dispatchers.Main) {
@@ -256,7 +259,10 @@ class AddContactFragment : Fragment() {
                 lifecycleScope.launch(Dispatchers.Main) {
                     // Torna o ProgressBar visível para indicar que uma operação está em andamento
                     binding.progressSaveContact.progressLayout.visibility = View.VISIBLE
-
+                    binding.progressSaveContact.apply {
+                        progressLayout.visibility = View.VISIBLE
+                        textProgressBar.text = "Carregando imagem"
+                    }
                     // Adiciona um pequeno atraso (300ms) para garantir que o ProgressBar seja exibido
                     delay(300)
 
@@ -264,7 +270,9 @@ class AddContactFragment : Fragment() {
                     viewModelAddContact.returnBitmap(result)
 
                     // Torna o ProgressBar invisível após o processamento da imagem
-                    binding.progressSaveContact.progressLayout.visibility = View.GONE
+                    binding.progressSaveContact.apply {
+                        progressLayout.visibility = View.GONE
+                    }
                 }
             }
         }
@@ -282,7 +290,7 @@ class AddContactFragment : Fragment() {
         viewModelAddContact.bitmapContact.observe(viewLifecycleOwner) { bitmap ->
             //se existit um bitmap
             bitmap?.let {
-                Glide.with(requireActivity()).load(it).into(binding.imageChooseButton) //imagem principal é setada com a imagem capturada pela camera
+                binding.imageChooseButton.setImageBitmap(it) //imagem principal é setada com a imagem capturada pela camera ou escolhida da galeria
                 //layout principal volta a ser exibido e layout de escolha das imagens é ocultado
                 binding.cardViewImage.visibility = View.VISIBLE
                 layout.visibility = View.GONE

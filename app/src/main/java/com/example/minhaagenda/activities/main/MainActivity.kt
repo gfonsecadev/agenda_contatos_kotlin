@@ -23,7 +23,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
-import com.example.minhaagenda.entities.SharedPreferencesHelper
+import com.example.minhaagenda.shared.SharedPreferencesHelper
 import com.example.minhaagenda.shared.LaunchersImage
 import com.example.minhaagenda.shared.AppBarViewModel
 import com.example.minhaagenda.shared.PermissionsManager
@@ -109,12 +109,13 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    //register para escolha da imagem (galeria ou camera)
+    //register para escolha da imagem (galeria ou camera) do perfil
     private fun takeImageActivity() {
         launchersImage = LaunchersImage()
         // Cria um launcher para iniciar uma atividade e lida com o resultado
-        val intent = registerForActivityResult(
-                ActivityResultContracts.StartActivityForResult()) {result->
+        val registerTakePicture = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
 
             var bitmap: Bitmap? = null
             //se galeria
@@ -136,20 +137,23 @@ class MainActivity : AppCompatActivity() {
 
             //se camera
             val data = result.data?.extras?.get("data")
-           data?.let { image->
+            data?.let { image ->
                 bitmap = image as Bitmap
             }
 
             //se não nulo salva o Bitmap nas preferências convertendo-o para string
             bitmap?.let {
                 preferencesHelper.editPreferencesImage(it)
-                Glide.with(this).load(it).into(imageProfile)}
+                imageProfile.setImageBitmap(it)
+            }
+
         }
 
         //atribui o register para a classe de ajuda (para poder ser lançada em outro momento)
-        launchersImage.registerLauncher(intent)
+            launchersImage.registerLauncher(registerTakePicture)
 
-    }
+        }
+
 
 
     // Inicializa o objeto de ajuda para as preferências compartilhadas

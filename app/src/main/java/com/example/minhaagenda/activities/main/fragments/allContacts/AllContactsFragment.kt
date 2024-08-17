@@ -152,7 +152,7 @@ class AllContactsFragment : Fragment() {
                     // Se houver contatos selecionados, limpa a lista de contatos selecionados
                     clearListSelectedContact()
                     // Recarrega o RecyclerView para atualizar a interface do usuário
-                    reload_recyclerView()
+                    reload_recyclerView("Desfazendo seleção")
                     // Atualiza o menu de opções para refletir as mudanças(não há contatos selecionado, então menu deve sumir)
                     requireActivity().invalidateOptionsMenu()
                 } else {
@@ -165,13 +165,16 @@ class AllContactsFragment : Fragment() {
 
     // Método para recarregar o RecyclerView
     @SuppressLint("NotifyDataSetChanged")
-    fun reload_recyclerView() {
+    fun reload_recyclerView(message:String) {
         // Lança uma coroutine na Main Thread para atualizar a UI
         lifecycleScope.launch(Dispatchers.Main) {
             // Torna visível o layout de progresso enquanto a lista está sendo recarregada
-            binding.progressReloadList.progressLayout.visibility = View.VISIBLE
+            binding.progressReloadList.apply {
+                progressLayout.visibility = View.VISIBLE
+                textProgressBar.text = message
+            }
             // Aguarda 300 milissegundos para simular o carregamento
-            delay(300)
+            delay(3000)
             // Notifica o adaptador do RecyclerView para atualizar a lista exibida
             binding.recyclerContact.adapter?.notifyDataSetChanged()
             // Oculta o layout de progresso após a atualização
@@ -184,7 +187,7 @@ class AllContactsFragment : Fragment() {
         // Solicita ao ViewModel para obter todos os contatos
         viewModelAllContacts.getAllContacts()
         // Recarrega o RecyclerView para atualizar a interface do usuário com os novos dados
-        reload_recyclerView()
+        reload_recyclerView("Recarregando Contatos")
     }
 
 
