@@ -1,24 +1,28 @@
-<LinearLayout     xmlns:android="http://schemas.android.com/apk/res/android"
-android:id="@+id/progressLayout"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/progressLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#45CD3A0C"
+    android:layout_height="0dp"
+    android:background="@drawable/background_selected_contacts"
     android:orientation="vertical"
     android:gravity="center_horizontal|center_vertical"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
     android:visibility="gone">
 
     <!-- Indicador de progresso centralizado -->
     <ProgressBar
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:indeterminateTint="@color/main_orange"/>
+        android:indeterminateTint="#A12B06"/>
     <TextView
         android:id="@+id/text_progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#552414"
+        android:textColor="#A12B06"
         android:layout_marginTop="5dp"
-        android:text="Salvando"
         android:textSize="25sp" />
 
 </LinearLayout>

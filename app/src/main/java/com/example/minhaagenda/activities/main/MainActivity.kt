@@ -19,7 +19,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
@@ -39,6 +38,7 @@ import com.example.minhaagenda.activities.main.fragments.allContacts.AllContacts
 import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment.Companion.clearListSelectedContact
 import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment.Companion.getListSelectedContacts
 import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment.Companion.getSizeSelectedContacts
+
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -54,7 +54,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var preferencesHelper: SharedPreferencesHelper
     private lateinit var imageProfile: ImageView
     private lateinit var textNameProfile: TextView
-    private val viewModelMain : ViewModelMain by viewModels() {ViewModelMainFactory(application) }
+    private val viewModelShared: AppBarViewModel by viewModels()
+    private val viewModelMain : ViewModelMain by viewModels {ViewModelMainFactory(application) }
 
     // Método chamado na criação da atividade
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -266,7 +267,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     //retorna o foco no item chamado
-    fun focusItem(itemId: Int?){
+    private fun focusItem(itemId: Int?){
         itemId?.let { navView.menu.findItem(it).isChecked = true }
     }
 
@@ -303,8 +304,7 @@ class MainActivity : AppCompatActivity() {
 
     // Configura o AppBarViewModel para controlar o estado da AppBar
     private fun setupViewModelAppBar() {
-        val viewModelShared = ViewModelProvider(this).get(AppBarViewModel::class.java)
-        viewModelShared.appBarLayoutState.observe(this) { expanded ->
+            viewModelShared.appBarLayoutState.observe(this) { expanded ->
             binding.appBarMain.appBarContact.setExpanded(expanded)
         }
     }
@@ -330,7 +330,7 @@ class MainActivity : AppCompatActivity() {
                     viewModelMain.deleteSelectedContacts(getListSelectedContacts())
 
                     // Exibe o Snackbar informando o sucesso da operação
-                    Snackbar.make(binding.root, "${getSizeSelectedContacts()} contatos excluídos!", Snackbar.LENGTH_LONG).show()
+                    loadSnackBar()
 
                     // Recarrega a lista de contatos para refletir a exclusão
                     reloadContactList()
@@ -346,9 +346,22 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    //configurando uma snackBar
+    private fun loadSnackBar(){
+        // Exibe o Snackbar informando o sucesso da operação
+        val snackbar = Snackbar.make(
+            binding.root,
+            "${getSizeSelectedContacts()} contatos excluídos!",
+            Snackbar.LENGTH_LONG
+        )
+        snackbar.view.setBackgroundColor(getColor(R.color.main_orange))
+        snackbar.show()
+    }
+
+
 
     // Função para recarregar a lista de contatos após uma alteração
-    fun reloadContactList() {
+    private fun reloadContactList() {
         // Encontra o NavHostFragment dentro do layout atual
         val navFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
         // Recupera o fragmento que contém todos os contatos

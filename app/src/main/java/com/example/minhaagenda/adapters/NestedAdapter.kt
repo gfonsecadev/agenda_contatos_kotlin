@@ -65,10 +65,10 @@ class NestedAdapter(val list: ContactListByInitial, val activity:Activity) :
 
         // Configura o comportamento ao realizar um clique longo
         holder.layoutContact.setOnLongClickListener {
-            // Invalida o menu para atualizar a interface
-            activity.invalidateOptionsMenu()
             // Seleciona o contato e atualiza a visualização
             selectContact(holder, contact)
+            // Invalida o menu para atualizar a interface e exibir o menu
+            activity.invalidateOptionsMenu()
             true // Indica que o clique longo foi processado
         }
 
@@ -77,7 +77,6 @@ class NestedAdapter(val list: ContactListByInitial, val activity:Activity) :
             if (getSizeSelectedContacts() > 0) {
                 // Se o modo de seleção está ativado, seleciona o contato e mostra o número de contatos selecionados
                 selectContact(holder, contact)
-                Toast.makeText(activity, "${getSizeSelectedContacts()}", Toast.LENGTH_SHORT).show()
             } else {
                 // Se o modo de seleção não está ativado, abre a atividade de detalhes do contato
                 val intent = Intent(activity, ShowContactActivity::class.java).apply {
@@ -98,7 +97,11 @@ class NestedAdapter(val list: ContactListByInitial, val activity:Activity) :
             // Se o contato não está selecionado, adiciona à lista de selecionados
             addSelectedContact(contact)
             // Adiciona uma marcação visual de seleção
-            holder.layoutContact.setBackgroundResource(R.drawable.bg_button) // Define a cor de seleção
+            holder.layoutContact.setBackgroundResource(R.drawable.background_selected_contacts) // Define a cor de seleção
+        }
+        //se lista de selecionados estiver vazia o menu irá sumir
+        if(getSizeSelectedContacts()==0){
+            activity.invalidateOptionsMenu()
         }
     }
 

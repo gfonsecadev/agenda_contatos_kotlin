@@ -13,8 +13,8 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.minhaagenda.activities.main.MainActivity
@@ -39,6 +39,7 @@ class AddContactFragment : Fragment() {
     private lateinit var layout:View
     private  lateinit var launcherPermissions: LauncherPermissions
     private  lateinit var launchersImage: LaunchersImage
+    private val viewModelShare: AppBarViewModel by activityViewModels()
     private val viewModelAddContact : AddContactViewModel by viewModels {  AddContactViewModelFactory(application = requireActivity().application) }
     private  var bitmapContactByteArray: ByteArray? = null
     private lateinit var contactToUpdate: Contact
@@ -301,8 +302,6 @@ class AddContactFragment : Fragment() {
 
     //Configura o comportamento da AppBar pela ViewModel
     private fun setupViewModelAppBar(){
-        //instãncia do AppBarViewModel
-        val viewModelShare = ViewModelProvider(requireActivity()).get(AppBarViewModel::class.java)
         //chamamos o metodo setAppBarLayoutState para alterar o valor do MutableLiveData  e disparar o observer na actity passando o boleano
         viewModelShare.setAppBarLayoutState(false)//appBar não será exibida neste fragment
     }
