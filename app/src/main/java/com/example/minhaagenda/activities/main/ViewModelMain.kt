@@ -25,7 +25,7 @@ class ViewModelMain(application: Application) : AndroidViewModel(application) {
 
 
     //deleta todos os contatos selecionados
-    fun deleteSelectedContacts(contacts:MutableSet<Contact>){
+    fun deleteSelectedContacts(contacts:List<Contact>){
         contacts.forEach{
             viewModelScope.launch {
             repository_main.deleteContact(it)}

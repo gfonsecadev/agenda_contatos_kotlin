@@ -1,6 +1,7 @@
 package com.example.minhaagenda.activities.main
 
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.os.Build
@@ -32,14 +33,19 @@ import com.example.minhaagendakotlin.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.content.FileProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import com.bumptech.glide.Glide
 import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment
 import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment.Companion.clearListSelectedContact
 import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment.Companion.getListSelectedContacts
 import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment.Companion.getSizeSelectedContacts
+import com.example.minhaagenda.shared.contactListToVcard
 
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 // Classe principal da atividade que estende AppCompatActivity
@@ -266,7 +272,7 @@ class MainActivity : AppCompatActivity() {
         focusItem(itemId)
     }
 
-    //retorna o foco no item chamado
+    //retorna o foco no item da navView chamado
     private fun focusItem(itemId: Int?){
         itemId?.let { navView.menu.findItem(it).isChecked = true }
     }
@@ -313,37 +319,79 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Verifica se a condição 'isSelected' é verdadeira para inflar o menu
         return if (getSizeSelectedContacts() > 0) {
-            // Infla o menu definido em 'main2.xml' na barra de ferramentas
-            menuInflater.inflate(R.menu.main2, menu)
+            // Infla o menu definido em 'menu_selected_contacts.xml' na barra de ferramentas
+            menuInflater.inflate(R.menu.menu_selected_contacts, menu)
             true // Retorna true para indicar que o menu foi inflado com sucesso
         } else {
             false // Retorna false se a condição não for satisfeita, e o menu não será inflado
         }
     }
 
-
+    //opcões no menu de itens selecionados
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.delete_menu -> {
                 if (getSizeSelectedContacts() > 0) {
-                    // Deleta os contatos selecionados
-                    viewModelMain.deleteSelectedContacts(getListSelectedContacts())
+                    lifecycleScope.launch {
+                        // Deleta os contatos selecionados
+                        viewModelMain.deleteSelectedContacts(getListSelectedContacts())
 
-                    // Exibe o Snackbar informando o sucesso da operação
-                    loadSnackBar()
+                        // Exibe o Snackbar informando o sucesso da operação
+                        loadSnackBar()
 
-                    // Recarrega a lista de contatos para refletir a exclusão
-                    reloadContactList()
+                        // Recarrega a lista de contatos para refletir a exclusão
+                        reloadContactList()
+                        delay(50)
+                        // Limpa os contatos selecionados
+                        clearListSelectedContact()
 
-                    // Limpa os contatos selecionados
-                    clearListSelectedContact()
-
-                    // Invalida o menu para remover o ícone de delete
-                    invalidateOptionsMenu()
+                        // Invalida o menu para remover o ícone de delete
+                        invalidateOptionsMenu()
+                    }
                 }
+            }
+            R.id.share_menu -> {
+                shareContacts()
             }
         }
         return true
+    }
+
+    fun shareContacts(){
+        if (getSizeSelectedContacts() > 0) { // Verifica se há contatos selecionados
+            try {
+                // Converte a lista de contatos selecionados em um arquivo vCard
+                val listVcard = getListSelectedContacts().contactListToVcard()
+
+                // Verifica se o arquivo vCard foi criado com sucesso
+                listVcard?.let { file ->
+                    // Gera um URI para o arquivo usando o FileProvider
+                    val listVcardUri = FileProvider.getUriForFile(
+                        this, // Contexto da atividade
+                        "${baseContext.packageName}.provider", // Autoridade do FileProvider
+                        file // O arquivo para o qual o URI será gerado
+                    )
+
+                    // Cria um Intent para enviar o arquivo vCard
+                    val intent = Intent(Intent.ACTION_SEND).apply {
+                        setType("text/x-vcard") // Define o tipo MIME do conteúdo como vCard
+                        putExtra(Intent.EXTRA_STREAM, listVcardUri) // Adiciona o URI do arquivo como um extra
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION) // Concede permissão de leitura do URI para o destinatário
+                    }
+
+                    // Inicia a atividade de compartilhamento com um chooser para o usuário selecionar o aplicativo
+                    startActivity(
+                        Intent.createChooser(
+                            intent,
+                            "Escolha um app para compartilhar seus contatos:" // Mensagem para o usuário
+                        )
+                    )
+                }
+            } catch (e: IllegalArgumentException) {
+                e.printStackTrace() // Captura e exibe qualquer exceção que possa ocorrer
+            }
+        }
+
     }
 
     //configurando uma snackBar

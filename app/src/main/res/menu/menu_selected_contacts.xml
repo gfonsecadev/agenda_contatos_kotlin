@@ -6,4 +6,10 @@
         android:orderInCategory="100"
         android:title="Excluir"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/share_menu"
+        android:orderInCategory="200"
+        android:title="Compartilhar"
+        app:showAsAction="never" />
 </menu>

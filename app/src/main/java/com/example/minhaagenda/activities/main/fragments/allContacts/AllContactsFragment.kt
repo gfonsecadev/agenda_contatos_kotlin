@@ -34,8 +34,8 @@ class AllContactsFragment : Fragment() {
         private var selectedContacts = mutableSetOf<Contact>()
 
         // Retorna a lista de contatos selecionados
-        fun getListSelectedContacts(): MutableSet<Contact> {
-            return selectedContacts
+        fun getListSelectedContacts(): List<Contact> {
+            return selectedContacts.toList()
         }
 
         // Verifica se um contato está na lista de selecionados
@@ -181,7 +181,7 @@ class AllContactsFragment : Fragment() {
                 textProgressBar.text = message
             }
             // Aguarda 300 milissegundos para simular o carregamento
-            delay(500)
+            delay(300)
             // Notifica o adaptador do RecyclerView para atualizar a lista exibida
             binding.recyclerContact.adapter?.notifyDataSetChanged()
             // Oculta o layout de progresso após a atualização
