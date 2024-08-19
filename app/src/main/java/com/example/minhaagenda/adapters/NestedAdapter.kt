@@ -44,8 +44,8 @@ class NestedAdapter(val list: ContactListByInitial, val activity:Activity) :
         // Define o nome do contato no TextView
         holder.nameContact.text = contact.name
 
-        // Cria uma cor RGB aleatória para contatos sem imagem
-        val color = randomColor()
+        // Cria uma cor RGB  com base no nome para contatos sem imagem
+        val color = randomColor(contact.name)
 
         // Configura a imagem do contato
         contact.image?.let {

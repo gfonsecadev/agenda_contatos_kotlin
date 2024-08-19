@@ -25,5 +25,9 @@
             android:visibility="invisible"/>
 
     <!-- Layout de carregamento com ProgressBar -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <include android:id="@+id/progress_reload_list" layout="@layout/progressbar_layout"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
