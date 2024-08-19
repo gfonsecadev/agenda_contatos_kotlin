@@ -11,8 +11,8 @@
             android:title="Todos Contatos" />
         <item
             android:id="@+id/nav_item_add_contact"
-            android:icon="@drawable/ic_config"
-            android:title="Configurações" />
+            android:icon="@drawable/ic_add"
+            android:title="Novo Contato" />
         <item
             android:id="@+id/nav_item_exit"
             android:icon="@drawable/ic_exit"

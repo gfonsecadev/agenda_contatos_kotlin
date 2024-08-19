@@ -38,10 +38,19 @@ class ContactAdapter(val listContact: List<ContactListByInitial>, val context: A
 
         //instãnciamos o recycler view.
         holder.recyclerNested.layoutManager = LinearLayoutManager(context)
+
+        // Indica que o tamanho do RecyclerView e seus itens são fixos, melhorando o desempenho
+        holder.recyclerNested.setHasFixedSize(true)
+
+        // Define o número de itens a serem mantidos no cache para melhorar a rolagem
+        holder.recyclerNested.setItemViewCacheSize(20)
+
         //holder.recyclerNested.addItemDecoration(DividerItemDecoration(context,LinearLayout.VERTICAL)) //ou
         holder.recyclerNested.addItemDecoration(CustomDivider())
+
         val adapter = NestedAdapter(contactObject, context)
         holder.recyclerNested.adapter = adapter
+
     }
 
 }

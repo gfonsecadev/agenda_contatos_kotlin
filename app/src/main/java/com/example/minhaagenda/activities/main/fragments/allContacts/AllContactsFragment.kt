@@ -106,6 +106,13 @@ class AllContactsFragment : Fragment() {
         val adapter = ContactAdapter(list, requireActivity())
 
         binding.recyclerContact.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+        // Indica que o tamanho do RecyclerView e seus itens são fixos, melhorando o desempenho
+        binding.recyclerContact.setHasFixedSize(true)
+
+        // Define o número de itens a serem mantidos no cache para melhorar a rolagem
+        binding.recyclerContact.setItemViewCacheSize(20)
+
         binding.recyclerContact.adapter = adapter
 
         // Utilizo o ScrollListener para ouvir mudanças no scroll do RecyclerView
@@ -123,7 +130,7 @@ class AllContactsFragment : Fragment() {
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING || newState == RecyclerView.SCROLL_STATE_SETTLING) {
                     fadeInImmediately(binding.textLetter)
                 } else {
-                    fadeOut(binding.textLetter, 200)
+                    fadeOut(binding.textLetter, 50)
                 }
             }
         })
