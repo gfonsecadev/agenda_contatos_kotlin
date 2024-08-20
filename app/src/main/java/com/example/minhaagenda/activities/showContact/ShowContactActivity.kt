@@ -1,6 +1,8 @@
 package com.example.minhaagenda.activities.showContact
 
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -13,6 +15,8 @@ import com.example.minhaagenda.activities.main.MainActivity
 import com.example.minhaagenda.activities.main.fragments.addContacts.AddContactFragment
 import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.shared.firstLetter
+import com.example.minhaagenda.shared.onlyNumbers
+import com.example.minhaagenda.shared.openWhatsApp
 import com.example.minhaagendakotlin.R
 import com.example.minhaagendakotlin.databinding.ActivityShowContactBinding
 
@@ -53,6 +57,9 @@ class ShowContactActivity : AppCompatActivity() {
 
         //Comportamento do botão de voltar do dispositivo
         backPressed()
+
+        //Configura todos os listeners desta activity
+        buttonListeners()
     }
 
     /**
@@ -132,16 +139,32 @@ class ShowContactActivity : AppCompatActivity() {
         }
     }
 
+    // Configura os listeners para os botões da interface do usuário
+    fun buttonListeners() {
+        // Configura um listener para o botão de compartilhamento
+        binding.clickShare.setOnClickListener {
+            // utiliza a extension onlyNumbers que criei para formatar o número de telefone recebido removendo todos os caracteres não numéricos
+            val formattedPhoneNumber = contactReceived.phone.onlyNumbers()
+            // Abre o WhatsApp com o número de telefone formatado utilizando a extension openWhatsApp que criei
+            formattedPhoneNumber.openWhatsApp(baseContext)
+        }
+    }
 
-    private fun backPressed(){
-        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true){
+    // Configura o comportamento ao pressionar o botão de voltar
+    private fun backPressed() {
+        // Adiciona um callback para o evento de pressionar o botão de voltar
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            // Método chamado quando o botão de voltar é pressionado
             override fun handleOnBackPressed() {
-                startActivity(Intent(baseContext,MainActivity::class.java))
+                // Inicia a MainActivity
+                startActivity(Intent(baseContext, MainActivity::class.java))
+
+                // Finaliza a Activity atual
                 finish()
             }
-
         })
     }
+
 
 
 }

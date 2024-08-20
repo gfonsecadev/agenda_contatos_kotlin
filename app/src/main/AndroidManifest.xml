@@ -41,6 +41,7 @@
             android:theme="@style/Theme.MinhaAgenda.NoActionBar">
         </activity>
 
+        <!--O FileProvider é uma classe que facilita o compartilhamento de arquivos entre aplicativos de forma segura, usando URIs em vez de caminhos de arquivos diretamente.-->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -51,6 +52,19 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+
     </application>
+
+    <queries>
+        <!-- Permite consultar aplicativos que lidam com o esquema "https" -->
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="https"/>
+        </intent>
+
+        <!-- Permite consultar o pacote do WhatsApp -->
+        <!--Permite verificar se o WhatsApp está instalado no dispositivo -->
+        <package android:name="com.whatsapp"/>
+    </queries>
 
 </manifest>

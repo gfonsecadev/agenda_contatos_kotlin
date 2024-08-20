@@ -77,86 +77,102 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="5dp"
                     android:text="35 99709-1244"
-                    android:textSize="20sp"
-                    android:translationY="-50dp"
+                    android:textSize="25sp"
+                    android:translationY="-40dp"
                     app:drawableStartCompat="@drawable/ic_telephone"
                     app:drawableTint="@color/main_orange" />
 
-                <!-- Action Buttons -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:translationY="-40dp">
+            </LinearLayout>
 
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/show_call"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginEnd="20dp"
-                        app:cardCornerRadius="20dp">
 
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@color/main_orange"
-                            android:padding="10dp"
-                            android:src="@drawable/ic_telephone"
-                            app:tint="@color/white" />
-                    </androidx.cardview.widget.CardView>
+            <!-- Bottom Action Layout -->
 
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/show_message"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        app:cardCornerRadius="20dp">
+            <LinearLayout
+                android:id="@+id/linearLayout3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/corner_contact"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@color/main_orange"
-                            android:padding="10dp"
-                            android:src="@drawable/ic_message"
-                            app:tint="@color/white" />
-                    </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/show_call"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="25dp"
+                    app:cardCornerRadius="25dp">
 
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/show_whatsapp"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="20dp"
-                        app:cardCornerRadius="20dp">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/main_orange"
+                        android:clickable="true"
+                        android:contentDescription="Ligar"
+                        android:focusable="true"
+                        android:foreground="@drawable/ripple_button"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_telephone"
+                        app:tint="@color/white" />
+                </androidx.cardview.widget.CardView>
 
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@color/main_orange"
-                            android:padding="10dp"
-                            android:src="@drawable/ic_whatsapp"
-                            app:tint="@color/white" />
-                    </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/show_message"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:cardCornerRadius="25dp">
 
-                </LinearLayout>
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/main_orange"
+                        android:clickable="true"
+                        android:contentDescription="enviar mensagem"
+                        android:focusable="true"
+                        android:foreground="@drawable/ripple_button"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_message"
+                        app:tint="@color/white" />
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/show_whatsapp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="25dp"
+                    app:cardCornerRadius="25dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/main_orange"
+                        android:clickable="true"
+                        android:contentDescription="Enviar whastapp"
+                        android:focusable="true"
+                        android:foreground="@drawable/ripple_button"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_whatsapp"
+                        app:tint="@color/white" />
+                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 
-            <!-- Email Info Section -->
             <LinearLayout
                 android:id="@+id/show_layout_text_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginTop="25dp"
                 android:background="@drawable/corner_contact"
                 android:orientation="vertical"
-                android:padding="20dp"
+                android:padding="25dp"
                 android:visibility="invisible"
-                app:layout_constraintBottom_toTopOf="@id/constraintLayout2"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-                app:layout_constraintVertical_bias="0.089">
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+                app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
                     android:id="@+id/show_text_email"
@@ -170,7 +186,6 @@
 
             </LinearLayout>
 
-            <!-- Bottom Action Layout -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout2"
                 android:layout_width="match_parent"
