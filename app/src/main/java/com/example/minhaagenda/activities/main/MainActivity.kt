@@ -42,6 +42,7 @@ import com.example.minhaagenda.activities.main.fragments.allContacts.AllContacts
 import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment.Companion.getListSelectedContacts
 import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment.Companion.getSizeSelectedContacts
 import com.example.minhaagenda.shared.contactListToVcard
+import com.example.minhaagenda.shared.exportContact
 
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
@@ -359,39 +360,13 @@ class MainActivity : AppCompatActivity() {
 
     fun shareContacts(){
         if (getSizeSelectedContacts() > 0) { // Verifica se há contatos selecionados
-            try {
-                // Converte a lista de contatos selecionados em um arquivo vCard
-                val listVcard = getListSelectedContacts().contactListToVcard()
-
-                // Verifica se o arquivo vCard foi criado com sucesso
-                listVcard?.let { file ->
-                    // Gera um URI para o arquivo usando o FileProvider
-                    val listVcardUri = FileProvider.getUriForFile(
-                        this, // Contexto da atividade
-                        "${baseContext.packageName}.provider", // Autoridade do FileProvider
-                        file // O arquivo para o qual o URI será gerado
-                    )
-
-                    // Cria um Intent para enviar o arquivo vCard
-                    val intent = Intent(Intent.ACTION_SEND).apply {
-                        setType("text/x-vcard") // Define o tipo MIME do conteúdo como vCard
-                        putExtra(Intent.EXTRA_STREAM, listVcardUri) // Adiciona o URI do arquivo como um extra
-                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION) // Concede permissão de leitura do URI para o destinatário
-                    }
-
-                    // Inicia a atividade de compartilhamento com um chooser para o usuário selecionar o aplicativo
-                    startActivity(
-                        Intent.createChooser(
-                            intent,
-                            "Escolha um app para compartilhar seus contatos:" // Mensagem para o usuário
-                        )
-                    )
-                }
-            } catch (e: IllegalArgumentException) {
-                e.printStackTrace() // Captura e exibe qualquer exceção que possa ocorrer
+            // Converte a lista de contatos selecionados em um arquivo vCard com a extension contactListToVcard
+            val listVcard = getListSelectedContacts().contactListToVcard()
+            listVcard?.let {
+                //função criada para exportar arquivo de contatos por uma intent
+                exportContact(it,baseContext)
             }
         }
-
     }
 
     //configurando uma snackBar

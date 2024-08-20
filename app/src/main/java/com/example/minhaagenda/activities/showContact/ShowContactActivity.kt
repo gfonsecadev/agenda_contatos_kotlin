@@ -1,8 +1,6 @@
 package com.example.minhaagenda.activities.showContact
 
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -14,6 +12,8 @@ import com.bumptech.glide.Glide
 import com.example.minhaagenda.activities.main.MainActivity
 import com.example.minhaagenda.activities.main.fragments.addContacts.AddContactFragment
 import com.example.minhaagenda.entities.Contact
+import com.example.minhaagenda.shared.contactListToVcard
+import com.example.minhaagenda.shared.exportContact
 import com.example.minhaagenda.shared.firstLetter
 import com.example.minhaagenda.shared.onlyNumbers
 import com.example.minhaagenda.shared.openWhatsApp
@@ -140,13 +140,23 @@ class ShowContactActivity : AppCompatActivity() {
     }
 
     // Configura os listeners para os botões da interface do usuário
-    fun buttonListeners() {
+    private fun buttonListeners() {
         // Configura um listener para o botão de compartilhamento
-        binding.clickShare.setOnClickListener {
+        binding.showWhatsapp.setOnClickListener {
             // utiliza a extension onlyNumbers que criei para formatar o número de telefone recebido removendo todos os caracteres não numéricos
             val formattedPhoneNumber = contactReceived.phone.onlyNumbers()
             // Abre o WhatsApp com o número de telefone formatado utilizando a extension openWhatsApp que criei
             formattedPhoneNumber.openWhatsApp(baseContext)
+        }
+
+        binding.clickShare.setOnClickListener {
+            //converto o contato para lista para utilizar a extension que criei para converter o contatos para formato Vcard
+            val contactToListFile = listOf(contactReceived).contactListToVcard()
+            contactToListFile?.let {
+                //função criada para exportar arquivo de contatos por uma intent
+                exportContact(it, baseContext)
+            }
+
         }
     }
 
