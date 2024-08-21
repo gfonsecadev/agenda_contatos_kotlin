@@ -70,7 +70,7 @@
                 android:paddingStart="5dp" />
 
             <!-- Campo de entrada para o telefone com máscara -->
-            <com.santalu.maskara.widget.MaskEditText
+            <EditText
                 android:id="@+id/edit_phone"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
@@ -82,7 +82,7 @@
                 android:hint="Telefone"
                 android:inputType="phone"
                 android:paddingStart="5dp"
-                app:mask="(##) #####-####" />
+                 />
 
             <!-- Campo de entrada para o e-mail -->
             <EditText

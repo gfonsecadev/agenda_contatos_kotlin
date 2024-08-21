@@ -19,6 +19,7 @@ import com.example.minhaagenda.shared.callContact
 import com.example.minhaagenda.shared.contactListToVcard
 import com.example.minhaagenda.shared.exportContact
 import com.example.minhaagenda.shared.firstLetter
+import com.example.minhaagenda.shared.messageContact
 import com.example.minhaagenda.shared.onlyNumbers
 import com.example.minhaagenda.shared.openWhatsApp
 import com.example.minhaagendakotlin.R
@@ -62,7 +63,6 @@ class ShowContactActivity : AppCompatActivity() {
 
         //Comportamento do botão de voltar do dispositivo
         backPressed()
-
 
 
         //Configura todos os listeners desta activity
@@ -156,7 +156,8 @@ class ShowContactActivity : AppCompatActivity() {
 
         // Configura um listener para o botão de mensagem
         binding.showMessage.setOnClickListener{
-
+            val formattedPhoneNumber = contactReceived.phone.onlyNumbers()
+            formattedPhoneNumber.messageContact(this)
         }
 
         // Configura um listener para o botão de compartilhamento

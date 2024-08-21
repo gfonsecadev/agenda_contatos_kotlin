@@ -3,6 +3,8 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +27,7 @@ import com.example.minhaagenda.shared.ImageFormatConverter
 import com.example.minhaagenda.shared.LauncherPermissions
 import com.example.minhaagenda.shared.LaunchersImage
 import com.example.minhaagenda.shared.PermissionsManager
+import com.example.minhaagenda.shared.firstLetter
 import com.example.minhaagenda.shared.stringToEditable
 import com.example.minhaagendakotlin.R
 import com.example.minhaagendakotlin.databinding.FragmentAddContactBinding
@@ -88,7 +91,8 @@ class AddContactFragment : Fragment() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        //Configura o editText do telefone para usar um textWatcher para aplicar uma mascára
+        formatPhoneInput()
         // Configura o ViewModel para gerenciar o estado do AppBarLayout
         setupViewModelAppBar()
         // Inicializa os lançadores para permissões e seleção de imagens
@@ -103,6 +107,7 @@ class AddContactFragment : Fragment() {
         cancelSave()
         //Configura  a ação ao clicar no botão de voltar do dispositivo
         backPressed()
+
     }
 
 
@@ -145,6 +150,62 @@ class AddContactFragment : Fragment() {
             )
         }
     }
+
+    //método para aplicar a formatação de número de telefone enquanto o usuário digita.
+    private fun formatPhoneInput() {
+        // Adiciona um TextWatcher ao EditText para monitorar as alterações no texto
+        binding.editPhone.addTextChangedListener(object : TextWatcher {
+
+            // Método chamado antes do texto ser alterado
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // Sem implementação, pois não precisamos realizar nenhuma ação antes da alteração do texto
+            }
+
+            // Método chamado enquanto o texto está sendo alterado
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Sem implementação, pois não precisamos realizar nenhuma ação durante a alteração do texto
+            }
+
+            // Método chamado após o texto ter sido alterado
+            override fun afterTextChanged(s: Editable?) {
+                // Converte o texto para uma String
+                val typed = s.toString()
+
+                //se a string não estiver vazia e a primeiro número for mesmo um número
+                if(typed.isNotBlank() && typed.firstLetter().contains("[\\d]".toRegex())){
+                // Remove todos os caracteres que não sejam dígitos (0-9) do texto
+                val unMasked = typed.replace("[^\\d]".toRegex(), "")
+
+                // Remove o TextWatcher temporariamente para evitar loops infinitos ao atualizar o texto
+                binding.editPhone.removeTextChangedListener(this)
+
+                // Define o texto formatado no EditText
+                binding.editPhone.setText(formatterPhone(unMasked))
+
+                // Move o cursor para o final do texto
+                binding.editPhone.setSelection(binding.editPhone.text.length)
+
+                // Adiciona o TextWatcher novamente após atualizar o texto
+                binding.editPhone.addTextChangedListener(this)}
+            }
+
+            // Método para formatar o número de telefone com base no comprimento
+            private fun formatterPhone(phone: String): String {
+                return when {
+                    // Se o número tiver menos de 8 dígitos, retorna o número como está
+                    phone.length < 8 -> phone
+
+                    // Se o número tiver entre 7 e 11 dígitos, aplica a máscara
+                    phone.length in 7..11 -> "(${phone.substring(0, 2)}) ${phone.substring(2, 7)}-${phone.substring(7)}"
+
+                    // Se o número tiver mais de 11 dígitos, retorna o número como está
+                    else -> phone
+                }
+            }
+
+        })
+    }
+
 
     private fun cancelSave() {
         // Configura um listener para o botão "Cancelar"
