@@ -2,6 +2,7 @@ package com.example.minhaagenda.shared
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.core.content.FileProvider
 import java.io.File
 
@@ -16,7 +17,8 @@ fun exportContact(file: File, context: Context) {
             val intent = Intent(Intent.ACTION_SEND).apply {
                 putExtra(Intent.EXTRA_STREAM, fileProviderUri) // Anexa o URI do arquivo à Intent
                 type = "text/x-vcard" // Define o tipo MIME para arquivos de vCard (contatos)
-                flags = Intent.FLAG_GRANT_READ_URI_PERMISSION // Concede permissão de leitura ao app de destino
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)  // Concede permissão de leitura ao app de destino
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) // como este metodo está sendo chamado fora da activity esta flag é necessária
             }
 
             // Inicia um seletor de aplicativos para que o usuário escolha qual app usar para compartilhar o arquivo
@@ -25,6 +27,7 @@ fun exportContact(file: File, context: Context) {
     } catch (e: IllegalArgumentException) {
         // Captura e imprime qualquer exceção IllegalArgumentException que possa ocorrer
         e.printStackTrace()
+        Log.d("erroEx", "exportContact: ${e.message}")
     }
 }
 

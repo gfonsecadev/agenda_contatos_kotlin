@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
@@ -12,6 +13,9 @@ import com.bumptech.glide.Glide
 import com.example.minhaagenda.activities.main.MainActivity
 import com.example.minhaagenda.activities.main.fragments.addContacts.AddContactFragment
 import com.example.minhaagenda.entities.Contact
+import com.example.minhaagenda.shared.LauncherPermissions
+import com.example.minhaagenda.shared.PermissionsManager
+import com.example.minhaagenda.shared.callContact
 import com.example.minhaagenda.shared.contactListToVcard
 import com.example.minhaagenda.shared.exportContact
 import com.example.minhaagenda.shared.firstLetter
@@ -27,6 +31,7 @@ class ShowContactActivity : AppCompatActivity() {
 
     // Variável para acessar o layout binding
     private lateinit var binding: ActivityShowContactBinding
+    private lateinit var launcherCallPermission: LauncherPermissions
 
     // ViewModel para gerenciar o estado e a lógica da Activity
     private val viewModelShowContact: ShowContactActivityViewModel by viewModels {
@@ -45,7 +50,7 @@ class ShowContactActivity : AppCompatActivity() {
         // Infla o layout usando View Binding
         binding = ActivityShowContactBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        registerCallLauncher()
         // Recupera o ID do contato da intent
         receiveIdContact()
 
@@ -57,6 +62,8 @@ class ShowContactActivity : AppCompatActivity() {
 
         //Comportamento do botão de voltar do dispositivo
         backPressed()
+
+
 
         //Configura todos os listeners desta activity
         buttonListeners()
@@ -141,24 +148,36 @@ class ShowContactActivity : AppCompatActivity() {
 
     // Configura os listeners para os botões da interface do usuário
     private fun buttonListeners() {
+        // Configura um listener para o botão de ligação
+        binding.showCall.setOnClickListener{
+            //dispara o launcher
+            launcherCallPermission.askPermissionsCall()
+        }
+
+        // Configura um listener para o botão de mensagem
+        binding.showMessage.setOnClickListener{
+
+        }
+
         // Configura um listener para o botão de compartilhamento
         binding.showWhatsapp.setOnClickListener {
             // utiliza a extension onlyNumbers que criei para formatar o número de telefone recebido removendo todos os caracteres não numéricos
             val formattedPhoneNumber = contactReceived.phone.onlyNumbers()
             // Abre o WhatsApp com o número de telefone formatado utilizando a extension openWhatsApp que criei
-            formattedPhoneNumber.openWhatsApp(baseContext)
+            formattedPhoneNumber.openWhatsApp(this)
         }
 
         binding.clickShare.setOnClickListener {
             //converto o contato para lista para utilizar a extension que criei para converter o contatos para formato Vcard
             val contactToListFile = listOf(contactReceived).contactListToVcard()
-            contactToListFile?.let {
+                contactToListFile?.let {
                 //função criada para exportar arquivo de contatos por uma intent
-                exportContact(it, baseContext)
+                exportContact(it, this)
             }
 
         }
     }
+
 
     // Configura o comportamento ao pressionar o botão de voltar
     private fun backPressed() {
@@ -175,6 +194,32 @@ class ShowContactActivity : AppCompatActivity() {
         })
     }
 
+    // Função para registrar um launcher para solicitar permissões em tempo de execução
+    fun registerCallLauncher() {
+        // Inicializa o launcher para permissões
+        launcherCallPermission = LauncherPermissions()
+
+        // Registra um ActivityResultLauncher para solicitar múltiplas permissões
+        val register = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
+            // Verifica se todas as permissões solicitadas foram concedidas e passa para função abaixo
+            val isGranted = result.all { it.value }
+
+            //metodo que se permissão dada executa uma função (neste caso aqui faz uma ligação para o número), senão pede novamente permissões mamuais
+            PermissionsManager.executeIfPermissionGranted(isGranted, { callContact() }, this)
+        }
+
+        //atribui o register para a classe de ajuda (para poder ser lançada em outro momento)
+        launcherCallPermission.registerLauncherPermissions(register)
+    }
+
+    // Função para iniciar uma chamada para o contato formatado
+    private fun callContact() {
+        // Formata o número de telefone recebido para conter apenas dígitos
+        val formattedPhoneNumber = contactReceived.phone.onlyNumbers()
+
+        // Inicia a chamada para o contato com o número formatado
+        formattedPhoneNumber.callContact(this)
+    }
 
 
 }

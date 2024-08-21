@@ -101,13 +101,13 @@
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/show_call"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginEnd="25dp"
                     app:cardCornerRadius="25dp">
 
                     <ImageView
+                        android:id="@+id/show_call"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@color/main_orange"
@@ -121,12 +121,12 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/show_message"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     app:cardCornerRadius="25dp">
 
                     <ImageView
+                        android:id="@+id/show_message"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@color/main_orange"
@@ -140,13 +140,13 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/show_whatsapp"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="25dp"
                     app:cardCornerRadius="25dp">
 
                     <ImageView
+                        android:id="@+id/show_whatsapp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@color/main_orange"

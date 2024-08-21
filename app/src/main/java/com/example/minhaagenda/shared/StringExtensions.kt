@@ -42,4 +42,12 @@ fun String.openWhatsApp(context: Context) {
     }
 }
 
+fun String.callContact(context: Context){
+    val intent =Intent(Intent.ACTION_CALL).apply {
+        data = Uri.parse("tel:$this")
+    }
+    context.startActivity(intent)
+
+}
+
 

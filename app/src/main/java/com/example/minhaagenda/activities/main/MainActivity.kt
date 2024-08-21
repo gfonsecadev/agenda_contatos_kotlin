@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
         val laucherPermissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
             // Verifica se todas as permissões foram concedidas
             val isGranted = result.all { it.value }
-            //metodo que se permissão dada executa uma função (neste caso aqui chama um dialog para escolha da imagem)
+            //metodo que se permissão dada executa uma função (neste caso aqui chama um dialog para escolha da imagem)senão pede novamente permissões mamuais
             PermissionsManager.executeIfPermissionGranted(isGranted, onPermissionGranted = { dialogImage() }, this)
 
         }
@@ -364,7 +364,7 @@ class MainActivity : AppCompatActivity() {
             val listVcard = getListSelectedContacts().contactListToVcard()
             listVcard?.let {
                 //função criada para exportar arquivo de contatos por uma intent
-                exportContact(it,baseContext)
+                exportContact(it,this)
             }
         }
     }
