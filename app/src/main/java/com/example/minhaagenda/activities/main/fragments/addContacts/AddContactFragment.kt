@@ -171,37 +171,42 @@ class AddContactFragment : Fragment() {
                 // Converte o texto para uma String
                 val typed = s.toString()
 
-                //se a string não estiver vazia e a primeiro número for mesmo um número
-                if(typed.isNotBlank() && typed.firstLetter().contains("[\\d]".toRegex())){
-                // Remove todos os caracteres que não sejam dígitos (0-9) do texto
-                val unMasked = typed.replace("[^\\d]".toRegex(), "")
+                // Verifica se a string não está vazia e se o primeiro caractere é um número ou abre parênteses
+                if (typed.isNotBlank() && typed.firstLetter().contains("[\\d(]".toRegex())) {
+                    // Remove todos os caracteres que não sejam dígitos (0-9) do texto
+                    val unMasked = typed.replace("[^\\d]".toRegex(), "")
 
-                // Remove o TextWatcher temporariamente para evitar loops infinitos ao atualizar o texto
-                binding.editPhone.removeTextChangedListener(this)
+                    // Remove o TextWatcher temporariamente para evitar loops infinitos ao atualizar o texto
+                    binding.editPhone.removeTextChangedListener(this)
 
-                // Define o texto formatado no EditText
-                binding.editPhone.setText(formatterPhone(unMasked))
+                    // Define o texto formatado no EditText com a máscara apropriada
+                    binding.editPhone.setText(formatterPhone(unMasked))
 
-                // Move o cursor para o final do texto
-                binding.editPhone.setSelection(binding.editPhone.text.length)
+                    // Move o cursor para o final do texto formatado
+                    binding.editPhone.setSelection(binding.editPhone.text.length)
 
-                // Adiciona o TextWatcher novamente após atualizar o texto
-                binding.editPhone.addTextChangedListener(this)}
+                    // Adiciona o TextWatcher novamente após atualizar o texto
+                    binding.editPhone.addTextChangedListener(this)
+                }
             }
 
             // Método para formatar o número de telefone com base no comprimento
             private fun formatterPhone(phone: String): String {
                 return when {
-                    // Se o número tiver menos de 8 dígitos, retorna o número como está
-                    phone.length < 8 -> phone
+                    // Se o número tiver menos de 5 dígitos, retorna o número como está (sem formatação)
+                    phone.length < 5 -> phone
 
-                    // Se o número tiver entre 7 e 11 dígitos, aplica a máscara
-                    phone.length in 7..11 -> "(${phone.substring(0, 2)}) ${phone.substring(2, 7)}-${phone.substring(7)}"
+                    // Se o número tiver entre 6 e 9 dígitos, adiciona um hífen após o quinto dígito
+                    phone.length in 6..9 -> "${phone.substring(0, 5)}-${phone.substring(5)}"
 
-                    // Se o número tiver mais de 11 dígitos, retorna o número como está
+                    // Se o número tiver entre 10 e 11 dígitos, formata como um número de telefone completo com DDD
+                    phone.length in 10..11 -> "(${phone.substring(0, 2)}) ${phone.substring(2, 7)}-${phone.substring(7)}"
+
+                    // Se o número tiver mais de 11 dígitos, retorna o número como está (sem formatação adicional)
                     else -> phone
                 }
             }
+
 
         })
     }

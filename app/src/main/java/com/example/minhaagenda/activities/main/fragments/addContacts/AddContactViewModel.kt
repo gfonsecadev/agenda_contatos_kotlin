@@ -78,7 +78,6 @@ class AddContactViewModel(application: Application) : AndroidViewModel(applicati
 
 
     //metódo que valida os editTexts passados retornando um boleano para interromper o fluxo da aplicação se os mesmos estiverem em branco
-    //estou utilizando varargs de EditText pois nem todos são MaskEditText(telefone é MaskEditText)
     fun isBlank(vararg editTexts: EditText): Boolean {
         var textIsBlank = false
 

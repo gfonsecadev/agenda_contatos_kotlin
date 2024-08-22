@@ -8,23 +8,25 @@ import android.telephony.TelephonyManager
 import android.text.Editable
 import android.widget.Toast
 
-fun String.stringToEditable():Editable{
-        return Editable.Factory.getInstance().newEditable(this)
-    }
+// Extensão para converter uma String em Editable
+fun String.stringToEditable(): Editable {
+    return Editable.Factory.getInstance().newEditable(this)
+}
 
-   fun String.firstLetter():String{
-       return this.first().toString()
-   }
+// Extensão para obter a primeira letra de uma String
+fun String.firstLetter(): String {
+    return this.first().toString()
+}
 
+// Extensão para remover a máscara do número( parênteses e hífens)
 fun String.onlyNumbers(): String {
-    return this.replace("[()-]".toRegex(),"")
+    return this.replace("[-()\\s]".toRegex(), "")
 }
 
 // Extensão para abrir o WhatsApp com um número de telefone específico
 fun String.openWhatsApp(context: Context) {
     val numberWithCodeCountry = getCountryCode(context) + this
 
-    // Cria um Intent para abrir o WhatsApp com uma URL formatada
     val intent = Intent(Intent.ACTION_VIEW).apply {
         // Define a URL para iniciar uma conversa no WhatsApp com o número fornecido
         data = Uri.parse("https://wa.me/$numberWithCodeCountry")
@@ -32,68 +34,66 @@ fun String.openWhatsApp(context: Context) {
         setPackage("com.whatsapp")
     }
 
-    // Consulta o PackageManager para verificar quais aplicativos podem lidar com o Intent criado
+    // Verifica se há algum aplicativo que pode lidar com o Intent
     val activities = context.packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
 
-    // Verifica se há pelo menos uma atividade que pode lidar com o Intent
     if (activities.isNotEmpty()) {
-        // Se houver atividades, inicia o Intent para abrir o WhatsApp
         context.startActivity(intent)
     } else {
-        // Se nenhuma atividade puder lidar com o Intent, mostra uma mensagem de erro
         Toast.makeText(context, "Nenhum aplicativo pode lidar com essa ação.", Toast.LENGTH_SHORT).show()
     }
 }
 
-fun String.callContact(context: Context){
-    val number:String
-    if (this.contains("[^0-9]".toRegex())){
-        number = getOperatorCode(context) + this
-    }else{
-        number = this
-    }
+// Extensão para realizar uma chamada telefônica
+fun String.callContact(context: Context) {
+    //se for um numero com 11 posições ou seja se contiver o ddd + número eu adiciono o codigo de longa distância da operadora
+    val number = if(this.matches("\\d{11}".toRegex())) {
+        getOperatorCode(context) + this
+    }else {//senão retorno o número como está
+            this
+        }
 
-    val intent =Intent(Intent.ACTION_CALL).apply {
-        data = Uri.parse("tel:${number}")
+    
+    val intent = Intent(Intent.ACTION_CALL).apply {
+        data = Uri.parse("tel:$number")
     }
     context.startActivity(intent)
-
 }
 
-fun String.messageContact(context: Context){
-    val intent = Intent(Intent.ACTION_SENDTO)
-   
-    intent.apply {
-        data = Uri.parse("smsto:${this@messageContact}")
+// Extensão para abrir o app de mensagens com um número pré-preenchido
+fun String.messageContact(context: Context) {
+    val intent = Intent(Intent.ACTION_SENDTO).apply {
+        data = Uri.parse("smsto:$this")
     }
 
-    val applications = context.packageManager.queryIntentActivities(intent,PackageManager.MATCH_DEFAULT_ONLY)
+    val applications = context.packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
 
     if (applications.isNotEmpty()) {
         context.startActivity(intent)
     } else {
-        // Opção para lidar com a ausência de um app de mensagens instalado
         Toast.makeText(context, "Nenhum aplicativo de mensagens encontrado.", Toast.LENGTH_SHORT).show()
     }
-
 }
 
+// Função para obter o TelephonyManager do sistema
 private fun getTelephonyManager(context: Context): TelephonyManager {
     return context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 }
 
+// Função para obter o código do país com base no ISO do país
 private fun getCountryCode(context: Context): String {
-    val code = getTelephonyManager(context).getNetworkCountryIso().uppercase()
+    val code = getTelephonyManager(context).networkCountryIso.uppercase()
     return code.getCountryCode()
 }
 
+// Função para obter o código da operadora de acordo com o país
 private fun getOperatorCode(context: Context): String? {
     val telephonyManager = getTelephonyManager(context)
     val code = telephonyManager.simOperatorName.uppercase()
-    return code.getOperatorCode(telephonyManager.getNetworkCountryIso().uppercase())
+    return code.getOperatorCode(telephonyManager.networkCountryIso.uppercase())
 }
 
-
+// Função para mapear o código de discagem dos principais paises
 fun String.getCountryCode(): String {
     val countryCodes = mapOf(
         "US" to "1",   // Estados Unidos
@@ -106,14 +106,15 @@ fun String.getCountryCode(): String {
         "NG" to "234", // Nigéria
         "BD" to "880", // Bangladesh
         "JP" to "81"   // Japão
-        //escolhi somente alguns paises
+        // Adicionei apenas alguns países
     )
-    return countryCodes[this] ?: "1" // Retorna "1" como padrão se não encontrado
+    return countryCodes[this] ?: "1" // Retorna "1" como padrão se o país não for encontrado
 }
 
-fun String.getOperatorCode(codeCountry:String): String? {
-    val operatorCodes = when(codeCountry){
-        "BR"-> mapOf(
+// Função para mapear o código das operadoras de acordo com o país
+fun String.getOperatorCode(codeCountry: String): String? {
+    val operatorCodes = when (codeCountry) {
+        "BR" -> mapOf(
             "VIVO" to "015",
             "CLARO" to "021",
             "TIM" to "041",
@@ -121,16 +122,10 @@ fun String.getOperatorCode(codeCountry:String): String? {
             "NEXTEL" to "99"
             // Adicionei as principais operadoras brasileiras
         )
-        //...deixei para futuras adições de outros paises.
+        // Adicionar outros países aqui se necessário
 
-        else-> emptyMap()//
+        else -> emptyMap() // Caso o país não seja reconhecido, retorna um mapa vazio
     }
 
     return operatorCodes[this]
 }
-
-
-
-
-
-
