@@ -53,7 +53,7 @@ fun String.callContact(context: Context) {
             this
         }
 
-    
+
     val intent = Intent(Intent.ACTION_CALL).apply {
         data = Uri.parse("tel:$number")
     }

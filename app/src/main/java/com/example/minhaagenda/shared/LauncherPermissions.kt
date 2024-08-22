@@ -36,6 +36,7 @@ class LauncherPermissions{
         permissionsLauncher.launch(permissions)
     }
 
+    //chama o launcher de permissão para ligações
     fun askPermissionsCall(){
         val callPermission = arrayOf(Manifest.permission.CALL_PHONE)
         permissionsLauncher.launch(callPermission)
