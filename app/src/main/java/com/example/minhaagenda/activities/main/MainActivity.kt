@@ -318,13 +318,16 @@ class MainActivity : AppCompatActivity() {
 
     // Infla o menu de opções na barra de ferramentas com base na condição 'isSelected'
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+
         // Verifica se a condição 'isSelected' é verdadeira para inflar o menu
         return if (getSizeSelectedContacts() > 0) {
             // Infla o menu definido em 'menu_selected_contacts.xml' na barra de ferramentas
             menuInflater.inflate(R.menu.menu_selected_contacts, menu)
             true // Retorna true para indicar que o menu foi inflado com sucesso
         } else {
-            false // Retorna false se a condição não for satisfeita, e o menu não será inflado
+            //Infla o menu de procura de contatos
+            menuInflater.inflate(R.menu.menu_search,menu)
+            true
         }
     }
 
