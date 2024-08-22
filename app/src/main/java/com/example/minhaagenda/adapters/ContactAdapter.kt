@@ -14,7 +14,7 @@ import com.example.minhaagendakotlin.databinding.RecyclerContactLayoutBinding
 
 //este adapter irá renderizar uma letra e a lista de contatos relacionado a esta letra para ser passada como parametro para o NestedAdapter aqui mesmo
 //ou seja a letra popula este adapter e a lista o adapter aninhado.
-class ContactAdapter(val listContact: List<ContactListByInitial>, val context: Activity) : RecyclerView.Adapter<ContactHolder>() {
+class ContactAdapter(var listContact: List<ContactListByInitial>, val context: Activity) : RecyclerView.Adapter<ContactHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactHolder {
         //retornamos para o holder um data binding do layout.
@@ -28,8 +28,18 @@ class ContactAdapter(val listContact: List<ContactListByInitial>, val context: A
 
     //retorna o item de acordo com a posição passada
     //é utilizado no ScrollListener deste recyclerView para recuperar o item visivel no topo do recyclerView
-    fun getItem(position: Int): ContactListByInitial {
-        return listContact.get(position)
+    fun getItem(position: Int): ContactListByInitial? {
+        if (listContact.isNotEmpty()){
+            return listContact.get(position)}
+
+        return null
+    }
+
+    //metodo para atualizar a lista do adapter
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateData(newListContact: List<ContactListByInitial>){
+        listContact = newListContact
+        this.notifyDataSetChanged()
     }
 
     override fun onBindViewHolder(holder: ContactHolder, @SuppressLint("RecyclerView") position: Int) {

@@ -28,6 +28,14 @@ class AllContactsViewModel(application: Application) : AndroidViewModel(applicat
 
        }
     }
+    //recupera os contatos por nome
+    fun getContactByName(name: String): Job {
+        return viewModelScope.launch {
+            val contactFound = contactDatabase.getContactByName(name)
+            _listContactListByInitial.value =
+                ContactMapper.contactsListToAContactsObjectList(contactFound)
+        }
+    }
 
 }
 

@@ -1,7 +1,6 @@
 package com.example.minhaagenda.activities.main
 
 import android.app.Dialog
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.os.Build
@@ -14,6 +13,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.appcompat.widget.SearchView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
@@ -33,7 +33,6 @@ import com.example.minhaagendakotlin.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import com.bumptech.glide.Glide
@@ -319,17 +318,35 @@ class MainActivity : AppCompatActivity() {
     // Infla o menu de opções na barra de ferramentas com base na condição 'isSelected'
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
 
-        // Verifica se a condição 'isSelected' é verdadeira para inflar o menu
+        // Verifica se a condição 'isSelected' é verdadeira para inflar o menu para contato(s) selecionado(s)
         return if (getSizeSelectedContacts() > 0) {
             // Infla o menu definido em 'menu_selected_contacts.xml' na barra de ferramentas
             menuInflater.inflate(R.menu.menu_selected_contacts, menu)
             true // Retorna true para indicar que o menu foi inflado com sucesso
         } else {
-            //Infla o menu de procura de contatos
-            menuInflater.inflate(R.menu.menu_search,menu)
+            //Infla o menu de pesquisa de contatos
+             menuInflater.inflate(R.menu.menu_search,menu)
+            val searchContact = menu.findItem(R.id.search_contact).actionView as SearchView
+            searchContact.setOnQueryTextListener(object:SearchView.OnQueryTextListener{
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    if (newText.isBlank()){
+                        allContacts()
+                    }else{
+                        contactFound(newText)
+                    }
+                    return true
+                }
+
+            })
             true
         }
     }
+
+
 
     //opcões no menu de itens selecionados
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -384,16 +401,27 @@ class MainActivity : AppCompatActivity() {
         snackbar.show()
     }
 
-
-
-    // Função para recarregar a lista de contatos após uma alteração
-    private fun reloadContactList() {
+    private fun getInstanceAllFragment(): AllContactsFragment {
         // Encontra o NavHostFragment dentro do layout atual
         val navFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
         // Recupera o fragmento que contém todos os contatos
         val allFragment = navFragment.childFragmentManager.primaryNavigationFragment as AllContactsFragment
         // Chama o método do fragmento para recarregar a lista de contatos
-        allFragment.reloadContactList()
+        return allFragment
+    }
+
+    // Função para recarregar a lista de contatos após uma alteração
+    private fun reloadContactList() {
+        getInstanceAllFragment().reloadContactList()
+    }
+
+    // Função para procurar os contatos na searchView
+    private fun contactFound(name: String){
+        getInstanceAllFragment().getContactFound(name)
+    }
+
+    private fun allContacts(){
+        getInstanceAllFragment().getAllContacts()
     }
 
     override fun onStart() {

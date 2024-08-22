@@ -19,6 +19,10 @@ class ContactRepository(context: Context) {
         return contactDatabase.getContact(id)
     }
 
+    fun getContactByName(name: String): List<Contact>{
+        return contactDatabase.getContactByName(name)
+    }
+
     fun getAllContacts(): List<Contact> {
         return contactDatabase.getAllContact()
     }

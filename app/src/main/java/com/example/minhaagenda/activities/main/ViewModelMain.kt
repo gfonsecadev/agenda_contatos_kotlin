@@ -31,6 +31,7 @@ class ViewModelMain(application: Application) : AndroidViewModel(application) {
             repository_main.deleteContact(it)}
         }
     }
+
 }
 
 class ViewModelMainFactory(val application: Application) : ViewModelProvider.Factory{

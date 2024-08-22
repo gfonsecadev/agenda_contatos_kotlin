@@ -21,6 +21,9 @@ interface ContactDao {
     @Query("SELECT * FROM Contato WHERE id = :id")
     fun getContact(id:Long):Contact
 
+    @Query("SELECT * FROM CONTATO WHERE 'name' = :name")
+    fun getContactByName(name: String): List<Contact>
+
     @Query("SELECT * FROM Contato")
     fun getAllContact(): List<Contact>
 }
