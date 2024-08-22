@@ -4,7 +4,6 @@ import android.content.Context
 import com.example.minhaagenda.dao.ContactDao
 import com.example.minhaagenda.database.ContactDatabase
 import com.example.minhaagenda.entities.Contact
-import com.example.minhaagenda.mappers.ContactMapper
 
 //padrão repository para encapsular o dominio da aplicação
 class ContactRepository(context: Context) {
@@ -15,7 +14,7 @@ class ContactRepository(context: Context) {
         return contactDatabase.insertContact(contact)
     }
 
-    fun getContact(id: Long): Contact {
+    fun getContactById(id: Long): Contact {
         return contactDatabase.getContact(id)
     }
 

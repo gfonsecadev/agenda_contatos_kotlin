@@ -2,7 +2,13 @@ package com.example.minhaagenda.adapters
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +19,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
+import com.example.minhaagenda.activities.main.MainActivity.Companion.typedNameToSearch
 import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment.Companion.addSelectedContact
 import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment.Companion.alreadySelected
 import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment.Companion.getSizeSelectedContacts
@@ -43,6 +50,7 @@ class NestedAdapter(val list: ContactListByInitial, val activity:Activity) :
 
         // Define o nome do contato no TextView
         holder.nameContact.text = contact.name
+        highlightText(holder.nameContact, typedNameToSearch)
 
         // Cria uma cor RGB  com base no nome para contatos sem imagem
         val color = randomColor(contact.name)
@@ -85,6 +93,36 @@ class NestedAdapter(val list: ContactListByInitial, val activity:Activity) :
                 activity.startActivity(intent)
             }
         }
+    }
+
+    fun highlightText(textView: TextView, textToHighlight: String) {
+        val originalText = textView.text.toString()
+        val spannableString = SpannableString(originalText)
+
+        // Encontra a posição do texto que deve ser destacado
+        val startIndex = originalText.indexOf(textToHighlight, ignoreCase = true)
+        if (startIndex != -1) {
+            // Define a cor de destaque
+            val colorSpan = ForegroundColorSpan(activity.getColor(R.color.main_orange))
+            // Aplica o estilo ao texto encontrado
+            spannableString.setSpan(
+                colorSpan,
+                startIndex,
+                startIndex + textToHighlight.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+
+            val styleSpan = StyleSpan(Typeface.BOLD)
+            spannableString.setSpan(
+                styleSpan,
+                startIndex,
+                startIndex + textToHighlight.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+
+        // Atualiza o TextView com o texto formatado
+        textView.text = spannableString
     }
 
     private fun selectContact(holder: HolderNestedAdaper, contact: Contact) {

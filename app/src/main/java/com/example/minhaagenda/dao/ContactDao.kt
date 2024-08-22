@@ -21,7 +21,7 @@ interface ContactDao {
     @Query("SELECT * FROM Contato WHERE id = :id")
     fun getContact(id:Long):Contact
 
-    @Query("SELECT * FROM CONTATO WHERE 'name' = :name")
+    @Query("SELECT * FROM CONTATO WHERE nome LIKE '%'||:name||'%'")
     fun getContactByName(name: String): List<Contact>
 
     @Query("SELECT * FROM Contato")

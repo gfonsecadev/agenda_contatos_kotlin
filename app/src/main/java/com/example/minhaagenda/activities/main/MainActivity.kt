@@ -335,7 +335,9 @@ class MainActivity : AppCompatActivity() {
                 override fun onQueryTextChange(newText: String): Boolean {
                     if (newText.isBlank()){
                         allContacts()
+                        typedNameToSearch = ""
                     }else{
+                        typedNameToSearch = newText
                         contactFound(newText)
                     }
                     return true
@@ -345,7 +347,6 @@ class MainActivity : AppCompatActivity() {
             true
         }
     }
-
 
 
     //opcões no menu de itens selecionados
@@ -430,6 +431,10 @@ class MainActivity : AppCompatActivity() {
         setupNavView()
         //seleciona o focu na inicialização da activity no item que mostra todos os contatos
         focusItem(R.id.nav_item_all)
+    }
+
+    companion object{
+        var typedNameToSearch:String = ""
     }
 
 }
