@@ -90,13 +90,17 @@ class AllContactsFragment : Fragment() {
         viewModelAllContacts.getAllContacts()
         viewModelAllContacts.listContactListByInitial.observe(viewLifecycleOwner) {
             listContactListByInitial = it
-            val adapter = binding.recyclerContact.adapter as ContactAdapter
-            adapter.updateData(it)
+            reloadAdapter(it)
         }
     }
 
+    //metodo para atualizar a lista de contatos
+    private fun reloadAdapter(newList:List<ContactListByInitial>){
+        val adapter = binding.recyclerContact.adapter as ContactAdapter
+        adapter.updateData(newList)
+    }
 
-
+    
     // Configura o comportamento da AppBar pela ViewModel
     private fun setupViewModelAppBar() {
         // Chamamos o método setAppBarLayoutState para alterar o valor do MutableLiveData e disparar o observer na Activity
@@ -199,10 +203,12 @@ class AllContactsFragment : Fragment() {
         reloadAllContacts()
     }
 
-    fun getContactFound(name: String){
+    //metodo que passará para este fragment qual o nome a procurar no SearchView da MainActivity
+    fun searchContacts(name: String){
         viewModelAllContacts.getContactByName(name)
     }
 
+    //metodo que pedirá a este fragment retornar todos os contatos  quando o SearchView da MainActivity estiver em branco
     fun getAllContacts(){
         viewModelAllContacts.getAllContacts()
     }

@@ -96,15 +96,21 @@ class NestedAdapter(val list: ContactListByInitial, val activity:Activity) :
     }
 
     fun highlightText(textView: TextView, textToHighlight: String) {
+        // Obtém o texto atual do TextView
         val originalText = textView.text.toString()
+
+        // Cria um SpannableString a partir do texto original para permitir a aplicação de estilos
         val spannableString = SpannableString(originalText)
 
-        // Encontra a posição do texto que deve ser destacado
+        // Encontra a posição inicial do texto que deve ser destacado
         val startIndex = originalText.indexOf(textToHighlight, ignoreCase = true)
+
+        // Verifica se o texto para destacar foi encontrado
         if (startIndex != -1) {
-            // Define a cor de destaque
+            // Cria um span para definir a cor do texto destacado
             val colorSpan = ForegroundColorSpan(activity.getColor(R.color.main_orange))
-            // Aplica o estilo ao texto encontrado
+
+            // Aplica o span de cor ao texto encontrado
             spannableString.setSpan(
                 colorSpan,
                 startIndex,
@@ -112,7 +118,10 @@ class NestedAdapter(val list: ContactListByInitial, val activity:Activity) :
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
 
+            // Cria um span para definir o estilo de negrito
             val styleSpan = StyleSpan(Typeface.BOLD)
+
+            // Aplica o span de estilo ao texto encontrado
             spannableString.setSpan(
                 styleSpan,
                 startIndex,
@@ -121,9 +130,10 @@ class NestedAdapter(val list: ContactListByInitial, val activity:Activity) :
             )
         }
 
-        // Atualiza o TextView com o texto formatado
+        // Atualiza o TextView com o texto formatado que inclui os estilos aplicados
         textView.text = spannableString
     }
+
 
     private fun selectContact(holder: HolderNestedAdaper, contact: Contact) {
         if (alreadySelected(contact)) {

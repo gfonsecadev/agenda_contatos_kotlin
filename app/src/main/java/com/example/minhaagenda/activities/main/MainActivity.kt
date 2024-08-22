@@ -418,7 +418,7 @@ class MainActivity : AppCompatActivity() {
 
     // Função para procurar os contatos na searchView
     private fun contactFound(name: String){
-        getInstanceAllFragment().getContactFound(name)
+        getInstanceAllFragment().searchContacts(name)
     }
 
     private fun allContacts(){
