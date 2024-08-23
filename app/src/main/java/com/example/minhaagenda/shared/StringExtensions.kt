@@ -63,7 +63,7 @@ fun String.callContact(context: Context) {
 // Extensão para abrir o app de mensagens com um número pré-preenchido
 fun String.messageContact(context: Context) {
     val intent = Intent(Intent.ACTION_SENDTO).apply {
-        data = Uri.parse("smsto:$this")
+        data = Uri.parse("smsto:${this@messageContact}")
     }
 
     val applications = context.packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)

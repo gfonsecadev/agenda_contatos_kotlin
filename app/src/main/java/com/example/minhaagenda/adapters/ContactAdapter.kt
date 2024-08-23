@@ -2,13 +2,13 @@ package com.example.minhaagenda.adapters
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.minhaagenda.DividerRecyclerView.CustomDivider
+import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.entities.ContactListByInitial
 import com.example.minhaagendakotlin.databinding.RecyclerContactLayoutBinding
 
@@ -44,30 +44,41 @@ class ContactAdapter(var listContact: List<ContactListByInitial>, val context: A
 
     override fun onBindViewHolder(holder: ContactHolder, @SuppressLint("RecyclerView") position: Int) {
         val contactObject = listContact.get(position)
-        holder.firstLetter.text = contactObject.letter.toString()
+        holder.firstLetter.text = contactObject.letter
 
-        //instãnciamos o recycler view.
-        holder.recyclerNested.layoutManager = LinearLayoutManager(context)
-
-        // Indica que o tamanho do RecyclerView e seus itens são fixos, melhorando o desempenho
-        holder.recyclerNested.setHasFixedSize(true)
-
-        // Define o número de itens a serem mantidos no cache para melhorar a rolagem
-        holder.recyclerNested.setItemViewCacheSize(20)
-
-        //holder.recyclerNested.addItemDecoration(DividerItemDecoration(context,LinearLayout.VERTICAL)) //ou
-        holder.recyclerNested.addItemDecoration(CustomDivider())
-
-        val adapter = NestedAdapter(contactObject, context)
-        holder.recyclerNested.adapter = adapter
+        holder.settingsRecyclerView(contactObject.contactList)
 
     }
 
 }
 
 //viewHolder utilizando data binding
-class ContactHolder(private val binding: RecyclerContactLayoutBinding,context: Context?) : ViewHolder(binding.root) {
+class ContactHolder(private val binding: RecyclerContactLayoutBinding,var context: Activity) : ViewHolder(binding.root) {
     val firstLetter = binding.firstLetter
-    val recyclerNested = binding.recyclerNested
+    val  recyclerNested = binding.recyclerNested
+
+
+    //metodo para configurar recyclerView
+    fun settingsRecyclerView(contacts:List<Contact>){
+
+        //instãnciamos o recycler view.
+        recyclerNested.layoutManager = LinearLayoutManager(context)
+
+        // Indica que o tamanho do RecyclerView e seus itens são fixos, melhorando o desempenho
+        recyclerNested.setHasFixedSize(true)
+
+        // Define o número de itens a serem mantidos no cache para melhorar a rolagem
+        recyclerNested.setItemViewCacheSize(20)
+
+        //holder.recyclerNested.addItemDecoration(DividerItemDecoration(context,LinearLayout.VERTICAL)) //ou
+        recyclerNested.addItemDecoration(CustomDivider())
+
+        val adapter = NestedAdapter(contacts, context)
+        recyclerNested.adapter = adapter
+        
+    }
+
 
 }
+
+
