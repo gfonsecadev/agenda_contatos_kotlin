@@ -75,7 +75,7 @@ class ContactHolder(private val binding: RecyclerContactLayoutBinding,var contex
 
         val adapter = NestedAdapter(contacts, context)
         recyclerNested.adapter = adapter
-        
+
     }
 
 

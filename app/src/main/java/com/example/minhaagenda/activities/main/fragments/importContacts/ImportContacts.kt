@@ -1,4 +1,4 @@
-package com.example.minhaagenda.activities.main.fragments.exitContacts
+package com.example.minhaagenda.activities.main.fragments.importContacts
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,16 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.minhaagenda.shared.AppBarViewModel
-import com.example.minhaagendakotlin.R
-import com.example.minhaagendakotlin.databinding.FragmentExitContactragmentBinding
+import com.example.minhaagendakotlin.databinding.FragmentImportContactsBinding
 
-class ExitContactragment : Fragment() {
-    private lateinit var binding: FragmentExitContactragmentBinding
+class ImportContacts : Fragment() {
+
+    private lateinit var binding: FragmentImportContactsBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentExitContactragmentBinding.inflate(inflater,container,false)
+    ): View {
+        binding = FragmentImportContactsBinding.inflate(inflater,container,false)
         return binding.root
     }
 
