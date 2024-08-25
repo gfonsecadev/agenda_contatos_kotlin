@@ -1,26 +1,20 @@
 package com.example.minhaagenda.activities.main.fragments.importContacts
 
 import android.app.Application
-import android.content.Intent
 import android.net.Uri
-import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.minhaagenda.database.ContactDatabase
 import com.example.minhaagenda.entities.Contact
-import java.io.File
 
 class ImportContactsViewModel(application: Application) : AndroidViewModel(application){
     private var application = application
-    private var _chooseContacts= MutableLiveData<ActivityResultLauncher<Intent>>()
-    val chooseContacts:MutableLiveData<ActivityResultLauncher<Intent>> = _chooseContacts
-    val repository = ContactDatabase.getContactDatabase(application).contactDAO()
+    private val repository = ContactDatabase.getContactDatabase(application).contactDAO()
 
     fun importFromCsv(uriContacts : Uri){
-       var inputStreamCSV = application.contentResolver.openInputStream(uriContacts)
+       val inputStreamCSV = application.contentResolver.openInputStream(uriContacts)
         var columnNameIndex= -1
         var columnPhoneIndex = -1
         var columnEmailIndex = -1
@@ -29,7 +23,7 @@ class ImportContactsViewModel(application: Application) : AndroidViewModel(appli
             inputStreamCSV?.let {stream->
                 stream.bufferedReader().useLines { lines->
                    lines.forEachIndexed { index,line->
-                       var arrayLine = if(line.contains(",")) line.split(",") else line.split(";")
+                       val arrayLine = if(line.contains(",")) line.split(",") else line.split(";")
 
 
                        if (index == 0){
