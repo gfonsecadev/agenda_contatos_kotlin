@@ -18,20 +18,23 @@ class ImportContactsViewModel(application: Application) : AndroidViewModel(appli
         var columnNameIndex= -1
         var columnPhoneIndex = -1
         var columnEmailIndex = -1
+        var separator = ""
 
         try {
             inputStreamCSV?.let {stream->
                 stream.bufferedReader().useLines { lines->
                    lines.forEachIndexed { index,line->
-                       val arrayLine = if(line.contains(",")) line.split(",") else line.split(";")
-
 
                        if (index == 0){
+                           separator = if(line.contains(",")) "," else ";"
+                           val arrayLine = manualReplaceCommas(line)
                            columnNameIndex = arrayLine.indexOf("first_name")
                            columnPhoneIndex = arrayLine.indexOf("phone")
                            columnEmailIndex = arrayLine.indexOf("email")
                        }else {
                            if (columnNameIndex >= 0 && columnPhoneIndex >= 0) {
+
+                               val arrayLine = manualReplaceCommas(line)
                                val contact = Contact()
                                contact.name = arrayLine[columnNameIndex]
                                contact.phone = arrayLine[columnPhoneIndex]
@@ -49,6 +52,51 @@ class ImportContactsViewModel(application: Application) : AndroidViewModel(appli
         }
 
     }
+
+
+    fun regexReplaceCommas(line: String): List<String> {
+        // Regex que encontra vírgulas fora das aspas
+        val regex = Regex(""",(?=(?:[^"]*"[^"]*")*[^"]*$)""")
+
+        // Substitui as vírgulas fora das aspas por asteriscos
+        val replaced = regex.replace(line, "*")
+
+        // Divide a string resultante pelos asteriscos e retorna a lista
+        return replaced.split("*")
+    }
+
+
+    fun manualReplaceCommas(line: String): List<String> {
+        var isQuote = false  // Indica se o caractere atual está dentro de aspas
+        val replaced = StringBuilder()  // StringBuilder para construir a string resultante
+
+        // Percorre cada caractere na linha com o índice
+        line.forEachIndexed { index, char ->
+            if (char == '"') {
+                // Alterna o estado de estar dentro ou fora de aspas
+                isQuote = !isQuote
+            }
+
+            if (isQuote) {
+                // Se dentro de aspas, adiciona o caractere diretamente
+                replaced.append(char)
+            } else {
+                // Se fora de aspas
+                if (char == ',') {
+                    // Substitui vírgulas fora de aspas por asteriscos
+                    replaced.append('*')
+                } else {
+                    // Adiciona outros caracteres diretamente
+                    replaced.append(char)
+                }
+            }
+        }
+
+        // Divide a string resultante pelos asteriscos e retorna a lista
+        return replaced.toString().split("*")
+    }
+
+
 
     fun importFromVcf(uriContacts: Uri){
         var inputStreamCSV = application.contentResolver.openInputStream(uriContacts)
