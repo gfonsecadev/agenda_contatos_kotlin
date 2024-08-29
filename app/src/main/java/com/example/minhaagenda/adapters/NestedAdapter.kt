@@ -132,13 +132,15 @@ fun TextView.highlightText(textToHighlight: String){
         // Cria um span para definir o estilo de negrito
         val styleSpan = StyleSpan(Typeface.BOLD)
 
-        // Aplica o span de cor e estilo bold ao texto encontrado
-        spannableString.setSpan(
-            arrayOf( colorSpan,styleSpan),
-            startIndex,
-            startIndex + textToHighlight.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
+        // Aplica o span de cor e estilo bold ao texto encontrado(para não repetir o codigo 2 vezes passei por um for já que o que muda é somente o span)
+        for (span in arrayOf(colorSpan, styleSpan)){
+            spannableString.setSpan(
+                span,
+                startIndex,
+                startIndex + textToHighlight.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
 
     }
 
