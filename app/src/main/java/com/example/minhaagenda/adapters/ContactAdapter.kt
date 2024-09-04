@@ -14,7 +14,7 @@ import com.example.minhaagendakotlin.databinding.RecyclerContactLayoutBinding
 
 //este adapter irá renderizar uma letra e a lista de contatos relacionado a esta letra para ser passada como parametro para o NestedAdapter aqui mesmo
 //ou seja a letra popula este adapter e a lista o adapter aninhado.
-class ContactAdapter(var listContact: List<ContactListByInitial>, val context: Activity) : RecyclerView.Adapter<ContactHolder>() {
+class ContactAdapter(private var listContact: List<ContactListByInitial>, val context: Activity) : RecyclerView.Adapter<ContactHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactHolder {
         //retornamos para o holder um data binding do layout.
@@ -53,22 +53,29 @@ class ContactAdapter(var listContact: List<ContactListByInitial>, val context: A
 }
 
 //viewHolder utilizando data binding
-class ContactHolder(private val binding: RecyclerContactLayoutBinding,var context: Activity) : ViewHolder(binding.root) {
+class ContactHolder(binding: RecyclerContactLayoutBinding, var context: Activity) : ViewHolder(binding.root) {
     val firstLetter = binding.firstLetter
-    val  recyclerNested = binding.recyclerNested
+    private val  recyclerNested = binding.recyclerNested
 
 
     //metodo para configurar recyclerView
     fun settingsRecyclerView(contacts:List<Contact>){
+        // Cria uma nova instância de LinearLayoutManager para o RecyclerView
+        val layout = LinearLayoutManager(context)
 
-        //instãnciamos o recycler view.
-        recyclerNested.layoutManager = LinearLayoutManager(context)
+        // Define o número de itens a serem pré-carregados (prefetched) pelo LinearLayoutManager
+        // para melhorar a performance de RecyclerViews aninhados
+        layout.initialPrefetchItemCount = 1000
+        //atribuimos o LinearLayout configurado ao recyclerView
+
+        recyclerNested.layoutManager = layout
 
         // Indica que o tamanho do RecyclerView e seus itens são fixos, melhorando o desempenho
         recyclerNested.setHasFixedSize(true)
+        recyclerNested.isNestedScrollingEnabled = false
 
         // Define o número de itens a serem mantidos no cache para melhorar a rolagem
-        recyclerNested.setItemViewCacheSize(20)
+        recyclerNested.setItemViewCacheSize(1000)
 
         //holder.recyclerNested.addItemDecoration(DividerItemDecoration(context,LinearLayout.VERTICAL)) //ou
         recyclerNested.addItemDecoration(CustomDivider())

@@ -109,10 +109,12 @@ class AllContactsFragment : Fragment() {
 
     // Configuração do RecyclerView Principal
     private fun recyclerSettings(list: List<ContactListByInitial>) {
-        // O contactAdapter recebe uma lista de Contact onde o mapper contactToContactObject converte para ContactObject que é o exigido pelo adapter
-        val adapter = ContactAdapter(list, requireActivity())
+        // Cria uma nova instância de LinearLayoutManager para o RecyclerView
+        val layout = LinearLayoutManager(context)
 
-        binding.recyclerContact.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        // Atribui o LinearLayoutManager configurado ao RecyclerView
+        binding.recyclerContact.layoutManager = layout
+
 
         // Indica que o tamanho do RecyclerView e seus itens são fixos, melhorando o desempenho
         binding.recyclerContact.setHasFixedSize(true)
@@ -120,6 +122,8 @@ class AllContactsFragment : Fragment() {
         // Define o número de itens a serem mantidos no cache para melhorar a rolagem
         binding.recyclerContact.setItemViewCacheSize(20)
 
+        // O contactAdapter recebe uma lista de Contact onde o mapper contactToContactObject converte para ContactObject que é o exigido pelo adapter
+        val adapter = ContactAdapter(list, requireActivity())
         binding.recyclerContact.adapter = adapter
 
         // Utilizo o ScrollListener para ouvir mudanças no scroll do RecyclerView

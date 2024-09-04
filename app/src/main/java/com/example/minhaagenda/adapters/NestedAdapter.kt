@@ -1,6 +1,5 @@
 package com.example.minhaagenda.adapters
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Typeface
@@ -93,15 +92,6 @@ class NestedAdapter(var list: List<Contact>, val activity:Activity) :
             }
         }
     }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateData(contacts: List<Contact>) {
-        if (contacts.isNotEmpty()){
-            list = contacts
-            notifyDataSetChanged()
-        }
-    }
-
 
 }
 

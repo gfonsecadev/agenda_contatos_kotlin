@@ -98,8 +98,35 @@ class ImportContactsViewModel(application: Application) : AndroidViewModel(appli
 
 
 
+
     fun importFromVcf(uriContacts: Uri){
-        var inputStreamCSV = application.contentResolver.openInputStream(uriContacts)
+        val inputStreamVcf = application.contentResolver.openInputStream(uriContacts)
+
+        try {
+            inputStreamVcf?.let { stream->
+                stream.bufferedReader().useLines { lines->
+
+                    val text = lines.reduce{acc,line->"$acc\n$line"}
+                    val contacts = text.split("BEGIN:VCARD")
+                    contacts.forEach {contact->
+                        val name = "FN.*:(.*)".toRegex().find(contact)?.groupValues?.get(1)?.trim()
+                        val phone = "TEL.*:(.*)".toRegex().find(contact)?.groupValues?.get(1)?.trim()
+                        val email = "EMAIL.*:(.*)".toRegex().find(contact)?.groupValues?.get(1)?.trim()
+
+                        if(!name.isNullOrEmpty() && !phone.isNullOrEmpty()){
+                            val contactSave = Contact()
+                            contactSave.name = name
+                            contactSave.phone = phone
+                            contactSave.email = email.orEmpty()
+                            repository.insertContact(contactSave)
+                        }
+                    }
+
+                }
+            }
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
     }
 }
 
