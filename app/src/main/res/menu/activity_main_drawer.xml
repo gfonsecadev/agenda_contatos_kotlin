@@ -15,7 +15,7 @@
             android:title="Novo Contato" />
         <item
             android:id="@+id/nav_item_exit"
-            android:icon="@drawable/ic_exit"
-            android:title="Sair" />
+            android:icon="@drawable/ic_import"
+            android:title="Importar Contatos" />
     </group>
 </menu>
