@@ -1,5 +1,6 @@
 package com.example.minhaagenda.activities.main.fragments.importContacts
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,9 +9,12 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.minhaagenda.shared.AppBarViewModel
 import com.example.minhaagenda.shared.LauncherSearchContacts
 import com.example.minhaagendakotlin.databinding.FragmentImportContactsBinding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class ImportContactsFragment : Fragment() {
 
@@ -36,11 +40,13 @@ class ImportContactsFragment : Fragment() {
 
     private fun buttomListeners(){
         binding.vcfFormat.setOnClickListener{
-            launcherSearchContacts.searchByVcfFile()
-        }
+                launcherSearchContacts.searchByVcfFile()
+
+            }
 
         binding.csvFormat.setOnClickListener{
             launcherSearchContacts.searchByCsvFile()
+
         }
     }
 
@@ -51,8 +57,8 @@ class ImportContactsFragment : Fragment() {
                 val type = requireActivity().contentResolver.getType(it)
 
                 when (type?.lowercase()) {
-                    "text/csv" -> importContactsViewModel.importFromCsv(it)
-                    "text/vcard", "text/x-vcard" -> importContactsViewModel.importFromVcf(it)
+                    "text/csv" -> importByCsv(it)
+                    "text/vcard", "text/x-vcard" -> importByVcf(it)
                     else -> {
                         println("Tipo de arquivo não suportado ou tipo MIME não reconhecido: $type")
                     }
@@ -63,6 +69,29 @@ class ImportContactsFragment : Fragment() {
         }
 
         launcherSearchContacts.registerLauncher(register)
+    }
+
+    fun importByCsv(file: Uri){
+        lifecycleScope.launch {
+            binding.importProgress.apply {
+                textProgressBar.text = "Importando de Csv..."
+                progressLayout.visibility = View.VISIBLE
+                delay(1000)
+                importContactsViewModel.importFromCsv(file)
+                progressLayout.visibility = View.GONE
+            }
+        }
+    }
+    fun importByVcf(file: Uri){
+        lifecycleScope.launch {
+            binding.importProgress.apply {
+                textProgressBar.text =  "Importando de Vcf..."
+                progressLayout.visibility = View.VISIBLE
+                delay(1000)
+                importContactsViewModel.importFromVcf(file)
+                progressLayout.visibility = View.GONE
+            }
+        }
     }
 
 
