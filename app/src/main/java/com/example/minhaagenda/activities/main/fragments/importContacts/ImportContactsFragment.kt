@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +21,7 @@ class ImportContactsFragment : Fragment() {
 
     private lateinit var binding: FragmentImportContactsBinding
     private  var launcherSearchContacts=LauncherSearchContacts()
+    private val viewModelShare: AppBarViewModel by activityViewModels()
     private val importContactsViewModel: ImportContactsViewModel by viewModels{ImportContactsViewModelFactory(requireActivity().application)}
 
     override fun onCreateView(
@@ -95,9 +97,8 @@ class ImportContactsFragment : Fragment() {
     }
 
 
-    private fun setupViewModelAppBar() {
-        //instãncia do AppBarViewModel
-        val viewModelShare = ViewModelProvider(requireActivity()).get(AppBarViewModel::class.java)
+    //Configura o comportamento da AppBar pela ViewModel
+    private fun setupViewModelAppBar(){
         //chamamos o metodo setAppBarLayoutState para alterar o valor do MutableLiveData  e disparar o observer na actity passando o boleano
         viewModelShare.setAppBarLayoutState(false)//appBar não será exibida neste fragment
     }
