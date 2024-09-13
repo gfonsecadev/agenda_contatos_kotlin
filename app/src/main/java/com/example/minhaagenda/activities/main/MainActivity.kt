@@ -334,9 +334,9 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onQueryTextChange(newText: String): Boolean {
                     if (newText.isBlank()){
-                        allContacts()
                         typedNameToSearch = ""
-                    }else{
+                        allContacts()
+                    }else {
                         typedNameToSearch = newText
                         contactFound(newText)
                     }
