@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -73,17 +74,28 @@ class AllContactsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentAllContactsBinding.inflate(inflater)
-
-        // Configura o ViewModel para gerenciar o estado do AppBarLayout
-        setupViewModelAppBar()
-        recyclerSettings(listContactListByInitial)
-        // Configura o observador do ViewModel
-        setupViewModelAllContacts()
-        // Configura o clique no botão de voltar do dispositivo
-        backPressed()
-
         return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        view.doOnPreDraw {
+            lifecycleScope.launch {
+                // Aguarda o tempo necessário (550ms) antes de executar o código
+                delay(400)
+                // Configura o ViewModel para gerenciar o estado do AppBarLayout
+                setupViewModelAppBar()
+                // Configura o RecyclerView
+                recyclerSettings(listContactListByInitial)
+                // Configura o observador do ViewModel
+                setupViewModelAllContacts()
+                // Configura o clique no botão de voltar do dispositivo
+                backPressed()
+            }
+        }
+    }
+
 
     // Configuração do ViewModel deste fragment
     private fun setupViewModelAllContacts() {
