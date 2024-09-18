@@ -33,6 +33,7 @@ import com.example.minhaagendakotlin.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.ActionBar.OnMenuVisibilityListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import com.bumptech.glide.Glide
@@ -313,6 +314,10 @@ class MainActivity : AppCompatActivity() {
             viewModelShared.appBarLayoutState.observe(this) { expanded ->
             binding.appBarMain.appBarContact.setExpanded(expanded)
         }
+
+        viewModelShared.appBarLayoutState.observe(this){show ->
+           
+        }
     }
 
     // Infla o menu de opções na barra de ferramentas com base na condição 'isSelected'
@@ -323,7 +328,7 @@ class MainActivity : AppCompatActivity() {
             // Infla o menu definido em 'menu_selected_contacts.xml' na barra de ferramentas
             menuInflater.inflate(R.menu.menu_selected_contacts, menu)
             true // Retorna true para indicar que o menu foi inflado com sucesso
-        } else {
+        } else{
             //Infla o menu de pesquisa de contatos
              menuInflater.inflate(R.menu.menu_search,menu)
             val searchContact = menu.findItem(R.id.search_contact).actionView as SearchView
@@ -344,7 +349,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
             })
-            true
+           return true
         }
     }
 

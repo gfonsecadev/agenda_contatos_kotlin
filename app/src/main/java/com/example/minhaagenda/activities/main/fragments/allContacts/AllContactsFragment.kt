@@ -129,8 +129,9 @@ class AllContactsFragment : Fragment() {
         // Atribui o LinearLayoutManager configurado ao RecyclerView
         binding.recyclerContact.layoutManager = layout
 
-        val snapHelper = LinearSnapHelper()
-        snapHelper.attachToRecyclerView(binding.recyclerContact)
+        val snapHelper = LinearSnapHelper() // Cria uma instância de LinearSnapHelper, que ajuda no "snapping" (alinhamento) dos itens do RecyclerView ao centro, ou seja, o item mais próximo será automaticamente posicionado no centro da tela.
+        snapHelper.attachToRecyclerView(binding.recyclerContact) // Anexa o SnapHelper ao RecyclerView específico. Isso faz com que, ao rolar a lista, os itens sejam "snapped" ou alinhados, centralizando um item na tela ao final da rolagem.
+
 
         // Indica que o tamanho do RecyclerView e seus itens são fixos, melhorando o desempenho
         binding.recyclerContact.setHasFixedSize(true)

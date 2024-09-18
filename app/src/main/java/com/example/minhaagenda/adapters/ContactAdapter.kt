@@ -75,7 +75,7 @@ class ContactHolder(binding: RecyclerContactLayoutBinding, var context: Activity
 
         // Indica que o tamanho do RecyclerView e seus itens são fixos, melhorando o desempenho
         recyclerNested.setHasFixedSize(true)
-        
+
         recyclerNested.isNestedScrollingEnabled = false
 
         // Define o número de itens a serem mantidos no cache para melhorar a rolagem

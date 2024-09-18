@@ -1,5 +1,6 @@
 package com.example.minhaagenda.shared
 
+import android.text.BoringLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,10 +10,12 @@ class AppBarViewModel : ViewModel() {
 
     //essa variavel que sofrerá mudançãs através do método setAppBarLayoutState
     private val _appBarLayoutState = MutableLiveData<Boolean>()
+    private val _searchMenuState = MutableLiveData<Boolean>()
 
     //essa variavel que será observada na activity
     // sempre será chamada quando a variavel _appBarLayoutState sofrer alteração através do metodo setAppBarLayoutState
     val appBarLayoutState: LiveData<Boolean> get() = _appBarLayoutState
+    val searchMenuState: LiveData<Boolean> get() = _searchMenuState
 
     // Função para atualizar o estado do AppBarLayout
     //será chamada nos fragments
@@ -21,4 +24,9 @@ class AppBarViewModel : ViewModel() {
         //dentro deste observer na activity que contém a logica para fechar a AppBar
         _appBarLayoutState.value = expanded
     }
+
+    fun setShowOrGoneSearchMenu(show: Boolean){
+        _searchMenuState.value = show
+    }
+
 }

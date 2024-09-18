@@ -370,6 +370,7 @@ class AddContactFragment : Fragment() {
     private fun setupViewModelAppBar(){
         //chamamos o metodo setAppBarLayoutState para alterar o valor do MutableLiveData  e disparar o observer na actity passando o boleano
         viewModelShare.setAppBarLayoutState(false)//appBar não será exibida neste fragment
+        viewModelShare.setShowOrGoneSearchMenu(false)
     }
 
     //Configuração do clique na imagem do contato, mudando o layout para escolha da imagem(galeria ou camera)
