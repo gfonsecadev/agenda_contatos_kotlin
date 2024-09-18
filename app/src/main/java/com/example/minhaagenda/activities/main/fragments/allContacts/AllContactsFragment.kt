@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 
@@ -92,6 +93,7 @@ class AllContactsFragment : Fragment() {
                 setupViewModelAllContacts()
                 // Configura o clique no botão de voltar do dispositivo
                 backPressed()
+
             }
         }
     }
@@ -127,17 +129,18 @@ class AllContactsFragment : Fragment() {
         // Atribui o LinearLayoutManager configurado ao RecyclerView
         binding.recyclerContact.layoutManager = layout
 
+        val snapHelper = LinearSnapHelper()
+        snapHelper.attachToRecyclerView(binding.recyclerContact)
 
         // Indica que o tamanho do RecyclerView e seus itens são fixos, melhorando o desempenho
         binding.recyclerContact.setHasFixedSize(true)
 
         // Define o número de itens a serem mantidos no cache para melhorar a rolagem
-        binding.recyclerContact.setItemViewCacheSize(20)
+        binding.recyclerContact.setItemViewCacheSize(list.size)
 
         // O contactAdapter recebe uma lista de Contact onde o mapper contactToContactObject converte para ContactObject que é o exigido pelo adapter
         val adapter = ContactAdapter(list, requireActivity())
         binding.recyclerContact.adapter = adapter
-
         // Utilizo o ScrollListener para ouvir mudanças no scroll do RecyclerView
         binding.recyclerContact.addOnScrollListener(object : OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {

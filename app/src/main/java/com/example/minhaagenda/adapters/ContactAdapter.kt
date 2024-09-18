@@ -11,6 +11,9 @@ import com.example.minhaagenda.DividerRecyclerView.CustomDivider
 import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.entities.ContactListByInitial
 import com.example.minhaagendakotlin.databinding.RecyclerContactLayoutBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 //este adapter irá renderizar uma letra e a lista de contatos relacionado a esta letra para ser passada como parametro para o NestedAdapter aqui mesmo
 //ou seja a letra popula este adapter e a lista o adapter aninhado.
@@ -72,10 +75,11 @@ class ContactHolder(binding: RecyclerContactLayoutBinding, var context: Activity
 
         // Indica que o tamanho do RecyclerView e seus itens são fixos, melhorando o desempenho
         recyclerNested.setHasFixedSize(true)
+        
         recyclerNested.isNestedScrollingEnabled = false
 
         // Define o número de itens a serem mantidos no cache para melhorar a rolagem
-        recyclerNested.setItemViewCacheSize(1000)
+        recyclerNested.setItemViewCacheSize(contacts.size)
 
         //holder.recyclerNested.addItemDecoration(DividerItemDecoration(context,LinearLayout.VERTICAL)) //ou
         recyclerNested.addItemDecoration(CustomDivider())
