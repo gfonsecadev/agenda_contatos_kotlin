@@ -52,6 +52,7 @@ class ShowContactActivityViewModel(application: Application) : AndroidViewModel(
 
 class ShowContactActivityViewModelFactory(private val application: Application) : ViewModelProvider.Factory{
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+        @Suppress("UNCHECKED_CAST")
         if (modelClass.isAssignableFrom(ShowContactActivityViewModel::class.java)){
             return ShowContactActivityViewModel(application) as T
         }

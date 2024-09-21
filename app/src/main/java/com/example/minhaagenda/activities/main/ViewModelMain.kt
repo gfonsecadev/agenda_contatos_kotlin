@@ -2,7 +2,6 @@ package com.example.minhaagenda.activities.main
 
 import android.app.Application
 import android.os.Build
-import android.widget.TextView
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -10,11 +9,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.repositories.contact_repository.ContactRepository
-import com.example.minhaagendakotlin.R
 import kotlinx.coroutines.launch
 
 class ViewModelMain(application: Application) : AndroidViewModel(application) {
-     val repository_main = ContactRepository(application)
+     private val repositoryMain = ContactRepository(application)
 
     fun dataDevice(): String {
         val brand = Build.BRAND.takeIf { it.isNotBlank() }?.replaceFirstChar { it.uppercase() } ?: "Unknown"
@@ -28,7 +26,7 @@ class ViewModelMain(application: Application) : AndroidViewModel(application) {
     fun deleteSelectedContacts(contacts:List<Contact>){
         contacts.forEach{
             viewModelScope.launch {
-            repository_main.deleteContact(it)}
+            repositoryMain.deleteContact(it)}
         }
     }
 

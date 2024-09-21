@@ -196,7 +196,7 @@ class ShowContactActivity : AppCompatActivity() {
     }
 
     // Função para registrar um launcher para solicitar permissões em tempo de execução
-    fun registerCallLauncher() {
+    private fun registerCallLauncher() {
         // Inicializa o launcher para permissões
         launcherCallPermission = LauncherPermissions()
 

@@ -84,7 +84,7 @@ class ImportContactsViewModel(application: Application) : AndroidViewModel(appli
     }
 
     // Função que manualmente substitui vírgulas fora de aspas
-    fun manualReplaceCommas(line: String, separator: Char): List<String> {
+    private fun manualReplaceCommas(line: String, separator: Char): List<String> {
         var isQuote = false  // Indica se o caractere atual está dentro de aspas
         val replaced = StringBuilder()  // StringBuilder para construir a string resultante
 

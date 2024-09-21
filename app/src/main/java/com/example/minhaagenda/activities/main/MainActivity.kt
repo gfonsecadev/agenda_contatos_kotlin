@@ -384,7 +384,7 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    fun shareContacts(){
+    private fun shareContacts(){
         if (getSizeSelectedContacts() > 0) { // Verifica se há contatos selecionados
             // Converte a lista de contatos selecionados em um arquivo vCard com a extension contactListToVcard
             val listVcard = getListSelectedContacts().contactListToVcard()

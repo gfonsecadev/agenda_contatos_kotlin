@@ -2,9 +2,7 @@ package com.example.minhaagenda.shared
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
 import java.io.ByteArrayOutputStream
-import java.util.Base64.Decoder
 
 object ImageFormatConverter {
     fun imageToByteArray(image: Bitmap): ByteArray {

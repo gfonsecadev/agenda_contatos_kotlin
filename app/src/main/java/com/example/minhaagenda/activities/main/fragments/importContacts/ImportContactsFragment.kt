@@ -72,7 +72,7 @@ class ImportContactsFragment : Fragment() {
         launcherSearchContacts.registerLauncher(register)
     }
 
-    fun importByCsv(file: Uri){
+    private fun importByCsv(file: Uri){
         lifecycleScope.launch {
             binding.importProgress.apply {
                 textProgressBar.text = "Importando de Csv..."
@@ -83,7 +83,7 @@ class ImportContactsFragment : Fragment() {
             }
         }
     }
-    fun importByVcf(file: Uri){
+    private fun importByVcf(file: Uri){
         lifecycleScope.launch {
             binding.importProgress.apply {
                 textProgressBar.text =  "Importando de Vcf..."

@@ -3,8 +3,6 @@ package com.example.minhaagenda.shared
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import java.io.ByteArrayOutputStream
 import android.util.Base64
 
 class SharedPreferencesHelper(context: Context) {

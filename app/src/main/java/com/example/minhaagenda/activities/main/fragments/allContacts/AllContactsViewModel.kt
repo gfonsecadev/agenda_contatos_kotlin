@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.entities.ContactListByInitial
 import com.example.minhaagenda.mappers.ContactMapper
 import com.example.minhaagenda.repositories.contact_repository.ContactRepository

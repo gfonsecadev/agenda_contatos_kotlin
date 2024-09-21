@@ -1,4 +1,4 @@
-package com.example.minhaagenda.DividerRecyclerView
+package com.example.minhaagenda.dividerRecyclerView
 
 import android.graphics.Canvas
 import android.graphics.Paint

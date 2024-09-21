@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 
 class LauncherSearchContacts {
-    lateinit var launcherSearchContacts:ActivityResultLauncher<Intent>
+    private lateinit var launcherSearchContacts:ActivityResultLauncher<Intent>
 
     fun registerLauncher(register : ActivityResultLauncher<Intent>){
         launcherSearchContacts = register

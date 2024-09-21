@@ -1,6 +1,5 @@
 package com.example.minhaagenda.shared
 
-import android.content.Context
 import com.example.minhaagenda.entities.Contact
 import java.io.File
 import java.io.FileWriter
