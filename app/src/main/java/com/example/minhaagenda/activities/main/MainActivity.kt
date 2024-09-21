@@ -25,7 +25,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import com.example.minhaagenda.shared.SharedPreferencesHelper
 import com.example.minhaagenda.shared.LaunchersImage
-import com.example.minhaagenda.shared.AppBarViewModel
+import com.example.minhaagenda.shared.AppBarViewAndSearchViewModel
 import com.example.minhaagenda.shared.PermissionsManager
 import com.example.minhaagenda.shared.LauncherPermissions
 import com.example.minhaagendakotlin.R
@@ -33,7 +33,6 @@ import com.example.minhaagendakotlin.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.ActionBar.OnMenuVisibilityListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import com.bumptech.glide.Glide
@@ -61,7 +60,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var preferencesHelper: SharedPreferencesHelper
     private lateinit var imageProfile: ImageView
     private lateinit var textNameProfile: TextView
-    private val viewModelShared: AppBarViewModel by viewModels()
+    private lateinit var searchContact : SearchView
+    private val viewModelShared: AppBarViewAndSearchViewModel by viewModels()
     private val viewModelMain : ViewModelMain by viewModels {ViewModelMainFactory(application) }
 
     // Método chamado na criação da atividade
@@ -82,8 +82,8 @@ class MainActivity : AppCompatActivity() {
         initializePreferences()
         //inicia os registerForActivityResult para permissôes e seleção de imagens(câmera e galeria)na activity
         registerLaunchersActivity()
-        // Configura o ViewModel para gerenciar o estado do AppBarLayout
-        setupViewModelAppBar()
+        // Configura o ViewModel para gerenciar o estado do AppBarLayout e SearchView
+        observeAppBarAndSearchViewVisibility()
         // Configura o listener de clique na imagemView do perfil
         profileImageChoice()
         // Configura o listener de clique no textView do perfil
@@ -309,14 +309,14 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    // Configura o AppBarViewModel para controlar o estado da AppBar
-    private fun setupViewModelAppBar() {
+    // Configura o AppBarViewAndSearchViewModel para controlar o estado da AppBar e a searchView
+    private fun observeAppBarAndSearchViewVisibility() {
             viewModelShared.appBarLayoutState.observe(this) { expanded ->
             binding.appBarMain.appBarContact.setExpanded(expanded)
         }
 
-        viewModelShared.appBarLayoutState.observe(this){show ->
-           
+        viewModelShared.searchMenuState.observe(this){visibility ->
+            searchContact.visibility = visibility
         }
     }
 
@@ -331,7 +331,7 @@ class MainActivity : AppCompatActivity() {
         } else{
             //Infla o menu de pesquisa de contatos
              menuInflater.inflate(R.menu.menu_search,menu)
-            val searchContact = menu.findItem(R.id.search_contact).actionView as SearchView
+            searchContact = menu.findItem(R.id.search_contact).actionView as SearchView
             searchContact.setOnQueryTextListener(object:SearchView.OnQueryTextListener{
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     return true

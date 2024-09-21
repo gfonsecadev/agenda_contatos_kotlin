@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 
-import com.example.minhaagenda.shared.AppBarViewModel
+import com.example.minhaagenda.shared.AppBarViewAndSearchViewModel
 import com.example.minhaagenda.adapters.ContactAdapter
 import com.example.minhaagenda.animations.fade.FadeToViews.fadeInImmediately
 import com.example.minhaagenda.animations.fade.FadeToViews.fadeOut
@@ -65,8 +65,8 @@ class AllContactsFragment : Fragment() {
         }
     }
 
-    // Instância do AppBarViewModel
-    private val viewModelShare: AppBarViewModel by activityViewModels()
+    // Instância do AppBarViewAndSearchViewModel
+    private val viewModelShare: AppBarViewAndSearchViewModel by activityViewModels()
     private val viewModelAllContacts: AllContactsViewModel by viewModels { AllContactsViewModelFactory(requireActivity().application) }
     private lateinit var binding: FragmentAllContactsBinding
     private var listContactListByInitial: List<ContactListByInitial> = emptyList()
@@ -85,8 +85,8 @@ class AllContactsFragment : Fragment() {
             lifecycleScope.launch {
                 // Aguarda o tempo necessário (550ms) antes de executar o código
                 delay(400)
-                // Configura o ViewModel para gerenciar o estado do AppBarLayout
-                setupViewModelAppBar()
+                // Configura o ViewModel para gerenciar o estado do AppBarLayout e searchView
+                observeAppBarAndSearchViewVisibility()
                 // Configura o RecyclerView
                 recyclerSettings(listContactListByInitial)
                 // Configura o observador do ViewModel
@@ -114,11 +114,12 @@ class AllContactsFragment : Fragment() {
         adapter.updateData(newList)
     }
 
-    
-    // Configura o comportamento da AppBar pela ViewModel
-    private fun setupViewModelAppBar() {
-        // Chamamos o método setAppBarLayoutState para alterar o valor do MutableLiveData e disparar o observer na Activity
-        viewModelShare.setAppBarLayoutState(true) // AppBar não será exibida neste fragment
+
+    //Configura o comportamento da AppBar e searchView por ViewModel
+    private fun observeAppBarAndSearchViewVisibility(){
+        //chamamos o metodo setAppBarLayoutState e setShowOrGoneSearchView para alterar o valor do MutableLiveData  e disparar o observer na actity passando os valores
+        viewModelShare.setAppBarLayoutState(true)//appBar será exibida neste fragment
+        viewModelShare.setShowOrGoneSearchView(View.VISIBLE)//searchView será exibida neste fragment
     }
 
     // Configuração do RecyclerView Principal
