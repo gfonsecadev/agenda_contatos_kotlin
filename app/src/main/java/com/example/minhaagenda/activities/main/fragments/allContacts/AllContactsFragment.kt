@@ -113,7 +113,6 @@ class AllContactsFragment : Fragment() {
 
     // Configuração do ViewModel deste fragment
     private fun setupViewModelAllContacts() {
-        viewModelAllContacts.getAllContacts()
         viewModelAllContacts.listContactListByInitial.observe(viewLifecycleOwner) {
             listContactListByInitial = it
             reloadAdapter(it)
@@ -124,6 +123,7 @@ class AllContactsFragment : Fragment() {
     private fun reloadAdapter(newList:List<ContactListByInitial>){
         val adapter = binding.recyclerContact.adapter as ContactAdapter
         adapter.updateData(newList)
+
     }
 
 
@@ -209,7 +209,7 @@ class AllContactsFragment : Fragment() {
                 textProgressBar.text = "Recarregando Contatos"
             }
             // Aguarda 300 milissegundos para simular o carregamento
-            delay(300)
+            delay(200)
             // Solicita ao ViewModel para obter todos os contatos
             viewModelAllContacts.getAllContacts()
             // Oculta o layout de progresso após a atualização
@@ -234,7 +234,9 @@ class AllContactsFragment : Fragment() {
     fun getAllContacts(){
         viewModelAllContacts.getAllContacts()
     }
+
     // Ao retornar para o fragmento, recarrega a lista de contatos
+    // e atribui verdadeiro para a variavel que controla a exibição dos menus.
     override fun onResume() {
         super.onResume()
         viewModelAllContacts.getAllContacts()
@@ -242,7 +244,8 @@ class AllContactsFragment : Fragment() {
         clearSelectedContactsAndRefreshMenu()
     }
 
-    //Ao sair do fragment limpa os itens selecionados, atualizando o menu
+
+    //Ao sair do fragment limpa os itens selecionados, e atribui falso para a variavel que controla a exibição dos menus para não serem exibidos em outros fragments.
     override fun onStop() {
         super.onStop()
         changeAllContactFragment(false)
