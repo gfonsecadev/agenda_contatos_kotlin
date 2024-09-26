@@ -23,7 +23,7 @@
     </fragment>
 
     <fragment
-        android:id="@+id/nav_exit"
+        android:id="@+id/nav_import"
         android:name="com.example.minhaagenda.activities.main.fragments.importContacts.ImportContactsFragment"
         android:label="Sair"
         tools:layout="@layout/fragment_import_contacts">

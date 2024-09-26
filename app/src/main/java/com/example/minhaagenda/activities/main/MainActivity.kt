@@ -291,8 +291,8 @@ class MainActivity : AppCompatActivity() {
                     changeFragmentNavController(R.id.nav_add_contact)
                     focusItem(item.itemId)
                 }
-                R.id.nav_item_exit -> {
-                    changeFragmentNavController(R.id.nav_exit)
+                R.id.nav_item_import -> {
+                    changeFragmentNavController(R.id.nav_import)
                     focusItem(item.itemId)
                 }
             }
@@ -383,7 +383,7 @@ class MainActivity : AppCompatActivity() {
         }
         return true
     }
-   
+
     private fun shareContacts(){
         if (getSizeSelectedContacts() > 0) { // Verifica se há contatos selecionados
             // Converte a lista de contatos selecionados em um arquivo vCard com a extension contactListToVcard

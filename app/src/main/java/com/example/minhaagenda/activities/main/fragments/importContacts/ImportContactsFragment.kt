@@ -10,8 +10,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.example.minhaagenda.activities.main.MainActivity
 import com.example.minhaagenda.shared.AppBarViewAndSearchViewModel
 import com.example.minhaagenda.shared.LauncherSearchContacts
+import com.example.minhaagendakotlin.R
 import com.example.minhaagendakotlin.databinding.FragmentImportContactsBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -72,6 +74,7 @@ class ImportContactsFragment : Fragment() {
         launcherSearchContacts.registerLauncher(register)
     }
 
+    //função para importar de um arquivo csv
     private fun importByCsv(file: Uri){
         lifecycleScope.launch {
             binding.importProgress.apply {
@@ -80,9 +83,11 @@ class ImportContactsFragment : Fragment() {
                 delay(1000)
                 importContactsViewModel.importFromCsv(file)
                 progressLayout.visibility = View.GONE
+                (requireActivity() as MainActivity).changeFragmentNavController(R.id.nav_item_import)
             }
         }
     }
+    //função para importar de um arquivo vcf
     private fun importByVcf(file: Uri){
         lifecycleScope.launch {
             binding.importProgress.apply {
@@ -91,6 +96,7 @@ class ImportContactsFragment : Fragment() {
                 delay(1000)
                 importContactsViewModel.importFromVcf(file)
                 progressLayout.visibility = View.GONE
+                (requireActivity() as MainActivity).changeFragmentNavController(R.id.nav_item_import)
             }
         }
     }
