@@ -25,7 +25,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import com.example.minhaagenda.shared.SharedPreferencesHelper
 import com.example.minhaagenda.shared.LaunchersImage
-import com.example.minhaagenda.shared.AppBarViewAndSearchViewModel
+import com.example.minhaagenda.shared.AppBarViewModel
 import com.example.minhaagenda.shared.PermissionsManager
 import com.example.minhaagenda.shared.LauncherPermissions
 import com.example.minhaagendakotlin.R
@@ -40,6 +40,7 @@ import com.example.minhaagenda.activities.main.fragments.allContacts.AllContacts
 import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment.Companion.clearListSelectedContact
 import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment.Companion.getListSelectedContacts
 import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment.Companion.getSizeSelectedContacts
+import com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment.Companion.isAllContactFragment
 import com.example.minhaagenda.shared.contactListToVcard
 import com.example.minhaagenda.shared.exportContact
 
@@ -61,7 +62,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var imageProfile: ImageView
     private lateinit var textNameProfile: TextView
     private lateinit var searchContact : SearchView
-    private val viewModelShared: AppBarViewAndSearchViewModel by viewModels()
+    private val viewModelShared: AppBarViewModel by viewModels()
     private val viewModelMain : ViewModelMain by viewModels {ViewModelMainFactory(application) }
 
     // Método chamado na criação da atividade
@@ -309,28 +310,28 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    // Configura o AppBarViewAndSearchViewModel para controlar o estado da AppBar e a searchView
+    // Configura o AppBarViewModel para controlar o estado da AppBar
     private fun observeAppBarAndSearchViewVisibility() {
             viewModelShared.appBarLayoutState.observe(this) { expanded ->
             binding.appBarMain.appBarContact.setExpanded(expanded)
         }
 
-        viewModelShared.searchMenuState.observe(this){visibility ->
-            searchContact.visibility = visibility
-        }
     }
 
     // Infla o menu de opções na barra de ferramentas com base na condição 'isSelected'
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
 
-        // Verifica se a condição 'isSelected' é verdadeira para inflar o menu para contato(s) selecionado(s)
-        return if (getSizeSelectedContacts() > 0) {
+        // Verifica se a condição 'isSelected' é verdadeira e se trata do allContactFragment para inflar o menu para contato(s) selecionado(s)
+        if (getSizeSelectedContacts() > 0 && isAllContactFragment()) {
             // Infla o menu definido em 'menu_selected_contacts.xml' na barra de ferramentas
             menuInflater.inflate(R.menu.menu_selected_contacts, menu)
-            true // Retorna true para indicar que o menu foi inflado com sucesso
-        } else{
+           return true // Retorna true para indicar que o menu foi inflado com sucesso
+        }
+
+        //somente exibirá o searchMenu no AllContactFragment
+        if (isAllContactFragment()){
             //Infla o menu de pesquisa de contatos
-             menuInflater.inflate(R.menu.menu_search,menu)
+            menuInflater.inflate(R.menu.menu_search,menu)
             searchContact = menu.findItem(R.id.search_contact).actionView as SearchView
             searchContact.setOnQueryTextListener(object:SearchView.OnQueryTextListener{
                 override fun onQueryTextSubmit(query: String?): Boolean {
@@ -349,8 +350,10 @@ class MainActivity : AppCompatActivity() {
                 }
 
             })
-           return true
+            return true
         }
+
+        return false
     }
 
 

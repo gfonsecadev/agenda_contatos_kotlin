@@ -5,16 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 //view model para exibição ou recolhimento da AppBar
-class AppBarViewAndSearchViewModel : ViewModel() {
+class AppBarViewModel : ViewModel() {
 
     //essa variavel que sofrerá mudançãs através do método setAppBarLayoutState
     private val _appBarLayoutState = MutableLiveData<Boolean>()
-    private val _searchMenuState = MutableLiveData<Int>()
 
     //essas variaveis que serão observadas na activity
-    // sempre será chamada quando a variavel _appBarLayoutState ou searchMenuState sofrer alteração através do metodo setAppBarLayoutState e setShowOrGoneSearchMenu
+    // sempre será chamada quando a variavel _appBarLayoutState  sofrer alteração através do metodo setAppBarLayoutState
     val appBarLayoutState: LiveData<Boolean> get() = _appBarLayoutState
-    val searchMenuState: LiveData<Int> get() = _searchMenuState
 
     // Função para atualizar o estado do AppBarLayout
     //será chamada nos fragments
@@ -24,10 +22,5 @@ class AppBarViewAndSearchViewModel : ViewModel() {
         _appBarLayoutState.value = expanded
     }
 
-    //Função para atualizar a visibilidade do searchView
-    //será chamada nos fragments
-    fun setShowOrGoneSearchView(visibility: Int){
-        _searchMenuState.value = visibility
-    }
 
 }

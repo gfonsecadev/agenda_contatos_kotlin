@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 
-import com.example.minhaagenda.shared.AppBarViewAndSearchViewModel
+import com.example.minhaagenda.shared.AppBarViewModel
 import com.example.minhaagenda.adapters.ContactAdapter
 import com.example.minhaagenda.animations.fade.FadeToViews.fadeInImmediately
 import com.example.minhaagenda.animations.fade.FadeToViews.fadeOut
@@ -32,6 +32,19 @@ class AllContactsFragment : Fragment() {
     companion object {
         // Conjunto mutável para armazenar os contatos selecionados
         private var selectedContacts = mutableSetOf<Contact>()
+        //variavel para controlar a exibição dos menus
+        private var isAllContactFragment = true
+
+
+        //muda o estado da variavel
+        fun changeAllContactFragment(value:Boolean){
+            isAllContactFragment = value
+        }
+
+        //retorna a variavel
+        fun isAllContactFragment(): Boolean {
+            return isAllContactFragment
+        }
 
         // Retorna a lista de contatos selecionados
         fun getListSelectedContacts(): List<Contact> {
@@ -64,8 +77,8 @@ class AllContactsFragment : Fragment() {
         }
     }
 
-    // Instância do AppBarViewAndSearchViewModel
-    private val viewModelShare: AppBarViewAndSearchViewModel by activityViewModels()
+    // Instância do AppBarViewModel
+    private val viewModelShare: AppBarViewModel by activityViewModels()
     private val viewModelAllContacts: AllContactsViewModel by viewModels { AllContactsViewModelFactory(requireActivity().application) }
     private lateinit var binding: FragmentAllContactsBinding
     private var listContactListByInitial: List<ContactListByInitial> = emptyList()
@@ -85,7 +98,7 @@ class AllContactsFragment : Fragment() {
                 // Aguarda o tempo necessário (550ms) antes de executar o código
                 delay(400)
                 // Configura o ViewModel para gerenciar o estado do AppBarLayout e searchView
-                observeAppBarAndSearchViewVisibility()
+                observeAppBarVisibility()
                 // Configura o RecyclerView
                 recyclerSettings(listContactListByInitial)
                 // Configura o observador do ViewModel
@@ -114,11 +127,10 @@ class AllContactsFragment : Fragment() {
     }
 
 
-    //Configura o comportamento da AppBar e searchView por ViewModel
-    private fun observeAppBarAndSearchViewVisibility(){
-        //chamamos o metodo setAppBarLayoutState e setShowOrGoneSearchView para alterar o valor do MutableLiveData  e disparar o observer na actity passando os valores
+    //Configura o comportamento da AppBar
+    private fun observeAppBarVisibility(){
+        //chamamos o metodo setAppBarLayoutState  para alterar o valor do MutableLiveData  e disparar o observer na actity passando os valores
         viewModelShare.setAppBarLayoutState(true)//appBar será exibida neste fragment
-        viewModelShare.setShowOrGoneSearchView(View.VISIBLE)//searchView será exibida neste fragment
     }
 
     // Configuração do RecyclerView Principal
@@ -159,12 +171,6 @@ class AllContactsFragment : Fragment() {
         })
     }
 
-    // Ao retornar para o fragmento, recarrega a lista de contatos e limpa os itens selecionados, atualizando o menu
-    override fun onResume() {
-        super.onResume()
-        viewModelAllContacts.getAllContacts()
-        clearSelectedContactsAndRefreshMenu()
-    }
 
     // Limpa a lista de contatos selecionados e atualiza o menu (quando não há contatos selecionados, o menu é ocultado)
     private fun clearSelectedContactsAndRefreshMenu() {
@@ -227,5 +233,19 @@ class AllContactsFragment : Fragment() {
     //metodo que pedirá a este fragment retornar todos os contatos  quando o SearchView da MainActivity estiver em branco
     fun getAllContacts(){
         viewModelAllContacts.getAllContacts()
+    }
+    // Ao retornar para o fragmento, recarrega a lista de contatos
+    override fun onResume() {
+        super.onResume()
+        viewModelAllContacts.getAllContacts()
+        changeAllContactFragment(true)
+        clearSelectedContactsAndRefreshMenu()
+    }
+
+    //Ao sair do fragment limpa os itens selecionados, atualizando o menu
+    override fun onStop() {
+        super.onStop()
+        changeAllContactFragment(false)
+        clearSelectedContactsAndRefreshMenu()
     }
 }

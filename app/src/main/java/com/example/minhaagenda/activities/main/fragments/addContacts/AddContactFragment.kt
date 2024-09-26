@@ -22,7 +22,7 @@ import com.bumptech.glide.Glide
 import com.example.minhaagenda.activities.main.MainActivity
 import com.example.minhaagenda.activities.showContact.ShowContactActivity
 import com.example.minhaagenda.entities.Contact
-import com.example.minhaagenda.shared.AppBarViewAndSearchViewModel
+import com.example.minhaagenda.shared.AppBarViewModel
 import com.example.minhaagenda.shared.ImageFormatConverter
 import com.example.minhaagenda.shared.LauncherPermissions
 import com.example.minhaagenda.shared.LaunchersImage
@@ -42,7 +42,7 @@ class AddContactFragment : Fragment() {
     private lateinit var layout:View
     private  lateinit var launcherPermissions: LauncherPermissions
     private  lateinit var launchersImage: LaunchersImage
-    private val viewModelShare: AppBarViewAndSearchViewModel by activityViewModels()
+    private val viewModelShare: AppBarViewModel by activityViewModels()
     private val viewModelAddContact : AddContactViewModel by viewModels {  AddContactViewModelFactory(application = requireActivity().application) }
     private  var bitmapContactByteArray: ByteArray? = null
     private lateinit var contactToUpdate: Contact
@@ -94,7 +94,7 @@ class AddContactFragment : Fragment() {
         //Configura o editText do telefone para usar um textWatcher para aplicar uma mascára
         formatPhoneInput()
         // Configura o ViewModel para gerenciar o estado do AppBarLayout e searchView
-        observeAppBarAndSearchViewVisibility()
+        observeAppBarVisibility()
         // Inicializa os lançadores para permissões e seleção de imagens
         registerLaunchersFragment()
         // Configura o layout para escolha de imagens e permissões
@@ -109,7 +109,6 @@ class AddContactFragment : Fragment() {
         backPressed()
 
     }
-
 
 
     //metodo que salva contatos
@@ -366,11 +365,10 @@ class AddContactFragment : Fragment() {
         }
     }
 
-    //Configura o comportamento da AppBar e searchView por ViewModel
-    private fun observeAppBarAndSearchViewVisibility(){
-        //chamamos o metodo setAppBarLayoutState e setShowOrGoneSearchView para alterar o valor do MutableLiveData  e disparar o observer na actity passando os valores
+    //Configura o comportamento da AppBar
+    private fun observeAppBarVisibility(){
+        //chamamos o metodo setAppBarLayoutState  para alterar o valor do MutableLiveData  e disparar o observer na actity passando os valores
         viewModelShare.setAppBarLayoutState(false)//appBar não será exibida neste fragment
-        viewModelShare.setShowOrGoneSearchView(View.GONE)//searchView não será exibida neste fragment
     }
 
     //Configuração do clique na imagem do contato, mudando o layout para escolha da imagem(galeria ou camera)

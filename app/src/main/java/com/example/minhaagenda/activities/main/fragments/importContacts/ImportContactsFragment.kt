@@ -11,7 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.minhaagenda.activities.main.MainActivity
-import com.example.minhaagenda.shared.AppBarViewAndSearchViewModel
+import com.example.minhaagenda.shared.AppBarViewModel
 import com.example.minhaagenda.shared.LauncherSearchContacts
 import com.example.minhaagendakotlin.R
 import com.example.minhaagendakotlin.databinding.FragmentImportContactsBinding
@@ -22,7 +22,7 @@ class ImportContactsFragment : Fragment() {
 
     private lateinit var binding: FragmentImportContactsBinding
     private  var launcherSearchContacts=LauncherSearchContacts()
-    private val viewModelShare: AppBarViewAndSearchViewModel by activityViewModels()
+    private val viewModelShare: AppBarViewModel by activityViewModels()
     private val importContactsViewModel: ImportContactsViewModel by viewModels{ImportContactsViewModelFactory(requireActivity().application)}
 
     override fun onCreateView(
@@ -36,7 +36,7 @@ class ImportContactsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Configura o ViewModel para gerenciar o estado do AppBarLayout e searchView
-        observeAppBarAndSearchViewVisibility()
+        observeAppBarVisibility()
         registerLaunchers()
         buttomListeners()
     }
@@ -102,11 +102,10 @@ class ImportContactsFragment : Fragment() {
     }
 
 
-    //Configura o comportamento da AppBar e searchView por ViewModel
-    private fun observeAppBarAndSearchViewVisibility(){
-        //chamamos o metodo setAppBarLayoutState e setShowOrGoneSearchView para alterar o valor do MutableLiveData  e disparar o observer na actity passando os valores
+    //Configura o comportamento da AppBar
+    private fun observeAppBarVisibility(){
+        //chamamos o metodo setAppBarLayoutState  para alterar o valor do MutableLiveData  e disparar o observer na actity passando os valores
         viewModelShare.setAppBarLayoutState(false)//appBar não será exibida neste fragment
-        viewModelShare.setShowOrGoneSearchView(View.GONE)//searchView não será exibida neste fragment
     }
 
 }
