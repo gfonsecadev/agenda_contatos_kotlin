@@ -96,7 +96,7 @@ class AllContactsFragment : Fragment() {
         view.doOnPreDraw {
             lifecycleScope.launch {
                 // Aguarda o tempo necessário (550ms) antes de executar o código
-                delay(400)
+                delay(500)
                 // Configura o ViewModel para gerenciar o estado do AppBarLayout e searchView
                 observeAppBarVisibility()
                 // Configura o RecyclerView
@@ -209,7 +209,7 @@ class AllContactsFragment : Fragment() {
                 textProgressBar.text = "Recarregando Contatos"
             }
             // Aguarda 300 milissegundos para simular o carregamento
-            delay(200)
+            delay(300)
             // Solicita ao ViewModel para obter todos os contatos
             viewModelAllContacts.getAllContacts()
             // Oculta o layout de progresso após a atualização
@@ -219,7 +219,7 @@ class AllContactsFragment : Fragment() {
 
     //metódos publicos abaixo serão utilizados pela MainActivity para manipular este fragment
 
-    // Método para recarregar a lista de contatos
+    // Método para recarregar a lista de contatos fora deste fragment
     fun reloadContactList() {
         // Recarrega o RecyclerView para atualizar a interface do usuário com os novos dados
         reloadAllContacts()
@@ -239,7 +239,7 @@ class AllContactsFragment : Fragment() {
     // e atribui verdadeiro para a variavel que controla a exibição dos menus.
     override fun onResume() {
         super.onResume()
-        viewModelAllContacts.getAllContacts()
+        reloadAllContacts()
         changeAllContactFragment(true)
         clearSelectedContactsAndRefreshMenu()
     }

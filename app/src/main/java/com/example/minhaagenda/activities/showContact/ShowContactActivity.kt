@@ -1,16 +1,13 @@
 package com.example.minhaagenda.activities.showContact
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import com.bumptech.glide.Glide
-import com.example.minhaagenda.activities.main.MainActivity
 import com.example.minhaagenda.activities.main.fragments.addContacts.AddContactFragment
 import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.shared.LauncherPermissions
@@ -60,9 +57,6 @@ class ShowContactActivity : AppCompatActivity() {
 
         // Configura os cliques nos botões
         setupClickListeners()
-
-        //Comportamento do botão de voltar do dispositivo
-        backPressed()
 
 
         //Configura todos os listeners desta activity
@@ -179,21 +173,6 @@ class ShowContactActivity : AppCompatActivity() {
         }
     }
 
-
-    // Configura o comportamento ao pressionar o botão de voltar
-    private fun backPressed() {
-        // Adiciona um callback para o evento de pressionar o botão de voltar
-        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
-            // Método chamado quando o botão de voltar é pressionado
-            override fun handleOnBackPressed() {
-                // Inicia a MainActivity
-                startActivity(Intent(baseContext, MainActivity::class.java))
-
-                // Finaliza a Activity atual
-                finish()
-            }
-        })
-    }
 
     // Função para registrar um launcher para solicitar permissões em tempo de execução
     private fun registerCallLauncher() {

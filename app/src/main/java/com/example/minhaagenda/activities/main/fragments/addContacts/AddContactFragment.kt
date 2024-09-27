@@ -99,8 +99,6 @@ class AddContactFragment : Fragment() {
         registerLaunchersFragment()
         // Configura o layout para escolha de imagens e permissões
         setupImageContact()
-        // Abre o teclado virtual para entrada de dados
-        openKeyboard()
         // Configura o listener para salvar ou atualizar um contato
         saveContact()
         //Configura o listener para deixar o fragment
@@ -411,13 +409,13 @@ class AddContactFragment : Fragment() {
 
 
     //Metodo que abre o teclado no primeiro editText do fragment
-    private fun openKeyboard(){
+    private fun controlKeyboardVisibility(resultReceiver: Int, time: Long){
         // Solicitar foco no primeiro EditText e mostrar o teclado
         binding.editName.requestFocus()
         binding.editName.postDelayed({
             val keyboard = requireActivity().getSystemService(InputMethodManager::class.java)
-            keyboard?.showSoftInput(binding.editName, InputMethodManager.SHOW_IMPLICIT)
-        }, 500) // Reduzir o atraso para 500 ms
+            keyboard?.showSoftInput(binding.editName,resultReceiver )
+        }, time) // Reduzir o atraso para 500 ms
     }
 
     // Método que configura o comportamento ao pressionar o botão "voltar"
@@ -446,6 +444,17 @@ class AddContactFragment : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        // Abre o teclado virtual para entrada de dados
+        controlKeyboardVisibility(InputMethodManager.SHOW_IMPLICIT,1000)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        // fecha o teclado virtual para entrada de dados
+        controlKeyboardVisibility(InputMethodManager.HIDE_IMPLICIT_ONLY,100)
+    }
 
 
 
