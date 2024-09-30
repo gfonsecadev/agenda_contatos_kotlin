@@ -450,12 +450,5 @@ class AddContactFragment : Fragment() {
         controlKeyboardVisibility(InputMethodManager.SHOW_IMPLICIT,1000)
     }
 
-    override fun onStop() {
-        super.onStop()
-        // fecha o teclado virtual para entrada de dados
-        controlKeyboardVisibility(InputMethodManager.HIDE_IMPLICIT_ONLY,100)
-    }
-
-
 
 }

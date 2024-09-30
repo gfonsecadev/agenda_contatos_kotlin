@@ -1,5 +1,6 @@
 package com.example.minhaagenda.activities.main.fragments.allContacts
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -114,15 +115,33 @@ class AllContactsFragment : Fragment() {
     // Configuração do ViewModel deste fragment
     private fun setupViewModelAllContacts() {
         viewModelAllContacts.listContactListByInitial.observe(viewLifecycleOwner) {
-            listContactListByInitial = it
             reloadAdapter(it)
         }
     }
 
     //metodo para atualizar a lista de contatos
+    @SuppressLint("NotifyDataSetChanged")
     private fun reloadAdapter(newList:List<ContactListByInitial>){
         val adapter = binding.recyclerContact.adapter as ContactAdapter
-        adapter.updateData(newList)
+
+        //se updateData retornar true então a nova lista passada é diferente, onde após isso o adapter é notificado da mudança exibindo um progress
+        if (adapter.updateData(newList)){
+            // Lança uma coroutine na Main Thread para atualizar a UI
+            lifecycleScope.launch(Dispatchers.Main) {
+                // Torna visível o layout de progresso enquanto a lista está sendo recarregada
+                binding.progressReloadList.apply {
+                    progressLayout.visibility = View.VISIBLE
+                    textProgressBar.text = "Recarregando Contatos"
+                }
+
+                // Aguarda 300 milissegundos para simular o carregamento
+                delay(300)
+               //atualizamos o adapter pois a nova lista é diferente(houve mudanças)
+                adapter.notifyDataSetChanged()
+                // Oculta o layout de progresso após a atualização
+                binding.progressReloadList.progressLayout.visibility = View.GONE
+            }
+        }
 
     }
 
@@ -187,8 +206,8 @@ class AllContactsFragment : Fragment() {
                 if (getSizeSelectedContacts() > 0) {
                     // Se houver contatos selecionados, limpa a lista de contatos selecionados
                     clearListSelectedContact()
-                    // Recarrega o RecyclerView para atualizar a interface do usuário
-                    getAllContacts()
+                    // Recarrega o adapter do RecyclerView para atualizar a interface do usuário
+                    binding.recyclerContact.adapter?.notifyDataSetChanged()
                     // Atualiza o menu de opções para refletir as mudanças (não há contatos selecionados, então o menu deve sumir)
                     requireActivity().invalidateOptionsMenu()
                 } else {
@@ -201,20 +220,7 @@ class AllContactsFragment : Fragment() {
 
     // Método para exibir progress de carregamento
     private fun reloadAllContacts() {
-        // Lança uma coroutine na Main Thread para atualizar a UI
-        lifecycleScope.launch(Dispatchers.Main) {
-            // Torna visível o layout de progresso enquanto a lista está sendo recarregada
-            binding.progressReloadList.apply {
-                progressLayout.visibility = View.VISIBLE
-                textProgressBar.text = "Recarregando Contatos"
-            }
-            // Aguarda 300 milissegundos para simular o carregamento
-            delay(300)
-            // Solicita ao ViewModel para obter todos os contatos
-            viewModelAllContacts.getAllContacts()
-            // Oculta o layout de progresso após a atualização
-            binding.progressReloadList.progressLayout.visibility = View.GONE
-        }
+        viewModelAllContacts.getAllContacts()
     }
 
     //metódos publicos abaixo serão utilizados pela MainActivity para manipular este fragment
@@ -234,6 +240,7 @@ class AllContactsFragment : Fragment() {
     fun getAllContacts(){
         viewModelAllContacts.getAllContacts()
     }
+
 
     // Ao retornar para o fragmento, recarrega a lista de contatos
     // e atribui verdadeiro para a variavel que controla a exibição dos menus.

@@ -41,7 +41,6 @@
 
         <activity android:name="com.example.minhaagenda.activities.showContact.ShowContactActivity"
             android:exported="false"
-            android:parentActivityName="com.example.minhaagenda.activities.main.MainActivity"
             android:theme="@style/Theme.MinhaAgenda.NoActionBar">
         </activity>
 

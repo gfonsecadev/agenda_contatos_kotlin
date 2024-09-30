@@ -36,12 +36,25 @@ class ContactAdapter(private var listContact: List<ContactListByInitial>, val co
         return null
     }
 
-    //metodo para atualizar a lista do adapter
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateData(newListContact: List<ContactListByInitial>){
-        listContact = newListContact
-        this.notifyDataSetChanged()
+    //metodo para atualizar a lista do adapter somente se a lista passada for de tamanho diferente
+    fun updateData(newListContact: List<ContactListByInitial>):Boolean{
+        return isDifferentList(listContact,newListContact);
     }
+
+    //metodo para distinguir se a atual lista e a que a substituirá são diferentes. Se diferentes atualizamos o adapter.
+    fun isDifferentList(actualList:List<ContactListByInitial>, newListContact: List<ContactListByInitial>): Boolean {
+        //esta condicional faz a comparação dos objetos por sobreescrito dos metodos equals e hashCode das classes ContactListByInitial e Contact
+        //ou se de tamanho diferente é uma lista diferente
+        if(actualList != newListContact || actualList.size != newListContact.size) {
+            //como é diferente substituimos a atual pela nova
+            listContact = newListContact
+            return true
+        }
+
+        //se nenhuma condição satisfazer então a lista atual e a nova são as mesmas
+        return false
+    }
+
 
     override fun onBindViewHolder(holder: ContactHolder, @SuppressLint("RecyclerView") position: Int) {
         val contactObject = listContact.get(position)

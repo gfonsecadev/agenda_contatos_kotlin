@@ -51,5 +51,29 @@ class Contact() : Parcelable {
         override fun newArray(size: Int): Array<Contact?> {
             return arrayOfNulls(size)
         }
+
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+
+        if (javaClass != other?.javaClass) return false
+
+        other as Contact
+
+        return id == other.id && name == other.name && phone == other.phone && email == other.email && image.contentEquals(other.image)
+
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result += 31 * name.hashCode()
+        result += 31 * phone.hashCode()
+        result += 31 * email.hashCode()
+        result += 31 * image.contentHashCode()
+        return result
+    }
+
 }
+
+
