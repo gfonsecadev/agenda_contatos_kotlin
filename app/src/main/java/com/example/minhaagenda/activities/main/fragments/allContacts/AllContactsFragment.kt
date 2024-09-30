@@ -2,6 +2,7 @@ package com.example.minhaagenda.activities.main.fragments.allContacts
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -171,20 +172,27 @@ class AllContactsFragment : Fragment() {
         binding.recyclerContact.adapter = adapter
         // Utilizo o ScrollListener para ouvir mudanças no scroll do RecyclerView
         binding.recyclerContact.addOnScrollListener(object : OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 // Recupero o LayoutManager
                 val layout = recyclerView.layoutManager as LinearLayoutManager
                 // Recupero o primeiro item visível do RecyclerView
                 // O método getItem foi implementado por mim no atual adapter para retornar o item da lista de acordo com a posição passada
                 val item = adapter.getItem(layout.findFirstVisibleItemPosition())
+                val firstItemVisible = layout.findFirstVisibleItemPosition()
                 // Passo a letra do ContactObject deste item
                 binding.textLetter.text = item?.letter
 
+
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                //se estiver em movimento é exibido imediatamente
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING || newState == RecyclerView.SCROLL_STATE_SETTLING) {
                     fadeInImmediately(binding.textLetter)
                 } else {
-                    fadeOut(binding.textLetter, 50)
+                    //se parado vai desaparecendo
+                    fadeOut(binding.textLetter, 500)
                 }
             }
         })
@@ -218,17 +226,14 @@ class AllContactsFragment : Fragment() {
         })
     }
 
-    // Método para exibir progress de carregamento
-    private fun reloadAllContacts() {
-        viewModelAllContacts.getAllContacts()
-    }
 
     //metódos publicos abaixo serão utilizados pela MainActivity para manipular este fragment
 
     // Método para recarregar a lista de contatos fora deste fragment
-    fun reloadContactList() {
-        // Recarrega o RecyclerView para atualizar a interface do usuário com os novos dados
-        reloadAllContacts()
+    // Método para carregar a lista de contatos no BD
+    // Método também utilizado neste fragment
+    fun getAllContactList() {
+        viewModelAllContacts.getAllContacts()
     }
 
     //metodo que passará para este fragment qual o nome a procurar no SearchView da MainActivity
@@ -246,7 +251,7 @@ class AllContactsFragment : Fragment() {
     // e atribui verdadeiro para a variavel que controla a exibição dos menus.
     override fun onResume() {
         super.onResume()
-        reloadAllContacts()
+        getAllContactList()
         changeAllContactFragment(true)
         clearSelectedContactsAndRefreshMenu()
     }

@@ -421,7 +421,7 @@ class MainActivity : AppCompatActivity() {
 
     // Função para recarregar a lista de contatos após uma alteração
     private fun reloadContactList() {
-        getInstanceAllFragment().reloadContactList()
+        getInstanceAllFragment().getAllContactList()
     }
 
     // Função para procurar os contatos na searchView

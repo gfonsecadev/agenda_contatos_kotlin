@@ -58,7 +58,6 @@ class ShowContactActivity : AppCompatActivity() {
         // Configura os cliques nos botões
         setupClickListeners()
 
-
         //Configura todos os listeners desta activity
         buttonListeners()
     }
