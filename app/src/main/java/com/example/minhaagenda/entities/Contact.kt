@@ -61,9 +61,14 @@ class Contact() : Parcelable {
 
         other as Contact
 
-        return id == other.id && name == other.name && phone == other.phone && email == other.email && image.contentEquals(other.image)
+        return  id == other.id &&
+                name == other.name &&
+                phone == other.phone &&
+                email == other.email &&
+                image.contentEquals(other.image)
 
     }
+
 
     override fun hashCode(): Int {
         var result = id.hashCode()
