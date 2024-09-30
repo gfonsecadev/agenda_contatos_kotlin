@@ -1,13 +1,18 @@
 package com.example.minhaagenda.activities.showContact
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import android.window.OnBackInvokedDispatcher
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import com.bumptech.glide.Glide
+import com.example.minhaagenda.activities.main.MainActivity
 import com.example.minhaagenda.activities.main.fragments.addContacts.AddContactFragment
 import com.example.minhaagenda.entities.Contact
 import com.example.minhaagenda.shared.LauncherPermissions
@@ -60,6 +65,8 @@ class ShowContactActivity : AppCompatActivity() {
 
         //Configura todos os listeners desta activity
         buttonListeners()
+
+        backPressed()
     }
 
     /**
@@ -198,6 +205,23 @@ class ShowContactActivity : AppCompatActivity() {
 
         // Inicia a chamada para o contato com o número formatado
         formattedPhoneNumber.callContact(this)
+    }
+
+    fun backPressed() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (isTaskRoot) {
+                    val intent = Intent(this@ShowContactActivity, MainActivity::class.java)
+                    startActivity(intent)
+                    // Se quiser fechar a Activity atual depois de iniciar a MainActivity
+                    finish()
+                } else {
+                    // Permita que o comportamento padrão do botão de voltar seja executado
+                    remove() // remove o callback e chama o comportamento padrão
+                    onBackPressedDispatcher.onBackPressed()
+                }
+            }
+        })
     }
 
 

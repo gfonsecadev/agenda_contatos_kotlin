@@ -83,7 +83,7 @@ class ImportContactsFragment : Fragment() {
                 delay(1000)
                 importContactsViewModel.importFromCsv(file)
                 progressLayout.visibility = View.GONE
-                (requireActivity() as MainActivity).changeFragmentNavController(R.id.nav_item_import)
+                redirectAllContact()
             }
         }
     }
@@ -96,9 +96,14 @@ class ImportContactsFragment : Fragment() {
                 delay(1000)
                 importContactsViewModel.importFromVcf(file)
                 progressLayout.visibility = View.GONE
-                (requireActivity() as MainActivity).changeFragmentNavController(R.id.nav_item_import)
+                redirectAllContact()
             }
         }
+    }
+
+    //método para redirecionar ao fragment que mostra todos os contatos.
+    private fun redirectAllContact(){
+        (requireActivity() as MainActivity).changeFragmentNavController(R.id.nav_item_import)
     }
 
 
