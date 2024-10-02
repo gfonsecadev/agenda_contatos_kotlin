@@ -370,7 +370,7 @@ class MainActivity : AppCompatActivity() {
                         loadSnackBar()
 
                         // Recarrega a lista de contatos para refletir a exclusão
-                        reloadContactList()
+                        allContacts()
                         delay(50)
                         // Limpa os contatos selecionados
                         clearListSelectedContact()
@@ -419,18 +419,15 @@ class MainActivity : AppCompatActivity() {
         return allFragment
     }
 
-    // Função para recarregar a lista de contatos após uma alteração
-    private fun reloadContactList() {
-        getInstanceAllFragment().getAllContactList()
-    }
 
     // Função para procurar os contatos na searchView
     private fun contactFound(name: String){
         getInstanceAllFragment().searchContacts(name)
     }
 
+    // Função para recarregar a lista de contatos após uma alteração
     private fun allContacts(){
-        getInstanceAllFragment().getAllContacts()
+        getInstanceAllFragment().getAllContactList()
     }
 
     override fun onStart() {

@@ -240,11 +240,6 @@ class AllContactsFragment : Fragment() {
         viewModelAllContacts.getContactByName(name)
     }
 
-    //metodo que pedirá a este fragment retornar todos os contatos  quando o SearchView da MainActivity estiver em branco
-    fun getAllContacts(){
-        viewModelAllContacts.getAllContacts()
-    }
-
 
     // Ao retornar para o fragmento, recarrega a lista de contatos
     // e atribui verdadeiro para a variavel que controla a exibição dos menus.
