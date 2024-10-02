@@ -13,7 +13,13 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_contact"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
+            android:overScrollMode="ifContentScrolls"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbarSize="15dp"
+            android:scrollbarThumbVertical="@drawable/scrollbar_thumb"
+            android:scrollbarTrackVertical="@drawable/scrollbar_track"/>
         <TextView
             android:id="@+id/text_letter"
             android:layout_width="50dp"

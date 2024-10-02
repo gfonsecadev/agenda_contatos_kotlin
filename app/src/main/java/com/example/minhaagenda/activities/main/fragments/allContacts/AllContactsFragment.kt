@@ -177,9 +177,13 @@ class AllContactsFragment : Fragment() {
                 // Recupero o primeiro item visível do RecyclerView
                 // O método getItem foi implementado por mim no atual adapter para retornar o item da lista de acordo com a posição passada
                 val item = adapter.getItem(layout.findFirstVisibleItemPosition())
-                val firstItemVisible = layout.findFirstVisibleItemPosition()
                 // Passo a letra do ContactObject deste item
                 binding.textLetter.text = item?.letter
+                binding.cardViewReturnTop.setOnClickListener {
+                    //binding.recyclerContact.smoothScrollToPosition(0)
+                    val offset = -binding.recyclerContact.computeVerticalScrollOffset()
+                    binding.recyclerContact.smoothScrollBy(0,offset,null,1500)
+                }
 
 
             }
@@ -189,9 +193,11 @@ class AllContactsFragment : Fragment() {
                 //se estiver em movimento é exibido imediatamente
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING || newState == RecyclerView.SCROLL_STATE_SETTLING) {
                     fadeInImmediately(binding.textLetter)
+                    fadeInImmediately(binding.cardViewReturnTop)
                 } else {
                     //se parado vai desaparecendo
                     fadeOut(binding.textLetter, 500)
+                    fadeOut(binding.cardViewReturnTop,3000)
                 }
             }
         })

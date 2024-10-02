@@ -5,25 +5,44 @@ import android.animation.AnimatorListenerAdapter
 import android.view.View
 
 object FadeToViews {
-    //mostra imediatamente a view
+
+    // Método para mostrar a view imediatamente
     fun fadeInImmediately(view: View) {
-        view.apply {
-            alpha = 1f
-            visibility = View.VISIBLE
+        // Cancela qualquer animação anterior em andamento
+        view.animate().cancel()
+
+        // Verifica se a view já está visível antes de aplicar a animação
+        if (view.visibility != View.VISIBLE) {
+            view.apply {
+                animate()
+                    .alpha(1f) // Define a opacidade para 100% (totalmente visível)
+                    .setDuration(0) // Animação instantânea (duração zero)
+                    .setListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            view.visibility = View.VISIBLE
+                        }
+                    })
+            }
         }
     }
 
-    //aplica uma animação de ocultação da view e no final a seta invisivel
+    // Método para ocultar a view gradualmente
     fun fadeOut(view: View, duration: Long = 300) {
-        view.apply {
-            animate()
-                .alpha(0f)
-                .setDuration(duration)
-                .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        view.visibility = View.INVISIBLE
-                    }
-                })
+        // Cancela qualquer animação anterior em andamento
+        view.animate().cancel()
+
+        // Verifica se a view já está invisível antes de aplicar a animação
+        if (view.visibility != View.GONE) {
+            view.apply {
+                animate()
+                    .alpha(0f) // Define a opacidade para 0% (totalmente invisível)
+                    .setDuration(duration) // Define a duração da animação (300ms por padrão)
+                    .setListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            view.visibility = View.GONE
+                        }
+                    })
+            }
         }
     }
 }
