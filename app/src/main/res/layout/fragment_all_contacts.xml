@@ -10,6 +10,12 @@
     android:background="@drawable/bg_layout_allcontacts"
     tools:context="com.example.minhaagenda.activities.main.fragments.allContacts.AllContactsFragment">
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/background_color_agenda"
+        app:cardElevation="0dp"
+        app:cardCornerRadius="20dp">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_contact"
             android:layout_width="match_parent"
@@ -20,6 +26,8 @@
             android:scrollbarSize="15dp"
             android:scrollbarThumbVertical="@drawable/scrollbar_thumb"
             android:scrollbarTrackVertical="@drawable/scrollbar_track"/>
+    </androidx.cardview.widget.CardView>
+
         <TextView
             android:id="@+id/text_letter"
             android:layout_width="50dp"

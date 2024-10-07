@@ -1,5 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#D3D3D3"/> <!-- Cor do track -->
-    <corners android:radius="4dp"/> <!-- Bordas arredondadas -->
-</shape>
+<!-- res/drawable/vertical_line_in_shape.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Retângulo de fundo -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/background_color_agenda"/> <!-- Cor de fundo do retângulo -->
+            <corners android:radius="8dp"/> <!-- Bordas arredondadas -->
+            <size android:width="8dp" android:height="150dp"/> <!-- Tamanho do retângulo -->
+        </shape>
+    </item>
+
+    <!-- Linha vertical no centro -->
+    <item  android:left="4dp" android:right="4dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#807672"/> <!-- Cor da linha -->
+            <size android:width="2dp" /> <!-- Largura da linha -->
+
+        </shape>
+    </item>
+
+</layer-list>

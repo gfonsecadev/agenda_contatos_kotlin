@@ -3,7 +3,7 @@
     android:id="@+id/progressLayout"
     android:layout_width="match_parent"
     android:layout_height="0dp"
-    android:background="@drawable/background_selected_contacts"
+    android:background="#CE8F7E78"
     android:orientation="vertical"
     android:gravity="center_horizontal|center_vertical"
     app:layout_constraintStart_toStartOf="parent"
