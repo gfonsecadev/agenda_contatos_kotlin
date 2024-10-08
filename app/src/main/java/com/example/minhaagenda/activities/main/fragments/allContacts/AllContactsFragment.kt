@@ -179,10 +179,9 @@ class AllContactsFragment : Fragment() {
                 val item = adapter.getItem(layout.findFirstVisibleItemPosition())
                 // Passo a letra do ContactObject deste item
                 binding.textLetter.text = item?.letter
-                binding.cardViewReturnTop.setOnClickListener {
-                    //binding.recyclerContact.smoothScrollToPosition(0)
-                    val offset = -binding.recyclerContact.computeVerticalScrollOffset()
-                    binding.recyclerContact.smoothScrollBy(0,offset,null,1500)
+                //clique no botão de retornar ao topo da lista
+                binding.buttonViewReturnTop.setOnClickListener {
+                    binding.recyclerContact.scrollToPosition(0)
                 }
 
 
@@ -193,11 +192,11 @@ class AllContactsFragment : Fragment() {
                 //se estiver em movimento é exibido imediatamente
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING || newState == RecyclerView.SCROLL_STATE_SETTLING) {
                     fadeInImmediately(binding.textLetter)
-                    fadeInImmediately(binding.cardViewReturnTop)
+                    fadeInImmediately(binding.buttonViewReturnTop)
                 } else {
                     //se parado vai desaparecendo
                     fadeOut(binding.textLetter, 500)
-                    fadeOut(binding.cardViewReturnTop,3000)
+                    fadeOut(binding.buttonViewReturnTop,3000)
                 }
             }
         })

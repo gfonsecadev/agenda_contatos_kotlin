@@ -39,22 +39,19 @@
             android:background="@drawable/text_letter_background"
             android:visibility="invisible"/>
 
-
-    <ImageView
-        android:id="@+id/cardViewReturnTop"
+    <ImageButton
+        android:id="@+id/buttonViewReturnTop"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:visibility="gone"
-        android:layout_gravity="center_horizontal|bottom"
-        app:cardCornerRadius="30dp"
         android:src="@drawable/return_top_background"
+        android:scaleType="centerCrop"
+        android:background="@android:color/transparent"
         android:foreground="@drawable/ripple_button"
         android:layout_marginBottom="50dp"
-        app:elevation="5dp">
+        android:padding="0dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:contentDescription="@string/retornar_ao_topo"/>
 
-    </ImageView>
 
 
     <!-- Layout de carregamento com ProgressBar -->

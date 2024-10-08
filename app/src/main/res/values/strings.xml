@@ -16,4 +16,5 @@
     <string name="title_edit">Editar</string>
     <string name="title_share">Compartilhar</string>
     <string name="title_delete">Excluir</string>
+    <string name="retornar_ao_topo">retornar ao topo</string>
 </resources>
