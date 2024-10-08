@@ -5,11 +5,12 @@
         <shape android:shape="rectangle">
             <gradient
                 android:angle="90"
-                android:startColor="#FF5722"
-                android:centerColor="#E6E4CDCD"
-                android:endColor="#FF5722" />
+                android:startColor="@color/background_color_agenda"
+                android:centerColor="#14978E8E"
+                android:endColor="@color/background_color_agenda" />
+            <corners android:radius="100dp"/>
         </shape>
     </item>
 
-    <item android:drawable="@drawable/ic_return_top" android:gravity="center"/>
+<item  android:drawable="@drawable/ic_return_top" android:top="4dp" android:bottom="4dp" android:start="4dp" android:end="4dp" android:gravity="center"/>
 </layer-list>
