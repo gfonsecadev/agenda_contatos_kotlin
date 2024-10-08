@@ -86,7 +86,14 @@ class ShowContactActivity : AppCompatActivity() {
         // Listener para o botão de exclusão
         binding.clickDelete.setOnClickListener {
             viewModelShowContact.deleteContact()
-            finish() // Fecha a Activity após a exclusão do contato
+            //Se for única activity da pilha , iniciamos a mainActivity para mostrar todos os contatos
+            if(isTaskRoot){
+                startActivity(Intent(this,MainActivity::class.java))
+                finish()
+             }else{//Se houver outras antes, somente finalizamos esta.
+               finish()
+            }
+
         }
     }
 
