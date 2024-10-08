@@ -174,7 +174,12 @@ class MainActivity : AppCompatActivity() {
         preferencesHelper = SharedPreferencesHelper(this)//classe de ajuda
 
         //seta as preferencias se definidas
-        Glide.with(this).load(preferencesHelper.getPreferencesImage()).into(imageProfile) //recupera a a imagem salva convertendo-a de string para Bitmap
+        //se o byteArray não estiver vazio.
+        if (preferencesHelper.getPreferencesImage().isNotEmpty()) {
+            Glide.with(this).load(preferencesHelper.getPreferencesImage())
+                .into(imageProfile) //recupera a a imagem salva convertendo-a de string para Bitmap
+        }
+
         textNameProfile.text = preferencesHelper.getPreferencesName()//recupera o nome salvo
     }
 
@@ -438,6 +443,7 @@ class MainActivity : AppCompatActivity() {
         focusItem(R.id.nav_item_all)
     }
 
+    //objeto estático para controle da variavel digitado no searchView
     companion object{
         var typedNameToSearch:String = ""
     }
