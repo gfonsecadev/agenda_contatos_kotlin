@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
+import com.example.minhaagenda.activities.main.MainActivity.Companion.typedNameToSearch
 
 import com.example.minhaagenda.shared.AppBarViewModel
 import com.example.minhaagenda.adapters.ContactAdapter
@@ -124,8 +125,8 @@ class AllContactsFragment : Fragment() {
     private fun reloadAdapter(newList:List<ContactListByInitial>){
         val adapter = binding.recyclerContact.adapter as ContactAdapter
 
-        //se updateData retornar true então a nova lista passada é diferente, onde após isso o adapter é notificado da mudança exibindo um progress
-        if (adapter.updateData(newList)){
+        //se updateData retornar true então a nova lista passada é diferente , após isso o adapter é notificado da mudança exibindo um progress
+        if (adapter.updateData(newList) ){
             // Lança uma coroutine na Main Thread para atualizar a UI
             lifecycleScope.launch(Dispatchers.Main) {
                 // Torna visível o layout de progresso enquanto a lista está sendo recarregada
@@ -141,6 +142,11 @@ class AllContactsFragment : Fragment() {
                 // Oculta o layout de progresso após a atualização
                 binding.progressReloadList.progressLayout.visibility = View.GONE
             }
+        }
+
+        //se for procura de contatos apenas atualizamos o adapter.
+        if (typedNameToSearch.isBlank()){
+            adapter.notifyDataSetChanged()
         }
 
     }
