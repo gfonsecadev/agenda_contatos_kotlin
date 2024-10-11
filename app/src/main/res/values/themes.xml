@@ -11,7 +11,8 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">#F63E03</item>
         <!-- Customize your theme here. -->
-        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowBackground" >@color/background_color_agenda</item>
         <item name="android:navigationBarColor">#EEF3683C</item>
     </style>
 
@@ -40,5 +41,6 @@
         <!-- Desativa o sombreamento de fundo quando o diálogo é exibido. Normalmente, quando um diálogo é mostrado,
              o fundo é escurecido para focar a atenção no diálogo. Definir isso como false remove esse efeito de escurecimento. -->
     </style>
+
 
 </resources>
