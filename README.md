@@ -1,5 +1,5 @@
 # Aplicativo de contatos
-Este aplicativo tem como intuito salvar e gerenciar os contatos do usuário.  
+Este aplicativo tem como intuito salvar e gerenciar os contatos do usuário. 
 Nele é possivel:
 - Adicionar email ao contato;
 - Adicionar uma imagem da galeria ou câmera ao contato;
